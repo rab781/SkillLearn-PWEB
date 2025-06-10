@@ -12,15 +12,20 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $primaryKey = 'users_id';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'nama_lengkap',
+        'no_telepon',
+        'username',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -42,4 +47,25 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // Relationships
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'users_id');
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class, 'users_id');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'AD';
+    }
+
+    public function isCustomer()
+    {
+        return $this->role === 'CU';
+    }
 }

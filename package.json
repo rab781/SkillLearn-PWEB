@@ -6,8 +6,15 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@tailwindcss/postcss": "^4.1.8",
+        "autoprefixer": "^10.4.21",
         "axios": "^1.6.4",
         "laravel-vite-plugin": "^1.0.0",
+        "postcss": "^8.5.4",
+        "tailwindcss": "^4.1.8",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "sweetalert2": "^11.22.0"
     }
 }
