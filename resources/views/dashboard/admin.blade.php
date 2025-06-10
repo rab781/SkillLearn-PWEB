@@ -4,50 +4,138 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Enhanced Admin Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p class="text-gray-600">Kelola platform Skillearn</p>
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div>
+                <h1 class="text-4xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                    👑 Admin Control Center
+                </h1>
+                <p class="text-xl text-gray-600 mt-2">
+                    Selamat datang, <span class="font-semibold text-orange-600">{{ auth()->user()->nama_lengkap }}</span>! 
+                    <span class="text-2xl">⚡</span> Kelola platform Skillearn dengan mudah
+                </p>
+            </div>
+            <div class="mt-4 lg:mt-0">
+                <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full text-sm font-medium shadow-lg">
+                    <span class="text-lg mr-2">🔥</span>
+                    Super Admin Access
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Stats Cards -->
+    <!-- Enhanced Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8" id="stats-cards">
-        <!-- Stats will be loaded here -->
+        <!-- Enhanced loading stats -->
+        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-blue-100">👥 Total Users</p>
+                    <p class="text-3xl font-bold">
+                        <span class="loading-spinner inline-block"></span>
+                    </p>
+                </div>
+                <div class="text-4xl opacity-80">👨‍💼</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-green-100">📹 Total Videos</p>
+                    <p class="text-3xl font-bold">
+                        <span class="loading-spinner inline-block"></span>
+                    </p>
+                </div>
+                <div class="text-4xl opacity-80">🎬</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-purple-100">📚 Categories</p>
+                    <p class="text-3xl font-bold">
+                        <span class="loading-spinner inline-block"></span>
+                    </p>
+                </div>
+                <div class="text-4xl opacity-80">📖</div>
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-orange-100">💬 Feedbacks</p>
+                    <p class="text-3xl font-bold">
+                        <span class="loading-spinner inline-block"></span>
+                    </p>
+                </div>
+                <div class="text-4xl opacity-80">📝</div>
+            </div>
+        </div>        <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl shadow-lg p-6 text-white card-hover">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-pink-100">📚 Bookmarks</p>
+                    <p class="text-3xl font-bold">
+                        <span class="loading-spinner inline-block"></span>
+                    </p>
+                </div>
+                <div class="text-4xl opacity-80">📖</div>
+            </div>
+        </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 class="text-xl font-semibold mb-4">Quick Actions</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button onclick="openAddVideoModal()" class="bg-blue-600 text-white p-4 rounded-lg hover:bg-blue-700 text-center">
-                <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Tambah Video
+    <!-- Enhanced Quick Actions -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center justify-center">
+                <span class="text-3xl mr-2">⚡</span>
+                Quick Actions
+            </h2>
+            <p class="text-gray-600 mt-2">Aksi cepat untuk mengelola konten platform</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <button onclick="openAddVideoModal()" class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <div class="text-5xl mb-3 group-hover:animate-bounce">🎬</div>
+                <h3 class="text-lg font-semibold mb-2">Tambah Video</h3>
+                <p class="text-blue-100 text-sm">Upload video pembelajaran baru</p>
             </button>
-            <button onclick="openAddCategoryModal()" class="bg-green-600 text-white p-4 rounded-lg hover:bg-green-700 text-center">
-                <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
-                </svg>
-                Tambah Kategori
+            <button onclick="openAddCategoryModal()" class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+                <div class="text-5xl mb-3 group-hover:animate-bounce">📚</div>
+                <h3 class="text-lg font-semibold mb-2">Tambah Kategori</h3>
+                <p class="text-green-100 text-sm">Buat kategori skill baru</p>
             </button>
-            <a href="/admin/reports" class="bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 text-center block">
-                <svg class="w-8 h-8 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                Lihat Reports
+            <a href="/admin/reports" class="group bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg block">
+                <div class="text-5xl mb-3 group-hover:animate-bounce">📊</div>
+                <h3 class="text-lg font-semibold mb-2">Lihat Reports</h3>
+                <p class="text-purple-100 text-sm">Analisis data platform</p>
             </a>
         </div>
     </div>
 
-    <!-- Recent Feedbacks -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 class="text-xl font-semibold mb-4">Feedback Terbaru</h2>
+    <!-- Enhanced Recent Feedbacks -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+                <span class="text-3xl mr-2">💬</span>
+                Feedback Terbaru
+            </h2>
+            <div class="flex space-x-2">
+                <span class="skill-badge bg-gradient-to-r from-blue-500 to-purple-500">🔔 Real-time</span>
+            </div>
+        </div>
         <div class="space-y-4" id="recent-feedbacks">
-            <!-- Recent feedbacks will be loaded here -->
+            <!-- Enhanced loading state -->
+            <div class="animate-pulse flex space-x-4 p-4 bg-gray-50 rounded-lg">
+                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                <div class="flex-1 space-y-2">
+                    <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                    <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Popular Videos -->
+    <!-- Enhanced Popular Videos -->
     <div class="bg-white rounded-lg shadow-md p-6">
         <h2 class="text-xl font-semibold mb-4">Video Terpopuler</h2>
         <div class="overflow-x-auto">

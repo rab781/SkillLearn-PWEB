@@ -57,6 +57,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/customer/dashboard', function () {
             return view('dashboard.customer');
         });
+        
+        // Add web routes for customer feedback and bookmark
+        Route::prefix('web')->group(function () {
+            Route::post('/feedback', [App\Http\Controllers\FeedbackController::class, 'store'])->name('web.feedback.store');
+            Route::delete('/feedback/{feedback}', [App\Http\Controllers\FeedbackController::class, 'destroy'])->name('web.feedback.destroy');
+            Route::post('/bookmark', [App\Http\Controllers\BookmarkController::class, 'store'])->name('web.bookmark.store');
+            Route::get('/bookmark/check/{video}', [App\Http\Controllers\BookmarkController::class, 'checkBookmark'])->name('web.bookmark.check');
+        });
     });
 
     // Admin routes

@@ -30,13 +30,15 @@ Route::get('/videos/popular', [VidioController::class, 'popular']);
 Route::get('/videos/latest', [VidioController::class, 'latest']);
 Route::get('/videos/category/{kategoriId}', [VidioController::class, 'getByCategory']);
 Route::get('/videos/{vidio}', [VidioController::class, 'show']);
+Route::post('/videos/{vidio}/increment-view', [VidioController::class, 'incrementView']);
 
 // Kategori public routes
 Route::get('/categories', [KategoriController::class, 'index']);
 Route::get('/categories/{kategori}', [KategoriController::class, 'show']);
 
 // Protected routes (require authentication)
-Route::middleware('auth:sanctum')->group(function () {
+// Use web session for dashboard access from web interface
+Route::middleware(['web', 'auth'])->group(function () {
     // Auth routes
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/profile', [AuthController::class, 'profile']);
@@ -48,6 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/bookmarks', [BookmarkController::class, 'index']);
         Route::post('/bookmarks', [BookmarkController::class, 'store']);
         Route::delete('/bookmarks/{bookmark}', [BookmarkController::class, 'destroy']);
+        Route::get('/bookmarks/check/{video}', [BookmarkController::class, 'checkBookmark']);
 
         // Feedback routes (customer)
         Route::get('/my-feedbacks', [FeedbackController::class, 'myFeedbacks']);
@@ -57,6 +60,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Dashboard customer
         Route::get('/dashboard', [DashboardController::class, 'customerDashboard']);
+        Route::get('/customer/stats', [DashboardController::class, 'customerStats']);
     });
 
     // Admin routes

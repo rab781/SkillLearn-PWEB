@@ -55,12 +55,17 @@ class BookmarkController extends Controller
             ->first();
 
         if ($existingBookmark) {
+            // Remove bookmark if exists (toggle)
+            $existingBookmark->delete();
+
             return response()->json([
-                'success' => false,
-                'message' => 'Video sudah ada di bookmark'
-            ], 400);
+                'success' => true,
+                'message' => 'Video berhasil dihapus dari bookmark',
+                'action' => 'removed'
+            ]);
         }
 
+        // Add new bookmark
         $bookmark = Bookmark::create([
             'users_id' => $user->users_id,
             'vidio_vidio_id' => $request->vidio_vidio_id
@@ -69,7 +74,8 @@ class BookmarkController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Video berhasil ditambahkan ke bookmark',
-            'bookmark' => $bookmark->load('vidio.kategori')
+            'bookmark' => $bookmark->load('vidio.kategori'),
+            'action' => 'added'
         ], 201);
     }
 
@@ -119,30 +125,18 @@ class BookmarkController extends Controller
     /**
      * Check if video is bookmarked by user
      */
-    public function checkBookmark(Request $request)
+    public function checkBookmark($video)
     {
-        $validator = Validator::make($request->all(), [
-            'vidio_id' => 'required|exists:vidio,vidio_id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         /** @var User $user */
         $user = Auth::user();
 
         $bookmark = Bookmark::where('users_id', $user->users_id)
-            ->where('vidio_vidio_id', $request->vidio_id)
+            ->where('vidio_vidio_id', $video)
             ->first();
 
         return response()->json([
             'success' => true,
-            'is_bookmarked' => $bookmark !== null,
+            'bookmarked' => $bookmark !== null,
             'bookmark_id' => $bookmark ? $bookmark->bookmark_id : null
         ]);
     }

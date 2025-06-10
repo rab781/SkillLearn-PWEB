@@ -17,16 +17,31 @@ class VidioController extends Controller
         $query = Vidio::with('kategori');
 
         // Filter by category if provided
-        if ($request->has('kategori_id')) {
+        if ($request->has('kategori_id') && $request->kategori_id) {
             $query->where('kategori_kategori_id', $request->kategori_id);
         }
 
         // Search by name if provided
-        if ($request->has('search')) {
+        if ($request->has('search') && $request->search) {
             $query->where('nama', 'like', '%' . $request->search . '%');
         }
 
-        $videos = $query->orderBy('created_at', 'desc')->paginate(12);
+        // Handle sorting
+        $sort = $request->get('sort', 'created_at');
+        $order = $request->get('order', 'desc');
+
+        // Validate sort fields
+        $allowedSorts = ['created_at', 'jumlah_tayang', 'nama'];
+        if (!in_array($sort, $allowedSorts)) {
+            $sort = 'created_at';
+        }
+
+        // Validate order
+        if (!in_array($order, ['asc', 'desc'])) {
+            $order = 'desc';
+        }
+
+        $videos = $query->orderBy($sort, $order)->paginate(12);
 
         return response()->json([
             'success' => true,
@@ -175,6 +190,20 @@ class VidioController extends Controller
         return response()->json([
             'success' => true,
             'videos' => $videos
+        ]);
+    }
+
+    /**
+     * Increment view count for a video
+     */
+    public function incrementView(Vidio $vidio)
+    {
+        $vidio->increment('jumlah_tayang');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'View count incremented',
+            'views' => $vidio->jumlah_tayang
         ]);
     }
 }
