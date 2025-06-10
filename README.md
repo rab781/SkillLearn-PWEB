@@ -15,48 +15,48 @@
 
 ### 1. Latar Belakang Masalah
 
-[cite_start]Dalam bidang pendidikan era digital saat ini, akses terhadap sumber belajar sangat melimpah, namun tidak semua orang dapat memanfaatkannya secara efektif. [cite_start]Banyak individu, atau pelajar bahkan masyarakat umum, merasa kebingungan dan kesulitan dalam mencari materi pembelajaran yang tepat, terstruktur, dan sesuai dengan kebutuhan keterampilan mereka. [cite_start]Meskipun banyak akses yang menyediakan banyak video pembelajaran di internet, tantangan dalam aksesnya tersebut adalah kurasi konten, di mana banyaknya jumlah video yang diunggah setiap detik menyulitkan pengguna untuk menemukan informasi yang relevan dan terpercaya. [cite_start]Selain itu, konten-konten tersebut sudah dipublikasi secara tidak terorganisir dan tidak memberikan alur panduan belajar yang jelas. [cite_start]Masalah lainnya adalah banyak platform pembelajaran daring yang mengenakan biaya berlangganan, sehingga menghambat akses masyarakat berpenghasilan rendah atau pelajar dari daerah terpencil. [cite_start]Akibatnya, potensi peningkatan keterampilan secara mandiri menjadi terhambat.
+Dalam bidang pendidikan era digital saat ini, akses terhadap sumber belajar sangat melimpah, namun tidak semua orang dapat memanfaatkannya secara efektif. Banyak individu, atau pelajar bahkan masyarakat umum, merasa kebingungan dan kesulitan dalam mencari materi pembelajaran yang tepat, terstruktur, dan sesuai dengan kebutuhan keterampilan mereka.  Meskipun banyak akses yang menyediakan banyak video pembelajaran di internet, tantangan dalam aksesnya tersebut adalah kurasi konten, di mana banyaknya jumlah video yang diunggah setiap detik menyulitkan pengguna untuk menemukan informasi yang relevan dan terpercaya.  Selain itu, konten-konten tersebut sudah dipublikasi secara tidak terorganisir dan tidak memberikan alur panduan belajar yang jelas.  Masalah lainnya adalah banyak platform pembelajaran daring yang mengenakan biaya berlangganan, sehingga menghambat akses masyarakat berpenghasilan rendah atau pelajar dari daerah terpencil.  Akibatnya, potensi peningkatan keterampilan secara mandiri menjadi terhambat.
 
-[cite_start]Mengetahui permasalahan tersebut, diperlukan strategi kurasi konten yang efektif untuk memastikan bahwa informasi yang disampaikan terstruktur dan jelas. [cite_start]Oleh karena itu, Skillearn hadir sebagai solusi berbasis web yang menyediakan kurasi video pembelajaran secara terarah dan gratis untuk diakses agar siapa pun dapat belajar secara sistematis tanpa harus bingung memilih sumber atau terbebani oleh biaya. [cite_start]Skillearn kami rancang dengan menyajikan video-video pembelajaran yang relevan dengan bidang yang dipilih dan disajikan secara urut sehingga pengguna khususnya pemula tidak kesulitan untuk belajar mulai dari awal sekali.
+ Mengetahui permasalahan tersebut, diperlukan strategi kurasi konten yang efektif untuk memastikan bahwa informasi yang disampaikan terstruktur dan jelas.  Oleh karena itu, Skillearn hadir sebagai solusi berbasis web yang menyediakan kurasi video pembelajaran secara terarah dan gratis untuk diakses agar siapa pun dapat belajar secara sistematis tanpa harus bingung memilih sumber atau terbebani oleh biaya.  Skillearn kami rancang dengan menyajikan video-video pembelajaran yang relevan dengan bidang yang dipilih dan disajikan secara urut sehingga pengguna khususnya pemula tidak kesulitan untuk belajar mulai dari awal sekali.
 
 ---
 
 ### 2. Rumusan Masalah
 
-* [cite_start]Bagaimana membangun sebuah platform pembelajaran online yang dapat mengkurasi dan menyusun video edukasi secara terarah?
-* [cite_start]Bagaimana menyusun sistem navigasi materi yang membantu pengguna belajar dari dasar hingga tingkat lanjut dalam berbagai bidang keterampilan?
-* [cite_start]Bagaimana mendesain tampilan antarmuka yang *user-friendly* agar proses belajar menjadi lebih nyaman dan efisien?
+*  Bagaimana membangun sebuah platform pembelajaran online yang dapat mengkurasi dan menyusun video edukasi secara terarah?
+*  Bagaimana menyusun sistem navigasi materi yang membantu pengguna belajar dari dasar hingga tingkat lanjut dalam berbagai bidang keterampilan?
+*  Bagaimana mendesain tampilan antarmuka yang *user-friendly* agar proses belajar menjadi lebih nyaman dan efisien?
 
 ---
 
 ### 3. Tujuan Proyek
 
 **Tujuan Umum:**
-* [cite_start]Mengembangkan platform pembelajaran online berbasis web yang menyediakan kurasi video edukasi secara terstruktur dan gratis untuk mendukung peningkatan berbagai keterampilan masyarakat secara mandiri.
-* [cite_start]Mengembangkan materi yang ternavigasi untuk membantu pengguna belajar dari dasar hingga tingkat lanjut dalam berbagai bidang keterampilan.
+*  Mengembangkan platform pembelajaran online berbasis web yang menyediakan kurasi video edukasi secara terstruktur dan gratis untuk mendukung peningkatan berbagai keterampilan masyarakat secara mandiri.
+*  Mengembangkan materi yang ternavigasi untuk membantu pengguna belajar dari dasar hingga tingkat lanjut dalam berbagai bidang keterampilan.
 
 **Tujuan Khusus:**
-* [cite_start]Membangun sistem berbasis Laravel yang mampu menampilkan daftar video pembelajaran yang dikurasi berdasarkan kategori dan tingkat kesulitan.
-* [cite_start]Menyediakan antarmuka yang sederhana dan mudah diakses oleh pengguna dari berbagai latar belakang.
-* [cite_start]Menyusun alur pembelajaran dalam bentuk modul atau jalur belajar yang jelas dan berurutan.
-* [cite_start]Menjamin seluruh konten yang ditampilkan bersumber dari materi terbuka dan legal.
+*  Membangun sistem berbasis Laravel yang mampu menampilkan daftar video pembelajaran yang dikurasi berdasarkan kategori dan tingkat kesulitan.
+*  Menyediakan antarmuka yang sederhana dan mudah diakses oleh pengguna dari berbagai latar belakang.
+*  Menyusun alur pembelajaran dalam bentuk modul atau jalur belajar yang jelas dan berurutan.
+*  Menjamin seluruh konten yang ditampilkan bersumber dari materi terbuka dan legal.
 
 ---
 
 ### 4. Studi Pustaka / Tinjauan Teknologi (Untuk Konteks Tambahan AI)
 
-* **Kurasi Konten dalam Platform Pembelajaran:** Wahyuni et al. [cite_start](2022) menjelaskan bahwa kurasi konten adalah proses memilih, menyusun, dan merekomendasikan materi yang relevan dan berkualitas kepada pengguna. [cite_start]Dalam konteks pembelajaran daring, kurasi video terarah dapat meningkatkan efektivitas belajar karena materi yang disajikan sesuai dengan kebutuhan keterampilan yang ingin dicapai oleh peserta didik. [cite_start]Dengan adanya kurasi, pengguna dapat lebih fokus pada materi yang relevan tanpa harus memilah konten secara mandiri.
-* [cite_start]**Pembelajaran Daring Berbasis Video:** Pratama dan Hamidah (2020) menyatakan bahwa pembelajaran daring merupakan metode pembelajaran yang memanfaatkan teknologi internet untuk menyampaikan materi ajar tanpa tatap muka langsung[cite: 22].
-[cite_start]Salah satu media yang banyak digunakan dalam pembelajaran daring adalah video, karena mampu menyajikan materi secara visual dan audio, sehingga dapat meningkatkan daya serap peserta didik serta fleksibilitas dalam waktu dan tempat belajar[cite: 23]. Oktaviani et al. [cite_start](2021) menemukan bahwa penggunaan video pembelajaran daring berbasis aplikasi KineMaster mampu meningkatkan pemahaman siswa terhadap materi pelajaran matematika secara signifikan.
-[cite_start]Hal ini sejalan dengan temuan Sitorus dan Siagian (2020) yang menyatakan bahwa video pembelajaran online dapat meningkatkan keterampilan menyanyi solo siswa melalui visualisasi praktik yang ditampilkan secara sistematis dan menarik.
-* [cite_start]**Pengembangan Soft Skill Melalui Pembelajaran Daring:** Simamarta (2021) mengungkapkan bahwa selain peningkatan aspek kognitif, pembelajaran daring juga berperan dalam pengembangan *soft skill* peserta didik.
-[cite_start]Menurutnya, proses pembelajaran secara online dapat mendorong siswa untuk meningkatkan keterampilan komunikasi, kemampuan berpikir kritis, serta adaptasi terhadap perkembangan teknologi digital. [cite_start]Pembelajaran berbasis video yang dikurasi secara terarah menjadi salah satu pendekatan yang dinilai efektif dalam pengembangan *soft skill* tersebut.
-* [cite_start]**Efektivitas Video Youtube sebagai Media Pembelajaran:** Wulandari (2021) menunjukkan bahwa video pembelajaran melalui platform Youtube mampu meningkatkan hasil belajar mahasiswa pendidikan teknologi informasi secara signifikan.
-[cite_start]Keunggulan Youtube terletak pada kemudahan akses, beragam konten, serta fleksibilitas waktu belajar.
-[cite_start]Hal ini menjadi salah satu pertimbangan dalam pengembangan platform Skillearn, yang memanfaatkan video terkurasi dari berbagai platform gratis untuk menunjang proses belajar berbasis *skill*.
-* [cite_start]**Kerangka Konsep Pengembangan Skillearn:** Berdasarkan kajian pustaka, dapat disimpulkan bahwa video pembelajaran daring efektif dalam meningkatkan keterampilan, baik *hard skill* maupun *soft skill*[cite: 32, 33].
-[cite_start]Pratama dan Hamidah (2020) serta Simarmata (2021) menekankan pentingnya media video dalam proses pembelajaran daring[cite: 33]. Selain itu, Wahyuni et al.
-[cite_start](2022) dan Wulandari (2021) menyatakan bahwa proses kurasi video yang dilakukan secara sistematis dan terarah memungkinkan pengguna memilih berbagai kategori *skill* sesuai minat dan kebutuhan secara fleksibel.
+* **Kurasi Konten dalam Platform Pembelajaran:** Wahyuni et al.  (2022) menjelaskan bahwa kurasi konten adalah proses memilih, menyusun, dan merekomendasikan materi yang relevan dan berkualitas kepada pengguna.  Dalam konteks pembelajaran daring, kurasi video terarah dapat meningkatkan efektivitas belajar karena materi yang disajikan sesuai dengan kebutuhan keterampilan yang ingin dicapai oleh peserta didik.  Dengan adanya kurasi, pengguna dapat lebih fokus pada materi yang relevan tanpa harus memilah konten secara mandiri.
+*  **Pembelajaran Daring Berbasis Video:** Pratama dan Hamidah (2020) menyatakan bahwa pembelajaran daring merupakan metode pembelajaran yang memanfaatkan teknologi internet untuk menyampaikan materi ajar tanpa tatap muka langsung[cite: 22].
+ Salah satu media yang banyak digunakan dalam pembelajaran daring adalah video, karena mampu menyajikan materi secara visual dan audio, sehingga dapat meningkatkan daya serap peserta didik serta fleksibilitas dalam waktu dan tempat belajar[cite: 23]. Oktaviani et al.  (2021) menemukan bahwa penggunaan video pembelajaran daring berbasis aplikasi KineMaster mampu meningkatkan pemahaman siswa terhadap materi pelajaran matematika secara signifikan.
+ Hal ini sejalan dengan temuan Sitorus dan Siagian (2020) yang menyatakan bahwa video pembelajaran online dapat meningkatkan keterampilan menyanyi solo siswa melalui visualisasi praktik yang ditampilkan secara sistematis dan menarik.
+*  **Pengembangan Soft Skill Melalui Pembelajaran Daring:** Simamarta (2021) mengungkapkan bahwa selain peningkatan aspek kognitif, pembelajaran daring juga berperan dalam pengembangan *soft skill* peserta didik.
+ Menurutnya, proses pembelajaran secara online dapat mendorong siswa untuk meningkatkan keterampilan komunikasi, kemampuan berpikir kritis, serta adaptasi terhadap perkembangan teknologi digital.  Pembelajaran berbasis video yang dikurasi secara terarah menjadi salah satu pendekatan yang dinilai efektif dalam pengembangan *soft skill* tersebut.
+*  **Efektivitas Video Youtube sebagai Media Pembelajaran:** Wulandari (2021) menunjukkan bahwa video pembelajaran melalui platform Youtube mampu meningkatkan hasil belajar mahasiswa pendidikan teknologi informasi secara signifikan.
+ Keunggulan Youtube terletak pada kemudahan akses, beragam konten, serta fleksibilitas waktu belajar.
+ Hal ini menjadi salah satu pertimbangan dalam pengembangan platform Skillearn, yang memanfaatkan video terkurasi dari berbagai platform gratis untuk menunjang proses belajar berbasis *skill*.
+*  **Kerangka Konsep Pengembangan Skillearn:** Berdasarkan kajian pustaka, dapat disimpulkan bahwa video pembelajaran daring efektif dalam meningkatkan keterampilan, baik *hard skill* maupun *soft skill*[cite: 32, 33].
+ Pratama dan Hamidah (2020) serta Simarmata (2021) menekankan pentingnya media video dalam proses pembelajaran daring[cite: 33]. Selain itu, Wahyuni et al.
+ (2022) dan Wulandari (2021) menyatakan bahwa proses kurasi video yang dilakukan secara sistematis dan terarah memungkinkan pengguna memilih berbagai kategori *skill* sesuai minat dan kebutuhan secara fleksibel.
 
 ---
 
@@ -64,49 +64,49 @@
 
 #### 5.1 Fungsi Utama Website
 
-[cite_start]Skillearn merupakan sebuah platform pembelajaran online berbasis kurasi video yang menyediakan berbagai jalur pembelajaran *skill* secara gratis.
-[cite_start]Fungsi utama dari website ini adalah sebagai media edukasi yang dirancang untuk menyajikan pembelajaran secara runtut bagi pengguna dalam memilih jalur pembelajaran sesuai minat, mengakses video-video pembelajaran yang telah dikurasi, serta memantau *progress* belajar yang dicapai.
+ Skillearn merupakan sebuah platform pembelajaran online berbasis kurasi video yang menyediakan berbagai jalur pembelajaran *skill* secara gratis.
+ Fungsi utama dari website ini adalah sebagai media edukasi yang dirancang untuk menyajikan pembelajaran secara runtut bagi pengguna dalam memilih jalur pembelajaran sesuai minat, mengakses video-video pembelajaran yang telah dikurasi, serta memantau *progress* belajar yang dicapai.
 
-* [cite_start]**Fitur Opsional (Jika Waktu Memungkinkan):** Platform ini juga dilengkapi dengan fitur *chatbot* yang dapat membantu pengguna dalam mencari video rekomendasi atau menjawab pertanyaan seputar materi yang tersedia.
+*  **Fitur Opsional (Jika Waktu Memungkinkan):** Platform ini juga dilengkapi dengan fitur *chatbot* yang dapat membantu pengguna dalam mencari video rekomendasi atau menjawab pertanyaan seputar materi yang tersedia.
 
 #### 5.2 Target Pengguna
 
 Target pengguna dari website Skillearn terdiri atas dua kategori, yaitu:
 
-* [cite_start]**Admin:** Pihak yang bertugas mengelola konten video pembelajaran, mengatur jalur kurasi, memantau statistik penggunaan, mengelola *database chatbot*, serta menangani *feedback* dari pengguna.
-* [cite_start]**Customer/User:** Masyarakat umum atau individu yang ingin mempelajari berbagai keterampilan secara mandiri dan gratis melalui video-video pembelajaran yang tersedia di platform.
+*  **Admin:** Pihak yang bertugas mengelola konten video pembelajaran, mengatur jalur kurasi, memantau statistik penggunaan, mengelola *database chatbot*, serta menangani *feedback* dari pengguna.
+*  **Customer/User:** Masyarakat umum atau individu yang ingin mempelajari berbagai keterampilan secara mandiri dan gratis melalui video-video pembelajaran yang tersedia di platform.
 
 #### 5.3 Fitur yang Akan Dikembangkan
 
 **A. Untuk Pengguna (Customer/User):**
-* [cite_start]**Registrasi:** Fitur bagi Customer untuk membuat akun baru dan masuk ke sistem.
-* [cite_start]**Login:** Melakukan autentikasi untuk masuk ke sistem.
+*  **Registrasi:** Fitur bagi Customer untuk membuat akun baru dan masuk ke sistem.
+*  **Login:** Melakukan autentikasi untuk masuk ke sistem.
 * **Fitur Pembelajaran:**
-    * [cite_start]Customer dapat melihat video pembelajaran sesuai kurasi yang dipilih.
-    * [cite_start]Customer dapat memilih pembelajaran berdasarkan kategori *skill*.
-    * [cite_start]Customer dapat memberikan *feedback* terhadap video.
-    * [cite_start]Customer dapat menyimpan video ke daftar favorit (*bookmark*).
-* [cite_start]**Fitur *Progress* Belajar:** Customer dapat melihat *progress* belajar yang telah dicapai di masing-masing kurasi.
+    *  Customer dapat melihat video pembelajaran sesuai kurasi yang dipilih.
+    *  Customer dapat memilih pembelajaran berdasarkan kategori *skill*.
+    *  Customer dapat memberikan *feedback* terhadap video.
+    *  Customer dapat menyimpan video ke daftar favorit (*bookmark*).
+*  **Fitur *Progress* Belajar:** Customer dapat melihat *progress* belajar yang telah dicapai di masing-masing kurasi.
 * **Fitur Profil:**
-    * [cite_start]Melihat data profil.
-    * [cite_start]Mengubah data profil.
-* [cite_start]**Logout:** Keluar dari sistem dan mengakhiri sesi pengguna.
+    *  Melihat data profil.
+    *  Mengubah data profil.
+*  **Logout:** Keluar dari sistem dan mengakhiri sesi pengguna.
 
 **B. Untuk Admin:**
-* [cite_start]**Login:** Fitur untuk melakukan autentikasi dan akses ke *dashboard* admin.
+*  **Login:** Fitur untuk melakukan autentikasi dan akses ke *dashboard* admin.
 * **Fitur Pembelajaran:**
-    * [cite_start]Admin dapat melihat video.
-    * [cite_start]Admin dapat menambah dan mengelompokkan video pembelajaran.
-    * [cite_start]Admin dapat mengupdate detail video pembelajaran.
-    * [cite_start]Admin dapat menghapus video dari platform.
-    * [cite_start]Admin dapat melihat daftar *feedback* yang diberikan oleh *customer*.
-    * [cite_start]Admin dapat membalas *feedback* yang diberikan oleh *customer*.
-    * [cite_start]Admin dapat menghapus *feedback*.
-* [cite_start]**Fitur Report:** Admin dapat melihat informasi total pengguna platform untuk kebutuhan bisnis.
+    *  Admin dapat melihat video.
+    *  Admin dapat menambah dan mengelompokkan video pembelajaran.
+    *  Admin dapat mengupdate detail video pembelajaran.
+    *  Admin dapat menghapus video dari platform.
+    *  Admin dapat melihat daftar *feedback* yang diberikan oleh *customer*.
+    *  Admin dapat membalas *feedback* yang diberikan oleh *customer*.
+    *  Admin dapat menghapus *feedback*.
+*  **Fitur Report:** Admin dapat melihat informasi total pengguna platform untuk kebutuhan bisnis.
 * **Fitur Profil:**
-    * [cite_start]Melihat data profil.
-    * [cite_start]Mengubah data profil.
-* [cite_start]**Fitur Logout:** Keluar dari sistem dan mengakhiri sesi admin.
+    *  Melihat data profil.
+    *  Mengubah data profil.
+*  **Fitur Logout:** Keluar dari sistem dan mengakhiri sesi admin.
 
 ---
 
@@ -115,72 +115,72 @@ Target pengguna dari website Skillearn terdiri atas dua kategori, yaitu:
 Berikut adalah diagram sistem yang menjadi acuan utama dalam pengembangan Skillearn. Pastikan Anda telah menempatkan semua file gambar diagram ini di folder `docs/diagrams/` di *root* proyek Anda.
 
 #### 6.1 Use Case Diagram
-[cite_start]![Use Case Diagram Skillearn](docs/diagrams/use_case_skillearn.png)
+ ![Use Case Diagram Skillearn](docs/diagrams/use_case_skillearn.png)
 
 #### 6.2 ERD (Entity Relationship Diagram)
-[cite_start]![ERD Skillearn](docs/diagrams/erd_skillearn.png)
+ ![ERD Skillearn](docs/diagrams/erd_skillearn.png)
 
 #### 6.3 PDM (Physical Data Model)
-[cite_start]![PDM Skillearn](docs/diagrams/pdm_skillearn.png)
+ ![PDM Skillearn](docs/diagrams/pdm_skillearn.png)
 
 #### 6.4 Activity Diagrams
 
 ##### Registrasi (Pelanggan)
-[cite_start]![Activity Diagram Registrasi Pelanggan](docs/diagrams/ad_registrasi_pelanggan.png)
+ ![Activity Diagram Registrasi Pelanggan](docs/diagrams/ad_registrasi_pelanggan.png)
 
 ##### Login (Admin)
-[cite_start]![Activity Diagram Login Admin](docs/diagrams/ad_login_admin.png)
+ ![Activity Diagram Login Admin](docs/diagrams/ad_login_admin.png)
 
 ##### Login (Pelanggan)
-[cite_start]![Activity Diagram Login Pelanggan](docs/diagrams/ad_login_pelanggan.png)
+ ![Activity Diagram Login Pelanggan](docs/diagrams/ad_login_pelanggan.png)
 
 ##### Melihat Video Pembelajaran (Admin)
-[cite_start]![Activity Diagram Melihat Video Pembelajaran Admin](docs/diagrams/ad_melihat_video_pembelajaran_admin.png)
+ ![Activity Diagram Melihat Video Pembelajaran Admin](docs/diagrams/ad_melihat_video_pembelajaran_admin.png)
 
 ##### Melihat Video Pembelajaran (Pelanggan)
-[cite_start]![Activity Diagram Melihat Video Pembelajaran Pelanggan](docs/diagrams/ad_melihat_video_pembelajaran_pelanggan.png)
+ ![Activity Diagram Melihat Video Pembelajaran Pelanggan](docs/diagrams/ad_melihat_video_pembelajaran_pelanggan.png)
 
 ##### Menambah dan Mengelompokkan Video Pembelajaran (Admin)
-[cite_start]![Activity Diagram Menambah dan Mengelompokkan Video Pembelajaran Admin](docs/diagrams/ad_menambah_mengelompokkan_video_admin.png)
+ ![Activity Diagram Menambah dan Mengelompokkan Video Pembelajaran Admin](docs/diagrams/ad_menambah_mengelompokkan_video_admin.png)
 
 ##### Mengupdate Detail Video Pembelajaran (Admin)
-[cite_start]![Activity Diagram Mengupdate Detail Video Pembelajaran Admin](docs/diagrams/ad_mengupdate_detail_video_admin.png)
+ ![Activity Diagram Mengupdate Detail Video Pembelajaran Admin](docs/diagrams/ad_mengupdate_detail_video_admin.png)
 
 ##### Menghapus Video Pembelajaran (Admin)
-[cite_start]![Activity Diagram Menghapus Video Pembelajaran Admin](docs/diagrams/ad_menghapus_video_admin.png)
+ ![Activity Diagram Menghapus Video Pembelajaran Admin](docs/diagrams/ad_menghapus_video_admin.png)
 
 ##### Menyimpan Video Ke Daftar Favorit (Pelanggan)
-[cite_start]![Activity Diagram Menyimpan Video Ke Daftar Favorit Pelanggan](docs/diagrams/ad_menyimpan_video_favorit_pelanggan.png)
+ ![Activity Diagram Menyimpan Video Ke Daftar Favorit Pelanggan](docs/diagrams/ad_menyimpan_video_favorit_pelanggan.png)
 
 ##### Melihat Progress Belajar (Pelanggan)
-[cite_start]![Activity Diagram Melihat Progress Belajar Pelanggan](docs/diagrams/ad_melihat_progress_belajar_pelanggan.png)
+ ![Activity Diagram Melihat Progress Belajar Pelanggan](docs/diagrams/ad_melihat_progress_belajar_pelanggan.png)
 
 ##### Melihat Total Pengguna Platform (Admin)
-[cite_start]![Activity Diagram Melihat Total Pengguna Platform Admin](docs/diagrams/ad_melihat_total_pengguna_admin.png)
+ ![Activity Diagram Melihat Total Pengguna Platform Admin](docs/diagrams/ad_melihat_total_pengguna_admin.png)
 
 ##### Melihat Feedback (Admin)
-[cite_start]![Activity Diagram Melihat Feedback Admin](docs/diagrams/ad_melihat_feedback_admin.png)
+ ![Activity Diagram Melihat Feedback Admin](docs/diagrams/ad_melihat_feedback_admin.png)
 
 ##### Melihat Feedback (Pelanggan)
-[cite_start]![Activity Diagram Melihat Feedback Pelanggan](docs/diagrams/ad_melihat_feedback_pelanggan.png)
+ ![Activity Diagram Melihat Feedback Pelanggan](docs/diagrams/ad_melihat_feedback_pelanggan.png)
 
 ##### Membuat Feedback (Admin)
-[cite_start]![Activity Diagram Membuat Feedback Admin](docs/diagrams/ad_membuat_feedback_admin.png)
+ ![Activity Diagram Membuat Feedback Admin](docs/diagrams/ad_membuat_feedback_admin.png)
 
 ##### Membuat Feedback (Pelanggan)
-[cite_start]![Activity Diagram Membuat Feedback Pelanggan](docs/diagrams/ad_membuat_feedback_pelanggan.png)
+ ![Activity Diagram Membuat Feedback Pelanggan](docs/diagrams/ad_membuat_feedback_pelanggan.png)
 
 ##### Menghapus Feedback (Admin)
-[cite_start]![Activity Diagram Menghapus Feedback Admin](docs/diagrams/ad_menghapus_feedback_admin.png)
+ ![Activity Diagram Menghapus Feedback Admin](docs/diagrams/ad_menghapus_feedback_admin.png)
 
 ##### Menghapus Feedback (Pelanggan)
-[cite_start]![Activity Diagram Menghapus Feedback Pelanggan](docs/diagrams/ad_menghapus_feedback_pelanggan.png)
+ ![Activity Diagram Menghapus Feedback Pelanggan](docs/diagrams/ad_menghapus_feedback_pelanggan.png)
 
 ##### Logout (Admin)
-[cite_start]![Activity Diagram Logout Admin](docs/diagrams/ad_logout_admin.png)
+ ![Activity Diagram Logout Admin](docs/diagrams/ad_logout_admin.png)
 
 ##### Logout (Pelanggan)
-[cite_start]![Activity Diagram Logout Pelanggan](docs/diagrams/ad_logout_pelanggan.png)
+ ![Activity Diagram Logout Pelanggan](docs/diagrams/ad_logout_pelanggan.png)
 
 ---
 
