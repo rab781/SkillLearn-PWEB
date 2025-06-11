@@ -49,15 +49,26 @@ Route::middleware('auth')->group(function () {
         if ($user->isAdmin()) {
             return redirect('/admin/dashboard');
         }
-        return view('dashboard.customer');
+
+        // Get dashboard data server-side
+        $controller = new \App\Http\Controllers\DashboardController();
+        $response = $controller->customerDashboard();
+        $dashboardData = json_decode($response->getContent(), true);
+
+        return view('dashboard.customer')->with('dashboardData', $dashboardData);
     })->name('dashboard');
 
     // Customer routes
     Route::middleware('check.role:CU')->group(function () {
         Route::get('/customer/dashboard', function () {
-            return view('dashboard.customer');
+            // Get dashboard data server-side
+            $controller = new \App\Http\Controllers\DashboardController();
+            $response = $controller->customerDashboard();
+            $dashboardData = json_decode($response->getContent(), true);
+
+            return view('dashboard.customer')->with('dashboardData', $dashboardData);
         });
-        
+
         // Add web routes for customer feedback and bookmark
         Route::prefix('web')->group(function () {
             Route::post('/feedback', [App\Http\Controllers\FeedbackController::class, 'store'])->name('web.feedback.store');

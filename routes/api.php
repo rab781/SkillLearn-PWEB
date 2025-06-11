@@ -61,6 +61,9 @@ Route::middleware(['web', 'auth'])->group(function () {
         // Dashboard customer
         Route::get('/dashboard', [DashboardController::class, 'customerDashboard']);
         Route::get('/customer/stats', [DashboardController::class, 'customerStats']);
+
+        // Watch history
+        Route::post('/watch-history', [DashboardController::class, 'recordWatchHistory']);
     });
 
     // Admin routes

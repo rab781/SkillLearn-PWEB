@@ -7,6 +7,7 @@ use App\Models\Vidio;
 use App\Models\Kategori;
 use App\Models\Feedback;
 use App\Models\Bookmark;
+use App\Models\RiwayatTonton;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -46,21 +47,32 @@ class DashboardController extends Controller
                     return $bookmark->vidio !== null; // Filter out bookmarks with deleted videos
                 });
 
-            // Get popular videos with error handling
-            $popularVideos = Vidio::with('kategori')
-                ->whereNotNull('gambar')
-                ->whereNotNull('nama')
-                ->orderBy('jumlah_tayang', 'desc')
-                ->take(6)
-                ->get();
+            // Get recently watched videos (riwayat tonton) with error handling
+            $recentlyWatched = RiwayatTonton::with(['video' => function($query) {
+                    $query->with('kategori');
+                }])
+                ->byUser($user->users_id)
+                ->recent(6)
+                ->get()
+                ->filter(function($history) {
+                    return $history->video !== null; // Filter out history with deleted videos
+                });
 
-            // Get latest videos as fallback if no popular videos
-            if ($popularVideos->count() === 0) {
-                $popularVideos = Vidio::with('kategori')
+            // If no watch history, get latest videos as fallback
+            if ($recentlyWatched->count() === 0) {
+                $recentlyWatched = Vidio::with('kategori')
                     ->whereNotNull('nama')
                     ->orderBy('created_at', 'desc')
                     ->take(6)
-                    ->get();
+                    ->get()
+                    ->map(function($video) {
+                        // Transform to match watch history structure
+                        return (object)[
+                            'video' => $video,
+                            'waktu_ditonton' => $video->created_at,
+                            'persentase_progress' => 0.00
+                        ];
+                    });
             }
 
             // Get categories with video count
@@ -108,7 +120,7 @@ class DashboardController extends Controller
                     'feedbacks_count' => $feedbacksCount,
                 ],
                 'recent_bookmarks' => $recentBookmarks->values(),
-                'popular_videos' => $popularVideos,
+                'recently_watched' => $recentlyWatched->values(),
                 'categories' => $categories
             ]);
         } catch (\Exception $e) {
@@ -122,7 +134,7 @@ class DashboardController extends Controller
                     'feedbacks_count' => 0,
                 ],
                 'recent_bookmarks' => [],
-                'popular_videos' => [],
+                'recently_watched' => [],
                 'categories' => []
             ], 500);
         }
@@ -323,5 +335,56 @@ class DashboardController extends Controller
                 'total_feedbacks' => $feedbacksCount
             ]
         ]);
+    }
+
+    /**
+     * Record watch history when user watches a video
+     */
+    public function recordWatchHistory(Request $request)
+    {
+        try {
+            /** @var User $user */
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not authenticated'
+                ], 401);
+            }
+
+            $request->validate([
+                'video_id' => 'required|exists:vidio,vidio_id',
+                'duration' => 'nullable|integer|min:0',
+                'progress' => 'nullable|numeric|min:0|max:100'
+            ]);
+
+            $watchHistory = RiwayatTonton::recordWatch(
+                $user->users_id,
+                $request->video_id,
+                $request->duration ?? 0,
+                $request->progress ?? 0
+            );
+
+            // Also increment view count for the video
+            $video = Vidio::find($request->video_id);
+            if ($video) {
+                $video->increment('jumlah_tayang');
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Riwayat tonton berhasil dicatat',
+                'data' => $watchHistory
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Watch history recording error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mencatat riwayat tonton'
+            ], 500);
+        }
     }
 }

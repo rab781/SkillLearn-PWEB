@@ -84,19 +84,19 @@
         </div>
     </div>
 
-    <!-- Enhanced Popular Videos -->
+    <!-- Enhanced Recently Watched Videos -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-                <span class="text-3xl mr-2">🔥</span>
-                Video Trending
+                <span class="text-3xl mr-2">🕒</span>
+                Riwayat Video yang Baru Ditonton
             </h2>
             <div class="flex space-x-2">
-                <span class="skill-badge">🚀 Populer</span>
-                <span class="skill-badge">✨ Terbaru</span>
+                <span class="skill-badge">📺 Riwayat</span>
+                <span class="skill-badge">⏰ Terbaru</span>
             </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="popular-videos">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="recently-watched">
             <!-- Enhanced loading state -->
             <div class="animate-pulse">
                 <div class="bg-gray-200 rounded-lg h-48 mb-4"></div>
@@ -253,6 +253,21 @@ async function loadDashboard() {
         // Show loading state
         showLoadingState();
 
+        // Check if we have server-side data first
+        @if(isset($dashboardData) && $dashboardData['success'])
+            const dashboardData = @json($dashboardData);
+            console.log('Using server-side dashboard data:', dashboardData);
+
+            loadStats(dashboardData.stats || {});
+            loadRecentBookmarks(dashboardData.recent_bookmarks || []);
+            loadRecentlyWatched(dashboardData.recently_watched || []);
+            loadCategories(dashboardData.categories || []);
+            return;
+        @endif
+
+        // Fallback to API if no server-side data
+        console.log('No server-side data, trying API...');
+
         // Check if we're authenticated first by checking if user name is displayed
         const userName = document.querySelector('span.font-semibold.text-blue-600');
         if (!userName || userName.textContent.trim() === '') {
@@ -275,8 +290,8 @@ async function loadDashboard() {
 
         // If unauthorized, user might need to login
         if (response.status === 401) {
-            console.log('401 Unauthorized - redirecting to login');
-            window.location.href = '/login';
+            console.log('401 Unauthorized - trying fallback data');
+            loadFallbackData();
             return;
         }
 
@@ -298,7 +313,7 @@ async function loadDashboard() {
         if (data.success) {
             loadStats(data.stats || {});
             loadRecentBookmarks(data.recent_bookmarks || []);
-            loadPopularVideos(data.popular_videos || []);
+            loadRecentlyWatched(data.recently_watched || []);
             loadCategories(data.categories || []);
         } else {
             throw new Error(data.message || 'Failed to load dashboard data');
@@ -313,6 +328,8 @@ async function loadDashboard() {
 }
 
 function loadFallbackData() {
+    console.log('Loading fallback dashboard data...');
+
     // Load basic stats with fallback data
     loadStats({
         bookmarks_count: 0,
@@ -321,12 +338,16 @@ function loadFallbackData() {
 
     // Load empty states for other sections
     loadRecentBookmarks([]);
-    loadPopularVideos([]);
-    loadCategories([]);
+    loadRecentlyWatched([]);
+    loadCategories([
+        {kategori_id: 1, kategori: 'Programming', vidios_count: 0},
+        {kategori_id: 2, kategori: 'Design', vidios_count: 0},
+        {kategori_id: 3, kategori: 'Marketing', vidios_count: 0},
+        {kategori_id: 4, kategori: 'Business', vidios_count: 0}
+    ]);
 
     // Show info message
     showInfoNotification('Memuat data dashboard dalam mode offline. Beberapa fitur mungkin terbatas.');
-}
 }
 
 function showLoadingState() {
@@ -446,15 +467,15 @@ function loadRecentBookmarks(bookmarks) {
         </div>
     `).join('');
 }
-function loadPopularVideos(videos) {
-    const container = document.getElementById('popular-videos');
+function loadRecentlyWatched(watchHistory) {
+    const container = document.getElementById('recently-watched');
 
-    if (!videos || videos.length === 0) {
+    if (!watchHistory || watchHistory.length === 0) {
         container.innerHTML = `
             <div class="col-span-full text-center py-12">
-                <div class="text-6xl mb-4">🔥</div>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada video trending</h3>
-                <p class="text-gray-500 mb-4">Video populer akan muncul di sini</p>
+                <div class="text-6xl mb-4">🕒</div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada riwayat tonton</h3>
+                <p class="text-gray-500 mb-4">Video yang kamu tonton akan muncul di sini</p>
                 <a href="/videos" class="btn-primary text-white px-6 py-3 rounded-xl">
                     🔍 Jelajahi Video
                 </a>
@@ -463,7 +484,18 @@ function loadPopularVideos(videos) {
         return;
     }
 
-    container.innerHTML = videos.slice(0, 6).map(video => `
+    container.innerHTML = watchHistory.slice(0, 6).map(history => {
+        const video = history.video || history; // Handle both watch history and fallback video objects
+        const watchedAt = history.waktu_ditonton ? new Date(history.waktu_ditonton).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        }) : 'Baru saja';
+        const progress = history.persentase_progress || 0;
+
+        return `
         <div class="group bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105">
             <div class="aspect-video bg-gray-200 relative overflow-hidden">
                 <img src="${video.gambar || '/images/default-video.svg'}"
@@ -471,11 +503,19 @@ function loadPopularVideos(videos) {
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                      onerror="this.src='/images/default-video.svg'">
                 <div class="absolute top-2 right-2">
-                    <span class="bg-red-500 text-white text-xs px-2 py-1 rounded">🔥 Trending</span>
+                    <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">🕒 Riwayat</span>
                 </div>
                 <div class="absolute top-2 left-2">
                     <span class="bg-black/70 text-white text-xs px-2 py-1 rounded">${video.kategori?.kategori || 'Umum'}</span>
                 </div>
+                ${progress > 0 ? `
+                <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2">
+                    <div class="w-full bg-gray-600 rounded-full h-1.5 mb-1">
+                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${progress}%"></div>
+                    </div>
+                    <span class="text-xs">${Math.round(progress)}% selesai</span>
+                </div>
+                ` : ''}
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                     <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                         <div class="bg-white/90 rounded-full p-3">
@@ -490,7 +530,8 @@ function loadPopularVideos(videos) {
                 <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     ${video.nama}
                 </h4>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${video.deskripsi || 'Deskripsi tidak tersedia'}</p>
+                <p class="text-sm text-gray-600 mb-2 line-clamp-2">${video.deskripsi || 'Deskripsi tidak tersedia'}</p>
+                <p class="text-xs text-gray-500 mb-3">📅 Ditonton: ${watchedAt}</p>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center text-sm text-gray-500">
                         <span class="mr-3">👁️ ${video.jumlah_tayang || 0}</span>
@@ -498,9 +539,9 @@ function loadPopularVideos(videos) {
                     </div>
                     <div class="flex gap-2">
                         <a href="/videos/${video.vidio_id}"
-                           onclick="incrementViewCount(${video.vidio_id})"
+                           onclick="recordWatchHistory(${video.vidio_id})"
                            class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition-colors">
-                            Tonton
+                            ${progress > 0 ? 'Lanjutkan' : 'Tonton Lagi'}
                         </a>
                         <button onclick="toggleBookmark(${video.vidio_id})"
                                 class="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded hover:bg-gray-300 transition-colors">
@@ -510,7 +551,8 @@ function loadPopularVideos(videos) {
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
 }
 
 function loadCategories(categories) {
@@ -655,6 +697,34 @@ async function incrementViewCount(videoId) {
         });
     } catch (error) {
         console.error('Failed to increment view count:', error);
+    }
+}
+
+// Record watch history when user watches a video
+async function recordWatchHistory(videoId, duration = 0, progress = 0) {
+    try {
+        const response = await fetch('/api/watch-history', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                video_id: videoId,
+                duration: duration,
+                progress: progress
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('Watch history recorded successfully');
+        }
+    } catch (error) {
+        console.error('Failed to record watch history:', error);
     }
 }
 
