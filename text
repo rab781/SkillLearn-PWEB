@@ -1,0 +1,8 @@
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   USER BROWSER  │────│   LARAVEL APP    │────│   DATABASE      │
+│                 │    │                  │    │                 │
+│ 1. Visit Page   │───▶│ 2. Web Route     │───▶│ 5. Query Data   │
+│ 3. Render View  │◀───│ 4. Blade Template│◀───│ 6. Return Data  │
+│ 7. AJAX Call    │───▶│ 8. API Route     │───▶│ 9. Query Data   │
+│ 11. Update UI   │◀───│ 10. JSON Response│◀───│ 10. Return Data │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
