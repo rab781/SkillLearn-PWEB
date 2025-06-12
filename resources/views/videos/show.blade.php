@@ -127,41 +127,44 @@
                 @endauth
 
                 <!-- Enhanced Feedbacks List -->
-                <div id="feedbacks-list">
-                    <!-- Enhanced loading state -->
-                    <div class="space-y-6">
-                        <div class="animate-pulse">
-                            <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
-                                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex justify-between">
-                                        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-16"></div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <div class="h-3 bg-gray-200 rounded w-3/4"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-1/2"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="animate-pulse" style="animation-delay: 0.2s">
-                            <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
-                                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex justify-between">
-                                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-16"></div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-2/3"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+                <div id="feedbacks-list-wrapper" class="max-h-96 overflow-y-auto mb-5">
+
+                    <div id="feedbacks-list">
+                        <!-- Feedbacks will be loaded here -->
+                        <div class="space-y-6">
+                            <div class="animate-pulse">
+                                <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
+                                    <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex justify-between">
+                                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-16"></div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="animate-pulse" style="animation-delay: 0.2s">
+                                <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
+                                    <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex justify-between">
+                                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-16"></div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-2/3"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center text-gray-500 loading-dots">Memuat feedback</div>
                         </div>
-                        <div class="text-center text-gray-500 loading-dots">Memuat feedback</div>
                     </div>
                 </div>
             </div>
@@ -276,7 +279,7 @@
                     <span class="text-2xl mr-2">🎯</span>
                     Video Terkait
                 </h3>
-                <div id="related-videos" class="space-y-4">
+                <div id="related-videos" class="space-y-4 overflow-y-auto max-h-72">
                     <!-- Enhanced loading state -->
                     <div class="animate-pulse space-y-4">
                         <div class="flex space-x-3">
@@ -291,7 +294,7 @@
             </div>
             <div class="bg-white rounded-lg shadow-md p-6 mt-8 card-hover">
                 <h3 class="text-lg font-semibold mb-4">Kategori Lainnya</h3>
-                <div class="space-y-2" id="categories-list">
+                <div class="space-y-2 max-h-90 overflow-y-auto" id="categories-list">
                     <!-- Categories will be loaded here -->
                 </div>
             </div>
@@ -507,9 +510,16 @@ function displayVideoInfo(video) {
     trackVideoView(video.vidio_id);
 }
 
+
 function displayFeedbacks(feedbacks) {
     const container = document.getElementById('feedbacks-list');
     const feedbackCount = document.getElementById('feedback-count');
+    const currentUserId = {{ auth()->id() ?? 'null' }};
+
+    // Pisahkan feedback milik user login dan lainnya
+    const ownFeedbacks = feedbacks.filter(fb => fb.users_id == currentUserId);
+    const otherFeedbacks = feedbacks.filter(fb => fb.users_id != currentUserId);
+    const sortedFeedbacks = [...ownFeedbacks, ...otherFeedbacks];
 
     // Update feedback count
     if (feedbackCount) {
@@ -527,8 +537,8 @@ function displayFeedbacks(feedbacks) {
         return;
     }
 
-    container.innerHTML = feedbacks.map((feedback, index) => `
-        <div class="feedback-item border-b border-gray-200 pb-6 mb-6 last:border-b-0 animate-fade-in" style="animation-delay: ${index * 0.1}s">
+    container.innerHTML = sortedFeedbacks.map((feedback, index) => `
+        <div class="feedback-item border-b border-gray-200 pb-6 mb-6 last:border-b-0 animate-fade-in" style="animation-delay: ${index * 0.1}s" data-feedback-id="${feedback.feedback_id}">
             <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center">
                     <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-lg">
@@ -540,7 +550,7 @@ function displayFeedbacks(feedbacks) {
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
-                            ${new Date(feedback.tanggal).toLocaleDateString('id-ID', {
+                            ${new Date(feedback.created_at).toLocaleDateString('id-ID', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
@@ -550,28 +560,25 @@ function displayFeedbacks(feedbacks) {
                         </p>
                     </div>
                 </div>
-
-
                 ${isCurrentUser(feedback.users_id) && '{{ auth()->user()->role ?? "" }}' === 'CU' ? `
-                <div class="flex space-x-2">
-                    <button onclick="editFeedback(${feedback.feedback_id})"
-                            class="text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">
-                        ✏️ Edit
-                    </button>
-                    <button onclick="deleteFeedback(${feedback.feedback_id})"
-                            class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
-                        🗑️ Hapus
-                    </button>
-                </div>`
-                : (('{{ auth()->user()->role ?? "" }}' !== 'CU') ? `
-                <div class="flex space-x-2">
-                    <button onclick="replyFeedback(${feedback.feedback_id})"
-                            class="text-purple-800 hover:text-purple-900 text-sm font-medium px-6 py-3 rounded hover:bg-purple-50 transition-colors">
-                        Balas
-                    </button>
-                </div>` : '')
-            }
-
+                    <div class="flex space-x-2">
+                        <button onclick="editFeedback(${feedback.feedback_id})"
+                                class="text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="deleteFeedback(${feedback.feedback_id})"
+                                class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
+                            🗑️ Hapus
+                        </button>
+                    </div>`
+                    : (('{{ auth()->user()->role ?? "" }}' !== 'CU') ? `
+                    <div class="flex space-x-2">
+                        <button onclick="replyFeedback(${feedback.feedback_id})"
+                                class="text-purple-800 hover:text-purple-900 text-sm font-medium px-6 py-3 rounded hover:bg-purple-50 transition-colors">
+                            Balas
+                        </button>
+                    </div>` : '')
+                }
             </div>
             <div class="ml-13">
                 <p class="text-gray-800 leading-relaxed mb-3 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">${feedback.pesan}</p>
@@ -588,6 +595,60 @@ function displayFeedbacks(feedbacks) {
             </div>
         </div>
     `).join('');
+}
+
+// ...existing code...
+
+function replyFeedback(feedbackId) {
+    // Cek apakah form balasan sudah ada
+    let replyForm = document.getElementById(`reply-form-${feedbackId}`);
+    if (replyForm) {
+        replyForm.classList.toggle('hidden');
+        return;
+    }
+
+    // Tambahkan form balasan di bawah feedback
+    const feedbackItem = document.querySelector(`[data-feedback-id="${feedbackId}"] .ml-13`);
+    if (feedbackItem) {
+        const formHtml = `
+            <form id="reply-form-${feedbackId}" class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-2">
+                <textarea id="reply-text-${feedbackId}" rows="2" class="w-full p-2 border rounded" placeholder="Tulis balasan admin..."></textarea>
+                <div class="flex justify-end">
+                    <button type="button" onclick="sendReply(${feedbackId})"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Kirim</button>
+                </div>
+            </form>
+        `;
+        feedbackItem.insertAdjacentHTML('beforeend', formHtml);
+    }
+}
+
+async function sendReply(feedbackId) {
+    const textarea = document.getElementById(`reply-text-${feedbackId}`);
+    const balasan = textarea.value.trim();
+    if (!balasan) return;
+
+    try {
+        const response = await fetch(`/api/admin/feedbacks/${feedbackId}/reply`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ balasan }),
+            credentials: 'same-origin'
+        });
+        const result = await response.json();
+        if (result.success) {
+            // Reload feedbacks
+            loadVideoDetail();
+        } else {
+            alert(result.message || 'Gagal mengirim balasan');
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan jaringan');
+    }
 }
 
 async function loadRelatedVideos(categoryId) {
