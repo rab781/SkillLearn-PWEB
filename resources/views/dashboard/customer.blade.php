@@ -18,7 +18,7 @@
             </div>
             <div class="mt-4 lg:mt-0">
                 <div class="inline-flex items-center px-4 py-2 glass-effect rounded-full text-sm font-medium">
-                    <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+                    <span class="w-4 h-4 bg-green-400 rounded-full mr-2 animate-pulse"></span>
                     🔥 Keep Learning!
                 </div>
             </div>

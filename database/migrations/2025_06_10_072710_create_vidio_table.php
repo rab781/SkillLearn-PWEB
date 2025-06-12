@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('kategori_kategori_id');
             $table->foreign('kategori_kategori_id')->references('kategori_id')->on('kategori')->onDelete('cascade');
             $table->timestamps();
+            $table->text('channel');
         });
     }
 
