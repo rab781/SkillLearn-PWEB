@@ -76,6 +76,15 @@ Route::middleware('auth')->group(function () {
             Route::post('/bookmark', [App\Http\Controllers\BookmarkController::class, 'store'])->name('web.bookmark.store');
             Route::get('/bookmark/check/{video}', [App\Http\Controllers\BookmarkController::class, 'checkBookmark'])->name('web.bookmark.check');
         });
+
+        //Add Profil 
+        Route::middleware('check.role:CU')->prefix('pelanggan')->as('pelanggan.')->group(function () {
+            Route::get('/', [App\Http\Controllers\ProfilPelangganController::class, 'show'])->name('show');
+            Route::get('/{id}/edit', [App\Http\Controllers\ProfilPelangganController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [App\Http\Controllers\ProfilPelangganController::class, 'update'])->name('update');
+        });
+
+
     });
 
     // Admin routes
