@@ -115,32 +115,53 @@
                     <a href="/videos" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md font-medium transition-colors">Pembelajaran</a>
 
                     @auth
-                        <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-2">
-                                <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                                    <span class="text-white text-sm font-medium">{{ substr(auth()->user()->nama_lengkap, 0, 1) }}</span>
-                                </div>
-                                <span class="text-gray-700 font-medium">{{ auth()->user()->nama_lengkap }}</span>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                                <span class="text-white text-sm font-medium">{{ substr(auth()->user()->nama_lengkap, 0, 1) }}</span>
                             </div>
-                            @if(auth()->user()->isAdmin())
-                                <a href="/admin/dashboard" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md">
-                                    Admin Dashboard
-                                </a>
-                            @else
-                                <a href="/customer/dashboard" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md">
-                                    Dashboard
+
+                           
+                            @if(auth()->user()->role === 'CU')
+                                <a href="{{ route('pelanggan.show') }}">
+                                    Profil Saya
                                 </a>
                             @endif
-                            <form action="/logout" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="text-red-600 hover:text-red-700 px-3 py-2 rounded-md font-medium transition-colors">Logout</button>
-                            </form>
+
+                            {{-- Nama User --}}
+                            <span class="text-gray-700 font-medium">
+                                {{ auth()->user()->nama_lengkap }}
+                            </span>
                         </div>
+
+                        {{-- Tombol Dashboard --}}
+                        @if(auth()->user()->isAdmin())
+                            <a href="/admin/dashboard"
+                            class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md">
+                                Admin Dashboard
+                            </a>
+                        @else
+                            <a href="/customer/dashboard"
+                            class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-md">
+                                Dashboard
+                            </a>
+                        @endif
+
+                        {{-- Logout --}}
+                        <form action="/logout" method="POST" class="inline">
+                            @csrf
+                            <button type="submit"
+                                    class="text-red-600 hover:text-red-700 px-3 py-2 rounded-md font-medium transition-colors">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                     @else
-                        <div class="flex items-center space-x-3">
-                            <a href="/login" class="text-blue-600 hover:text-blue-700 px-4 py-2 rounded-md font-medium transition-colors">Login</a>
-                            <a href="/register" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-md">Register</a>
-                        </div>
+                    <div class="flex items-center space-x-3">
+                        <a href="/login" class="text-blue-600 hover:text-blue-700 px-4 py-2 rounded-md font-medium transition-colors">Login</a>
+                        <a href="/register"
+                        class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-medium shadow-md">Register</a>
+                    </div>
                     @endauth
                 </div>
 

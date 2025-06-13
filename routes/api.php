@@ -84,7 +84,6 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/admin/feedbacks', [FeedbackController::class, 'index']);
         Route::put('/admin/feedbacks/{feedback}/reply', [FeedbackController::class, 'reply']);
         Route::delete('/admin/feedbacks/{feedback}', [FeedbackController::class, 'destroy']);
-        // Route::post('/admin/feedbacks/{feedback}/reply', [FeedbackController::class, 'reply']);
 
         // Dashboard admin & reports
         Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard']);
