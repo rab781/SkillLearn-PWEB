@@ -24,13 +24,13 @@
                     Masuk ke akun Skillearn Anda dan mulai belajar
                 </p>
                 <p class="mt-1 text-sm text-gray-500">
-                    Belum punya akun? 
+                    Belum punya akun?
                     <a href="/register" class="font-medium text-blue-600 hover:text-blue-500 transition-colors">
                         Daftar sekarang 🚀
                     </a>
                 </p>
             </div>
-            
+
             <!-- Enhanced Error Messages -->
             @if ($errors->any())
                 <div class="bg-red-50 border-l-4 border-red-400 rounded-lg p-4 mb-6 animate-shake">
@@ -50,10 +50,10 @@
                     </div>
                 </div>
             @endif
-        
+
             <form class="space-y-6" id="loginForm" action="{{ route('login.post') }}" method="POST">
                 @csrf
-                
+
                 <!-- Enhanced Form Fields -->
                 <div class="space-y-4">
                     <div>
@@ -69,7 +69,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div>
                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                             🔒 Password
@@ -84,7 +84,7 @@
 
                 <!-- Enhanced Submit Button -->
                 <div>
-                    <button type="submit" 
+                    <button type="submit"
                             class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white btn-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200">
                         <span class="absolute left-0 inset-y-0 flex items-center pl-3">
                             <svg class="h-5 w-5 text-blue-300 group-hover:text-blue-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -120,10 +120,10 @@
 document.getElementById('loginForm').addEventListener('submit', function(e) {
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
-    
+
     submitBtn.innerHTML = 'Memproses...';
     submitBtn.disabled = true;
-    
+
     // Re-enable after 5 seconds as fallback
     setTimeout(() => {
         submitBtn.innerHTML = originalText;

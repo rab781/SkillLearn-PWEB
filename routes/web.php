@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfilController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -76,16 +78,18 @@ Route::middleware('auth')->group(function () {
             Route::post('/bookmark', [App\Http\Controllers\BookmarkController::class, 'store'])->name('web.bookmark.store');
             Route::get('/bookmark/check/{video}', [App\Http\Controllers\BookmarkController::class, 'checkBookmark'])->name('web.bookmark.check');
         });
-
-        //Add Profil 
-        Route::middleware('check.role:CU')->prefix('pelanggan')->as('pelanggan.')->group(function () {
-            Route::get('/', [App\Http\Controllers\ProfilPelangganController::class, 'show'])->name('show');
-            Route::get('/{id}/edit', [App\Http\Controllers\ProfilPelangganController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [App\Http\Controllers\ProfilPelangganController::class, 'update'])->name('update');
-        });
-
-
     });
+
+    // Profil umum untuk CU dan AD (pindahkan ke luar group check.role:CU)
+    Route::middleware('check.role:CU,AD')
+    ->prefix('profil')
+    ->as('profil.')
+    ->group(function () {
+        Route::get('/', [ProfilController::class, 'show'])->name('show');
+        Route::get('/edit', [ProfilController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfilController::class, 'update'])->name('update');
+});
+
 
     // Admin routes
     Route::middleware('check.role:AD')->group(function () {

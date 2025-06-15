@@ -12,7 +12,7 @@
                     👑 Admin Control Center
                 </h1>
                 <p class="text-xl text-gray-600 mt-2">
-                    Selamat datang, <span class="font-semibold text-orange-600">{{ auth()->user()->nama_lengkap }}</span>! 
+                    Selamat datang, <span class="font-semibold text-orange-600">{{ auth()->user()->nama_lengkap }}</span>!
                     <span class="text-2xl">⚡</span> Kelola platform Skillearn dengan mudah
                 </p>
             </div>
@@ -182,6 +182,10 @@
                 <select name="kategori_kategori_id" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" id="categorySelect">
                     <!-- Categories will be loaded here -->
                 </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Channel</label>
+                <input type="text" name="channel" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
             </div>
             <div class="flex justify-end space-x-2">
                 <button type="button" onclick="closeAddVideoModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Batal</button>

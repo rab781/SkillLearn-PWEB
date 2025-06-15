@@ -12,9 +12,12 @@ class CheckRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @param  mixed ...$roles
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, ...$roles): Response
     {
         // Check if user is authenticated
         if (!auth()->check()) {
@@ -32,12 +35,12 @@ class CheckRole
 
         $user = auth()->user();
 
-        // Check if user has the required role
-        if ($user->role !== $role) {
+        // Check if user has one of the required roles
+        if (!in_array($user->role, $roles)) {
             Log::warning('CheckRole middleware: Access denied', [
                 'user_id' => $user->users_id ?? $user->id,
                 'user_role' => $user->role,
-                'required_role' => $role,
+                'required_roles' => $roles,
                 'path' => $request->path()
             ]);
 
@@ -46,7 +49,7 @@ class CheckRole
                 'message' => 'Access denied. Insufficient permissions.',
                 'debug' => [
                     'user_role' => $user->role,
-                    'required_role' => $role
+                    'required_roles' => $roles
                 ]
             ], 403);
         }
@@ -54,7 +57,7 @@ class CheckRole
         Log::info('CheckRole middleware: Access granted', [
             'user_id' => $user->users_id ?? $user->id,
             'user_role' => $user->role,
-            'required_role' => $role,
+            'required_roles' => $roles,
             'path' => $request->path()
         ]);
 

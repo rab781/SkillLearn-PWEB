@@ -66,13 +66,14 @@
                         Feedback & Diskusi
                     </h3>
                     <div class="flex items-center space-x-2">
-                        <span class="skill-badge">🔥 Aktif</span>
+                        {{-- <span class="skill-badge">🔥 Aktif</span> --}}
                         <span class="text-sm text-gray-500" id="feedback-count">0 komentar</span>
                     </div>
                 </div>
 
                 @auth
                 <!-- Enhanced Add Feedback Form -->
+                @if(auth()->user()->role === 'CU')
                 <div class="mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl border border-blue-200">
                     <div class="flex items-center mb-4">
                         <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-3">
@@ -87,9 +88,9 @@
                         @csrf
                         <div class="mb-4">
                             <textarea name="pesan"
-                                      placeholder="💭 Tulis feedback, pertanyaan, atau insights Anda tentang video ini..."
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
-                                      rows="4"></textarea>
+                                    placeholder="💭 Tulis feedback, pertanyaan, atau insights Anda tentang video ini..."
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                                    rows="4"></textarea>
                         </div>
                         <div class="flex justify-between items-center">
                             <div class="text-xs text-gray-500">
@@ -103,6 +104,9 @@
                         </div>
                     </form>
                 </div>
+                @endif
+
+
                 @else
                 <div class="mb-8 p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200 text-center">
                     <div class="text-4xl mb-3">🔐</div>
@@ -123,41 +127,44 @@
                 @endauth
 
                 <!-- Enhanced Feedbacks List -->
-                <div id="feedbacks-list">
-                    <!-- Enhanced loading state -->
-                    <div class="space-y-6">
-                        <div class="animate-pulse">
-                            <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
-                                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex justify-between">
-                                        <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-16"></div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <div class="h-3 bg-gray-200 rounded w-3/4"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-1/2"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="animate-pulse" style="animation-delay: 0.2s">
-                            <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
-                                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                                <div class="flex-1 space-y-3">
-                                    <div class="flex justify-between">
-                                        <div class="h-4 bg-gray-200 rounded w-1/3"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-16"></div>
-                                    </div>
-                                    <div class="space-y-2">
-                                        <div class="h-3 bg-gray-200 rounded w-5/6"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-2/3"></div>
-                                        <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+                <div id="feedbacks-list-wrapper" class="max-h-96 overflow-y-auto mb-5">
+
+                    <div id="feedbacks-list">
+                        <!-- Feedbacks will be loaded here -->
+                        <div class="space-y-6">
+                            <div class="animate-pulse">
+                                <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
+                                    <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex justify-between">
+                                            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-16"></div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-1/2"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="animate-pulse" style="animation-delay: 0.2s">
+                                <div class="flex space-x-4 p-6 bg-gray-50 rounded-xl">
+                                    <div class="rounded-full bg-gray-200 h-12 w-12"></div>
+                                    <div class="flex-1 space-y-3">
+                                        <div class="flex justify-between">
+                                            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-16"></div>
+                                        </div>
+                                        <div class="space-y-2">
+                                            <div class="h-3 bg-gray-200 rounded w-5/6"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-2/3"></div>
+                                            <div class="h-3 bg-gray-200 rounded w-1/3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center text-gray-500 loading-dots">Memuat feedback</div>
                         </div>
-                        <div class="text-center text-gray-500 loading-dots">Memuat feedback</div>
                     </div>
                 </div>
             </div>
@@ -235,7 +242,7 @@
                                 <span id="notes-count" class="text-xs text-gray-500">0/200 karakter</span>
                                 <button onclick="saveNotes()"
                                         class="bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-1.5 rounded-lg text-xs font-medium hover:from-indigo-600 hover:to-purple-600 transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
-                                    💾 Simpan
+                                    Simpan
                                 </button>
                             </div>
                         </div>
@@ -258,16 +265,21 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Enhanced Related Videos -->
+                    <!-- Button Quiz -->
+                    <button onclick="saveNotes()"
+                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-xl p-4 border border-indigo-200 transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
+                        📝 Latihan Quiz
+                    </button>
+                    </div>
+                </div>
+                <!-- Enhanced Related Videos -->
             <div class="bg-white rounded-2xl shadow-lg p-6 card-hover">
                 <h3 class="text-xl font-bold text-gray-800 mb-6 flex items-center">
                     <span class="text-2xl mr-2">🎯</span>
                     Video Terkait
                 </h3>
-                <div id="related-videos" class="space-y-4">
+                <div id="related-videos" class="space-y-4 overflow-y-auto max-h-72">
                     <!-- Enhanced loading state -->
                     <div class="animate-pulse space-y-4">
                         <div class="flex space-x-3">
@@ -280,25 +292,28 @@
                     </div>
                 </div>
             </div>
+            <div class="bg-white rounded-lg shadow-md p-6 mt-8 card-hover">
+                <h3 class="text-lg font-semibold mb-4">Kategori Lainnya</h3>
+                <div class="space-y-2 max-h-90 overflow-y-auto" id="categories-list">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </div>
+            {{-- </div> --}}
+
         </div>
 
         <!-- Sidebar -->
-        <div class="lg:col-span-1">
+        {{-- <div class="lg:col-span-1">
             <!-- Related Videos -->
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h3 class="text-lg font-semibold mb-4">Video Terkait</h3>
                 <div class="space-y-4" id="related-videos">
                     <!-- Related videos will be loaded here -->
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Categories -->
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold mb-4">Kategori Lainnya</h3>
-                <div class="space-y-2" id="categories-list">
-                    <!-- Categories will be loaded here -->
-                </div>
-            </div>
+
         </div>
     </div>
 </div>
@@ -443,6 +458,8 @@ function displayVideoInfo(video) {
                     <span class="bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
                         📚 ${video.kategori?.kategori || 'Umum'}
                     </span>
+                    </div>
+                <div class="flex items-center space-x-4 mt-3 text-sm text-gray-500">
                     <span class="flex items-center">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
@@ -455,6 +472,11 @@ function displayVideoInfo(video) {
                             <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                         </svg>
                         ${new Date(video.created_at).toLocaleDateString('id-ID')}
+                    </span>
+                    <span class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24"><path d="M6.166 16.943l1.4 1.4-4.622 4.657h-2.944l6.166-6.057zm11.768-6.012c2.322-2.322 4.482-.457 6.066-1.931l-8-8c-1.474 1.584.142
+                            3.494-2.18 5.817-3.016 3.016-4.861-.625-10.228 4.742l9.6 9.6c5.367-5.367 1.725-7.211 4.742-10.228z"/></svg>
+                        ${video.channel}
                     </span>
                 </div>
             </div>
@@ -488,9 +510,16 @@ function displayVideoInfo(video) {
     trackVideoView(video.vidio_id);
 }
 
+
 function displayFeedbacks(feedbacks) {
     const container = document.getElementById('feedbacks-list');
     const feedbackCount = document.getElementById('feedback-count');
+    const currentUserId = {{ auth()->id() ?? 'null' }};
+
+    // Pisahkan feedback milik user login dan lainnya
+    const ownFeedbacks = feedbacks.filter(fb => fb.users_id == currentUserId);
+    const otherFeedbacks = feedbacks.filter(fb => fb.users_id != currentUserId);
+    const sortedFeedbacks = [...ownFeedbacks, ...otherFeedbacks];
 
     // Update feedback count
     if (feedbackCount) {
@@ -508,8 +537,8 @@ function displayFeedbacks(feedbacks) {
         return;
     }
 
-    container.innerHTML = feedbacks.map((feedback, index) => `
-        <div class="feedback-item border-b border-gray-200 pb-6 mb-6 last:border-b-0 animate-fade-in" style="animation-delay: ${index * 0.1}s">
+    container.innerHTML = sortedFeedbacks.map((feedback, index) => `
+        <div class="feedback-item border-b border-gray-200 pb-6 mb-6 last:border-b-0 animate-fade-in" style="animation-delay: ${index * 0.1}s" data-feedback-id="${feedback.feedback_id}">
             <div class="flex justify-between items-start mb-3">
                 <div class="flex items-center">
                     <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-lg">
@@ -521,7 +550,7 @@ function displayFeedbacks(feedbacks) {
                             <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                             </svg>
-                            ${new Date(feedback.tanggal).toLocaleDateString('id-ID', {
+                            ${new Date(feedback.created_at).toLocaleDateString('id-ID', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric',
@@ -531,17 +560,25 @@ function displayFeedbacks(feedbacks) {
                         </p>
                     </div>
                 </div>
-                ${isCurrentUser(feedback.users_id) ? `
-                <div class="flex space-x-2">
-                    <button onclick="editFeedback(${feedback.feedback_id})"
-                            class="text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">
-                        ✏️ Edit
-                    </button>
-                    <button onclick="deleteFeedback(${feedback.feedback_id})"
-                            class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
-                        🗑️ Hapus
-                    </button>
-                </div>` : ''}
+                ${isCurrentUser(feedback.users_id) && '{{ auth()->user()->role ?? "" }}' === 'CU' ? `
+                    <div class="flex space-x-2">
+                        <button onclick="editFeedback(${feedback.feedback_id})"
+                                class="text-blue-600 hover:text-blue-800 text-sm font-medium px-2 py-1 rounded hover:bg-blue-50 transition-colors">
+                            ✏️ Edit
+                        </button>
+                        <button onclick="deleteFeedback(${feedback.feedback_id})"
+                                class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
+                            🗑️ Hapus
+                        </button>
+                    </div>`
+                    : (('{{ auth()->user()->role ?? "" }}' !== 'CU') ? `
+                    <div class="flex space-x-2">
+                        <button onclick="replyFeedback(${feedback.feedback_id})"
+                                class="text-purple-800 hover:text-purple-900 text-sm font-medium px-6 py-3 rounded hover:bg-purple-50 transition-colors">
+                            Balas
+                        </button>
+                    </div>` : '')
+                }
             </div>
             <div class="ml-13">
                 <p class="text-gray-800 leading-relaxed mb-3 p-4 bg-gray-50 rounded-lg border-l-4 border-blue-500">${feedback.pesan}</p>
@@ -558,6 +595,60 @@ function displayFeedbacks(feedbacks) {
             </div>
         </div>
     `).join('');
+}
+
+// ...existing code...
+
+function replyFeedback(feedbackId) {
+    // Cek apakah form balasan sudah ada
+    let replyForm = document.getElementById(`reply-form-${feedbackId}`);
+    if (replyForm) {
+        replyForm.classList.toggle('hidden');
+        return;
+    }
+
+    // Tambahkan form balasan di bawah feedback
+    const feedbackItem = document.querySelector(`[data-feedback-id="${feedbackId}"] .ml-13`);
+    if (feedbackItem) {
+        const formHtml = `
+            <form id="reply-form-${feedbackId}" class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-2">
+                <textarea id="reply-text-${feedbackId}" rows="2" class="w-full p-2 border rounded" placeholder="Tulis balasan admin..."></textarea>
+                <div class="flex justify-end">
+                    <button type="button" onclick="sendReply(${feedbackId})"
+                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Kirim</button>
+                </div>
+            </form>
+        `;
+        feedbackItem.insertAdjacentHTML('beforeend', formHtml);
+    }
+}
+
+async function sendReply(feedbackId) {
+    const textarea = document.getElementById(`reply-text-${feedbackId}`);
+    const balasan = textarea.value.trim();
+    if (!balasan) return;
+
+    try {
+        const response = await fetch(`/api/admin/feedbacks/${feedbackId}/reply`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ balasan }),
+            credentials: 'same-origin'
+        });
+        const result = await response.json();
+        if (result.success) {
+            // Reload feedbacks
+            loadVideoDetail();
+        } else {
+            alert(result.message || 'Gagal mengirim balasan');
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan jaringan');
+    }
 }
 
 async function loadRelatedVideos(categoryId) {

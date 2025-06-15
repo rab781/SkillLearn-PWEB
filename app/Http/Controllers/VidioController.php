@@ -60,6 +60,7 @@ class VidioController extends Controller
             'url' => 'required|url',
             'gambar' => 'required|url',
             'kategori_kategori_id' => 'required|exists:kategori,kategori_id',
+            'channel' => 'required|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -76,7 +77,8 @@ class VidioController extends Controller
             'url' => $request->url,
             'gambar' => $request->gambar,
             'kategori_kategori_id' => $request->kategori_kategori_id,
-            'jumlah_tayang' => 0
+            'jumlah_tayang' => 0,
+            'channel' => $request->channel
         ]);
 
         return response()->json([
@@ -111,6 +113,7 @@ class VidioController extends Controller
             'url' => 'sometimes|url',
             'gambar' => 'sometimes|url',
             'kategori_kategori_id' => 'sometimes|exists:kategori,kategori_id',
+            'channel' => 'sometimes|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -122,7 +125,7 @@ class VidioController extends Controller
         }
 
         $vidio->update($request->only([
-            'nama', 'deskripsi', 'url', 'gambar', 'kategori_kategori_id'
+            'nama', 'deskripsi', 'url', 'gambar', 'kategori_kategori_id','channel'
         ]));
 
         return response()->json([

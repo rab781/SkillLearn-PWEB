@@ -58,3 +58,140 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(to bottom, #2563eb, #1e40af);
 }
+
+.profil-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: #f8f9fc;
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.profil-card {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    position: relative; /* ini penting supaya avatar bisa absolute di dalamnya */
+    z-index: 1;
+    color: #333;
+}
+
+.avatar-circle {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    width: 70px;
+    height: 70px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.profile-section {
+    font-family: 'Poppins', sans-serif;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.form-control-static {
+    background: #f9f9f9;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    color: #444;
+}
+
+.form-control input {
+    border: none;
+    background: transparent;
+}
+.form-control input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.btn-gradient {
+    background: linear-gradient(45deg, #4e54c8, #8f94fb);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    display: inline-block;
+    transition: 0.3s ease;
+}
+
+.btn-gradient:hover {
+    opacity: 0.9;
+}
+
+.btn-light {
+    background: #f8f9fa;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+    display: inline-block;
+    transition: 0.3s ease;
+}
+
+.btn-light:hover {
+    background: #e2e6ea;
+}
+
+
+/* Tambahan bubble manual */
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, #a18cd1, #fbc2eb);
+    opacity: 0.2;
+    animation: float 8s ease-in-out infinite alternate;
+    z-index: 0;
+}
+
+/* Beberapa bubble kecil */
+.bubble.small {
+    width: 60px;
+    height: 60px;
+}
+
+.bubble.medium {
+    width: 100px;
+    height: 100px;
+}
+
+.bubble.large {
+    width: 140px;
+    height: 140px;
+}
+
+.bubble-1 {
+    top: 200px;
+    left: 20px;
+    animation-delay: 1s;
+}
+.bubble-2 {
+    top: 500px;
+    right: 50px;
+    animation-delay: 3s;
+}
+.bubble-3 {
+    bottom: 100px;
+    left: 200px;
+    animation-delay: 5s;
+}

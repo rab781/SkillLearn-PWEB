@@ -122,17 +122,11 @@
                             </div>
 
                            
-                            @if(auth()->user()->role === 'CU')
-                                <a href="{{ route('pelanggan.show') }}">
-                                    Profil Saya
-                                </a>
-                            @endif
+                        @auth
+                            <a href="{{ route('profil.show') }}" class="text-gray-700 hover:text-blue-600 font-medium">
+                            Hi, {{ auth()->user()->nama_lengkap }}</a>
+                         @endauth
 
-                            {{-- Nama User --}}
-                            <span class="text-gray-700 font-medium">
-                                {{ auth()->user()->nama_lengkap }}
-                            </span>
-                        </div>
 
                         {{-- Tombol Dashboard --}}
                         @if(auth()->user()->isAdmin())
