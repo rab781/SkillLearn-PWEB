@@ -92,8 +92,8 @@
                 Riwayat Video yang Baru Ditonton
             </h2>
             <div class="flex space-x-2">
-                <span class="skill-badge">📺 Riwayat</span>
-                <span class="skill-badge">⏰ Terbaru</span>
+                <span class="skill-badge">Riwayat</span>
+                <span class="skill-badge">Terbaru</span>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="recently-watched">
@@ -388,7 +388,7 @@ function loadStats(stats) {
                 <div class="text-4xl opacity-80">💾</div>
             </div>
         </div>
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white card-hover animate-fade-in">
+        <div class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-6 text-white card-hover animate-fade-in">
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-purple-100">💬 Total Feedback</p>
@@ -473,7 +473,6 @@ function loadRecentlyWatched(watchHistory) {
     if (!watchHistory || watchHistory.length === 0) {
         container.innerHTML = `
             <div class="col-span-full text-center py-12">
-                <div class="text-6xl mb-4">🕒</div>
                 <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada riwayat tonton</h3>
                 <p class="text-gray-500 mb-4">Video yang kamu tonton akan muncul di sini</p>
                 <a href="/videos" class="btn-primary text-white px-6 py-3 rounded-xl">
@@ -589,11 +588,11 @@ function loadCategories(categories) {
         const videoCount = category.vidios_count || 0;
 
         return `
-            <div class="group text-center p-6 bg-gray-50 rounded-xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 cursor-pointer">
+            <div class="group text-center p-6 bg-gray-50 rounded-xl hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 cursor-pointer">
                 <div class="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
                     ${icon}
                 </div>
-                <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                <h3 class="font-semibold text-gray-900 mb-1 group-hover:text-purple-600 transition-colors">
                     ${category.kategori}
                 </h3>
                 <p class="text-sm text-gray-600">
@@ -601,7 +600,7 @@ function loadCategories(categories) {
                 </p>
                 <div class="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <a href="/videos?kategori=${category.kategori_id}"
-                       class="inline-block bg-blue-600 text-white text-xs px-4 py-2 rounded-full hover:bg-blue-700 transition-colors">
+                       class="inline-block bg-purple-600 text-white text-xs px-4 py-2 rounded-full hover:bg-purple-700 transition-colors">
                         Jelajahi →
                     </a>
                 </div>

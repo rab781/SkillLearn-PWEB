@@ -88,8 +88,8 @@
                         @csrf
                         <div class="mb-4">
                             <textarea name="pesan"
-                                    placeholder="💭 Tulis feedback, pertanyaan, atau insights Anda tentang video ini..."
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 resize-none"
+                                    placeholder="💭 Ketik feedback, pertanyaan, atau insights Anda tentang video ini..."
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl  focus:border-blue-500 transition-all duration-200 resize-none focus:ring-0.5 focus:outline-none"
                                     rows="4"></textarea>
                         </div>
                         <div class="flex justify-between items-center">
@@ -127,7 +127,7 @@
                 @endauth
 
                 <!-- Enhanced Feedbacks List -->
-                <div id="feedbacks-list-wrapper" class="max-h-96 overflow-y-auto mb-5">
+                <div id="feedbacks-list-wrapper" class="max-h-96 overflow-y-auto pr-6 mb-5">
 
                     <div id="feedbacks-list">
                         <!-- Feedbacks will be loaded here -->
@@ -235,7 +235,7 @@
                             Catatan Cepat
                         </h4>
                         <div class="space-y-3">
-                            <textarea id="quick-notes" placeholder="Tulis catatan tentang video ini..."
+                            <textarea id="quick-notes" placeholder="Ketik catatan tentang video ini..."
                                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 resize-none text-sm hover:border-indigo-300"
                                       rows="3" maxlength="200"></textarea>
                             <div class="flex justify-between items-center">
@@ -268,7 +268,7 @@
 
                     <!-- Button Quiz -->
                     <button onclick="saveNotes()"
-                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white rounded-xl p-4 border border-indigo-200 transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
+                            class="w-full bg-orange-400 hover:bg-orange-500 text-white rounded-xl p-4 border border-orange-300 transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
                         📝 Latihan Quiz
                     </button>
                     </div>
@@ -298,8 +298,6 @@
                     <!-- Categories will be loaded here -->
                 </div>
             </div>
-            {{-- </div> --}}
-
         </div>
 
         <!-- Sidebar -->
@@ -568,7 +566,7 @@ function displayFeedbacks(feedbacks) {
                         </button>
                         <button onclick="deleteFeedback(${feedback.feedback_id})"
                                 class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
-                            🗑️ Hapus
+                            Hapus
                         </button>
                     </div>`
                     : (('{{ auth()->user()->role ?? "" }}' !== 'CU') ? `
@@ -576,6 +574,10 @@ function displayFeedbacks(feedbacks) {
                         <button onclick="replyFeedback(${feedback.feedback_id})"
                                 class="text-purple-800 hover:text-purple-900 text-sm font-medium px-6 py-3 rounded hover:bg-purple-50 transition-colors">
                             Balas
+                        </button>
+                        <button onclick="deleteFeedback(${feedback.feedback_id})"
+                                class="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors">
+                            Hapus
                         </button>
                     </div>` : '')
                 }
@@ -585,7 +587,7 @@ function displayFeedbacks(feedbacks) {
                 ${feedback.balasan ? `
                 <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200 mt-3">
                     <div class="flex items-center mb-2">
-                        <div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-2">
+                        <div class="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-200 rounded-full flex items-center justify-center mr-2">
                             <span class="text-white text-xs">A</span>
                         </div>
                         <p class="text-sm font-semibold text-blue-800">Balasan Admin:</p>
@@ -597,10 +599,8 @@ function displayFeedbacks(feedbacks) {
     `).join('');
 }
 
-// ...existing code...
-
 function replyFeedback(feedbackId) {
-    // Cek apakah form balasan sudah ada
+    // Cek apakah form balasan sudah ada buat balasan admin
     let replyForm = document.getElementById(`reply-form-${feedbackId}`);
     if (replyForm) {
         replyForm.classList.toggle('hidden');
@@ -612,10 +612,10 @@ function replyFeedback(feedbackId) {
     if (feedbackItem) {
         const formHtml = `
             <form id="reply-form-${feedbackId}" class="mt-4 bg-blue-50 p-4 rounded-lg border border-blue-200 space-y-2">
-                <textarea id="reply-text-${feedbackId}" rows="2" class="w-full p-2 border rounded" placeholder="Tulis balasan admin..."></textarea>
+                <textarea id="reply-text-${feedbackId}" rows="2" class="w-full p-2 border border-blue-300 rounded focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none" placeholder="Ketik balasan admin..."></textarea>
                 <div class="flex justify-end">
                     <button type="button" onclick="sendReply(${feedbackId})"
-                        class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Kirim</button>
+                        class="bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white px-4 py-2 rounded hover:from-blue-700 hover:to-purple-700">Kirim</button>
                 </div>
             </form>
         `;
@@ -645,6 +645,78 @@ async function sendReply(feedbackId) {
             loadVideoDetail();
         } else {
             alert(result.message || 'Gagal mengirim balasan');
+        }
+    } catch (error) {
+        alert('Terjadi kesalahan jaringan');
+    }
+}
+
+// buat edit feedback dari customer
+function editFeedback(feedbackId) {
+    // Cari elemen feedback
+    const feedbackItem = document.querySelector(`[data-feedback-id="${feedbackId}"] .ml-13`);
+    if (!feedbackItem) return;
+
+    // Ambil pesan lama
+    const oldMsgElem = feedbackItem.querySelector('.feedback-message');
+    const oldMsg = oldMsgElem ? oldMsgElem.textContent : '';
+
+    // Cek jika sudah ada form edit, jangan render dua kali
+    if (feedbackItem.querySelector(`#edit-form-${feedbackId}`)) return;
+
+    // Sembunyikan pesan lama
+    if (oldMsgElem) oldMsgElem.style.display = 'none';
+
+    // Render form edit
+    const formHtml = `
+        <form id="edit-form-${feedbackId}" class="mt-2 space-y-2">
+            <textarea id="edit-text-${feedbackId}" rows="3"
+                class="w-full p-2 border border-blue-300 rounded focus:ring-0.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none resize-none"
+                >${oldMsg}</textarea>
+            <div class="flex justify-end space-x-2">
+                <button type="button" onclick="cancelEditFeedback(${feedbackId})"
+                    class="px-4 py-1 text-sm rounded bg-gray-200 text-gray-700 hover:bg-gray-300">Batal</button>
+                <button type="button" onclick="updateFeedback(${feedbackId})"
+                    class="px-4 py-1 text-sm rounded bg-blue-200 text-blue hover:bg-blue-800 hover:text-white transition-all duration-200">Update</button>
+            </div>
+        </form>
+    `;
+    feedbackItem.insertAdjacentHTML('beforeend', formHtml);
+}
+
+function cancelEditFeedback(feedbackId) {
+    const feedbackItem = document.querySelector(`[data-feedback-id="${feedbackId}"] .ml-13`);
+    if (!feedbackItem) return;
+    // Hapus form edit
+    const form = feedbackItem.querySelector(`#edit-form-${feedbackId}`);
+    if (form) form.remove();
+    // Tampilkan pesan lama
+    const oldMsgElem = feedbackItem.querySelector('.feedback-message');
+    if (oldMsgElem) oldMsgElem.style.display = '';
+}
+
+async function updateFeedback(feedbackId) {
+    const textarea = document.getElementById(`edit-text-${feedbackId}`);
+    const pesan = textarea.value.trim();
+    if (!pesan) return;
+
+    try {
+        const response = await fetch(`/api/feedbacks/${feedbackId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ pesan }),
+            credentials: 'same-origin'
+        });
+        const result = await response.json();
+        if (result.success) {
+            // Reload feedbacks
+            loadVideoDetail();
+        } else {
+            alert(result.message || 'Gagal update feedback');
         }
     } catch (error) {
         alert('Terjadi kesalahan jaringan');
@@ -913,9 +985,13 @@ function isAuthenticated() {
     return {{ auth()->check() ? 'true' : 'false' }};
 }
 
+// function isCurrentUser(userId) {
+//     // Simple check - in real app, you'd compare with current user ID
+//     return isAuthenticated();
+// }
+
 function isCurrentUser(userId) {
-    // Simple check - in real app, you'd compare with current user ID
-    return isAuthenticated(); // For demo purposes
+    return userId == {{ auth()->id() ?? 'null' }};
 }
 
 // Load data when page loads
@@ -1074,7 +1150,7 @@ function updateBookmarkUI(isBookmarked) {
         bookmarkBtn.className = bookmarkBtn.className.replace('from-green-500 to-emerald-500', 'from-blue-500 to-indigo-500');
         bookmarkBtn.className = bookmarkBtn.className.replace('hover:from-green-600 hover:to-emerald-600', 'hover:from-blue-600 hover:to-indigo-600');
         bookmarkIcon.textContent = '📖';
-        bookmarkText.textContent = 'Bookmark';
+        bookmarkText.textContent = '+ Bookmark';
     }
 }
 
@@ -1274,11 +1350,11 @@ function saveNotes() {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 title: '📝 Catatan Kosong',
-                text: 'Silakan tulis catatan terlebih dahulu',
+                text: 'Silakan ketik catatan terlebih dahulu',
                 icon: 'info'
             });
         } else {
-            alert('📝 Silakan tulis catatan terlebih dahulu');
+            alert('📝 Silakan ketik catatan terlebih dahulu');
         }
         return;
     }
@@ -1411,8 +1487,13 @@ async function deleteFeedback(feedbackId) {
 
     if ((typeof Swal !== 'undefined' && confirmDelete.isConfirmed) || (typeof Swal === 'undefined' && confirmDelete)) {
         try {
-            // Try API endpoint first, then fallback to web route
-            let response = await fetch(`/api/feedbacks/${feedbackId}`, {
+            // Tentukan endpoint berdasarkan role
+            const isAdmin = '{{ auth()->user()->role ?? "" }}' === 'AD';
+            const url = isAdmin
+                ? `/api/admin/feedbacks/${feedbackId}`
+                : `/api/feedbacks/${feedbackId}`;
+
+            let response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
