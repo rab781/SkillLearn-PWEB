@@ -40,13 +40,13 @@
                     <span class="block text-3xl sm:text-4xl lg:text-5xl mt-2">🚀 Terarah</span>
                 </h1>
 
-                <p class="text-lg sm:text-xl mb-8 text-blue-100 max-w-2xl leading-relaxed">
+                <p class="text-lg sm:text-xl mb-7 text-blue-100 max-w-2xl leading-relaxed">
                     🎯 Platform pembelajaran online modern dengan kurasi video berkualitas tinggi.
                     Tingkatkan skill dengan pembelajaran terarah dari expert terpercaya.
                 </p>
 
                 <!-- Enhanced Stats with Icons -->
-                <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-3 gap-6 mb-7">
                     <div class="text-center glass-effect rounded-xl p-4">
                         <div class="text-2xl font-bold" id="stats-videos">-</div>
                         <div class="text-sm text-blue-200">Video Berkualitas</div>
@@ -62,19 +62,20 @@
                 </div>
 
                 <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <div class="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start mb-10">
                     @guest
-                        <a href="/register" class="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
-                            <span class="flex items-center justify-center">
-                                Mulai Belajar Gratis
-                                <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                                </svg>
-                            </span>
-                        </a>
-                        <a href="/videos" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
-                            Jelajahi Video
-                        </a>
+                    <a href="/register" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
+                        <span class="flex items-center justify-center">
+                            Mulai Belajar Gratis
+                            <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                            </svg>
+                        </span>
+                    </a>
+                    <a href="/videos" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
+                        Jelajahi Video
+                    </a>
+
                     @else
                         <a href="{{ auth()->user()->isAdmin() ? '/admin/dashboard' : '/customer/dashboard' }}" class="group bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
                             <span class="flex items-center justify-center">
@@ -155,7 +156,7 @@
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <h2 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Mengapa Memilih Skillearn?</h2>
+            <h2 class="text-3xl sm:text-4xl font-bold text-gray-700 mb-4">Mengapa Memilih Skillearn?</h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">Platform pembelajaran dengan fitur lengkap untuk mendukung journey belajar Anda</p>
         </div>
 
@@ -231,11 +232,11 @@
 <section class="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-sm font-medium mb-4">
+            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-sm font-medium mb-4">
                 <span class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
                 🎯 Top Categories
-            </div>
-            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent mb-4">
+            </div> --}}
+            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-900 to-purple-400 bg-clip-text text-transparent mb-4">
                 Kategori Pembelajaran Populer
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -258,7 +259,7 @@
 
         <!-- View All Categories Button -->
         <div class="text-center mt-12">
-            <a href="/videos" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:shadow-xl">
+            <a href="/videos" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
@@ -272,10 +273,10 @@
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-sm font-medium mb-4">
+            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-sm font-medium mb-4">
                 <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
                 🔥 Trending Now
-            </div>
+            </div> --}}
             <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent mb-4">
                 Video Populer
             </h2>
@@ -298,7 +299,7 @@
         </div>
 
         <div class="text-center mt-12">
-            <a href="/videos?sort=popular" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-xl hover:from-red-700 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl">
+            <a href="/videos?sort=popular" class="inline-flex items-center px-6 py-3 bg-gradient-to-r  from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
                 Lihat Semua Video Populer
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -312,10 +313,10 @@
 <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-blue-100 rounded-full text-sm font-medium mb-4">
+            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-blue-100 rounded-full text-sm font-medium mb-4">
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                 ✨ Fresh Content
-            </div>
+            </div> --}}
             <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
                 Video Terbaru
             </h2>
@@ -338,7 +339,7 @@
         </div>
 
         <div class="text-center mt-12">
-            <a href="/videos?sort=newest" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl">
+            <a href="/videos?sort=newest" class="inline-flex items-center px-6 py-3 bg-gradient-to-r  from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all hover:scale-105 shadow-lg hover:shadow-xl">
                 Lihat Semua Video Terbaru
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
@@ -365,7 +366,7 @@
                 </a>
             </div>
         @else
-            <a href="{{ auth()->user()->isAdmin() ? '/admin/dashboard' : '/customer/dashboard' }}" class="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
+            <a href="{{ auth()->user()->isAdmin() ? '/admin/dashboard' : '/customer/dashboard' }}" class="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all hover:scale-105 shadow-lg hover:shadow-xl">
                 Lanjutkan Belajar
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>

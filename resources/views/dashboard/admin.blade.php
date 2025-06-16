@@ -18,7 +18,7 @@
             </div>
             <div class="mt-4 lg:mt-0">
                 <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full text-sm font-medium shadow-lg">
-                    <span class="text-lg mr-2">🔥</span>
+                    {{-- <span class="text-lg mr-2">🔥</span> --}}
                     Super Admin Access
                 </div>
             </div>
