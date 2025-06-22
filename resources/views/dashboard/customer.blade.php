@@ -68,9 +68,9 @@
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center">
                 <span class="text-3xl mr-2">⭐</span>
-                Bookmark Favoritmu
+                Course Bookmark Favoritmu
             </h2>
-            <a href="/videos" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
+            <a href="/courses" class="btn-primary text-white px-4 py-2 rounded-lg text-sm font-medium">
                 Lihat Semua 🔍
             </a>
         </div>
@@ -84,12 +84,12 @@
         </div>
     </div>
 
-    <!-- Enhanced Recently Watched Videos -->
+    <!-- Enhanced Recently Watched Courses -->
     <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center">
                 <span class="text-3xl mr-2">🕒</span>
-                Riwayat Video yang Baru Ditonton
+                Riwayat Course yang Baru Diakses
             </h2>
             <div class="flex space-x-2">
                 <span class="skill-badge">Riwayat</span>
@@ -111,9 +111,9 @@
         <div class="text-center mb-6">
             <h2 class="text-2xl font-bold text-gray-800 flex items-center justify-center">
                 <span class="text-3xl mr-2">🎯</span>
-                Jelajahi Kategori Skill
+                Jelajahi Kategori Course
             </h2>
-            <p class="text-gray-600 mt-2">Pilih kategori yang sesuai dengan minatmu dan mulai belajar!</p>
+            <p class="text-gray-600 mt-2">Pilih kategori course yang sesuai dengan minatmu dan mulai belajar!</p>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="categories">
             <!-- Enhanced loading state -->
@@ -333,17 +333,20 @@ function loadFallbackData() {
     // Load basic stats with fallback data
     loadStats({
         bookmarks_count: 0,
-        feedbacks_count: 0
+        feedbacks_count: 0,
+        completed_courses: 0,
+        in_progress_courses: 0,
+        total_enrolled_courses: 0
     });
 
     // Load empty states for other sections
     loadRecentBookmarks([]);
     loadRecentlyWatched([]);
     loadCategories([
-        {kategori_id: 1, kategori: 'Programming', vidios_count: 0},
-        {kategori_id: 2, kategori: 'Design', vidios_count: 0},
-        {kategori_id: 3, kategori: 'Marketing', vidios_count: 0},
-        {kategori_id: 4, kategori: 'Business', vidios_count: 0}
+        {kategori_id: 1, kategori: 'Programming', courses_count: 0},
+        {kategori_id: 2, kategori: 'Design', courses_count: 0},
+        {kategori_id: 3, kategori: 'Marketing', courses_count: 0},
+        {kategori_id: 4, kategori: 'Business', courses_count: 0}
     ]);
 
     // Show info message
@@ -375,25 +378,33 @@ function loadStats(stats) {
     const statsContainer = document.getElementById('stats-cards');
     const bookmarksCount = stats.bookmarks_count || 0;
     const feedbacksCount = stats.feedbacks_count || 0;
-    const progressScore = Math.min(85 + bookmarksCount * 2, 100);
+    const completedCourses = stats.completed_courses || 0;
+    const inProgressCourses = stats.in_progress_courses || 0;
+    const totalCourses = stats.total_enrolled_courses || (completedCourses + inProgressCourses);
+    const progressScore = totalCourses > 0 
+        ? Math.round((completedCourses / totalCourses) * 100) 
+        : Math.min(85 + bookmarksCount * 2, 100);
 
     statsContainer.innerHTML = `
         <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white card-hover animate-fade-in">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-blue-100">📚 Total Bookmarks</p>
-                    <p class="text-3xl font-bold">${bookmarksCount}</p>
-                    <p class="text-sm text-blue-200 mt-1">Video tersimpan</p>
+                    <p class="text-blue-100">📚 Courses Enrolled</p>
+                    <p class="text-3xl font-bold">${totalCourses}</p>
+                    <p class="text-sm text-blue-200 mt-1">
+                        <span class="font-medium">${completedCourses}</span> selesai, 
+                        <span class="font-medium">${inProgressCourses}</span> in progress
+                    </p>
                 </div>
-                <div class="text-4xl opacity-80">💾</div>
+                <div class="text-4xl opacity-80">🎓</div>
             </div>
         </div>
         <div class="bg-gradient-to-br from-purple-900 to-purple-800 rounded-xl shadow-lg p-6 text-white card-hover animate-fade-in">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-purple-100">💬 Total Feedback</p>
+                    <p class="text-purple-100">💬 Course Feedback</p>
                     <p class="text-3xl font-bold">${feedbacksCount}</p>
-                    <p class="text-sm text-purple-200 mt-1">Komentar diberikan</p>
+                    <p class="text-sm text-purple-200 mt-1">Feedback diberikan</p>
                 </div>
                 <div class="text-4xl opacity-80">📝</div>
             </div>
@@ -401,11 +412,11 @@ function loadStats(stats) {
         <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white card-hover animate-fade-in">
             <div class="flex items-center justify-between">
                 <div>
-                    <p class="text-green-100">🎓 Progress Score</p>
-                    <p class="text-3xl font-bold">${progressScore}%</p>
-                    <p class="text-sm text-green-200 mt-1">Skor pembelajaran</p>
+                    <p class="text-green-100">⭐ Course Bookmarks</p>
+                    <p class="text-3xl font-bold">${bookmarksCount}</p>
+                    <p class="text-sm text-green-200 mt-1">Course tersimpan</p>
                 </div>
-                <div class="text-4xl opacity-80">📊</div>
+                <div class="text-4xl opacity-80">�</div>
             </div>
         </div>
     `;
@@ -417,55 +428,72 @@ function loadRecentBookmarks(bookmarks) {
         container.innerHTML = `
             <div class="col-span-full text-center py-12">
                 <div class="text-6xl mb-4">📚</div>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada bookmark</h3>
-                <p class="text-gray-500 mb-4">Mulai bookmark video favoritmu untuk akses cepat</p>
-                <a href="/videos" class="btn-primary text-white px-6 py-3 rounded-xl">
-                    🔍 Jelajahi Video
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada bookmark course</h3>
+                <p class="text-gray-500 mb-4">Mulai bookmark course favoritmu untuk akses cepat</p>
+                <a href="/courses" class="btn-primary text-white px-6 py-3 rounded-xl">
+                    🔍 Jelajahi Course
                 </a>
             </div>
         `;
         return;
     }
 
-    container.innerHTML = bookmarks.map(bookmark => `
+    container.innerHTML = bookmarks.map(bookmark => {
+        const course = bookmark.course || bookmark;
+        const levelBadge = {
+            'pemula': '<span class="bg-green-500 text-white text-xs px-2 py-1 rounded">Pemula</span>',
+            'menengah': '<span class="bg-yellow-500 text-black text-xs px-2 py-1 rounded">Menengah</span>',
+            'lanjut': '<span class="bg-red-500 text-white text-xs px-2 py-1 rounded">Lanjut</span>',
+            'default': '<span class="bg-gray-500 text-white text-xs px-2 py-1 rounded">Semua Level</span>'
+        };
+        
+        return `
         <div class="group bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105">
             <div class="aspect-video bg-gray-200 relative overflow-hidden">
-                <img src="${bookmark.vidio.gambar || '/images/default-video.svg'}"
-                     alt="${bookmark.vidio.nama}"
+                <img src="${course.gambar_course || '/images/default-course.svg'}"
+                     alt="${course.nama_course}"
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                     onerror="this.src='/images/default-video.svg'">
+                     onerror="this.src='/images/default-course.svg'">
                 <div class="absolute top-2 right-2">
-                    <span class="bg-black/70 text-white text-xs px-2 py-1 rounded">${bookmark.vidio.kategori?.kategori || 'Umum'}</span>
+                    ${levelBadge[course.level] || levelBadge.default}
+                </div>
+                <div class="absolute top-2 left-2">
+                    <span class="bg-black/70 text-white text-xs px-2 py-1 rounded">${course.kategori?.kategori || 'Umum'}</span>
                 </div>
                 <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                     <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div class="bg-white/90 rounded-full p-3">
+                        <a href="/courses/${course.course_id}" class="bg-white/90 rounded-full p-3 block">
                             <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8 5v14l11-7z"/>
                             </svg>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
             <div class="p-4">
                 <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    ${bookmark.vidio.nama}
+                    ${course.nama_course}
                 </h4>
-                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${bookmark.vidio.deskripsi || 'Deskripsi tidak tersedia'}</p>
+                <p class="text-sm text-gray-600 mb-3 line-clamp-2">${course.deskripsi_course || 'Deskripsi tidak tersedia'}</p>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center text-sm text-gray-500">
-                        <span class="mr-3">👁️ ${bookmark.vidio.jumlah_tayang || 0}</span>
-                        <span>⭐ Bookmark</span>
+                        <span class="mr-3"><i class="fas fa-play-circle"></i> ${course.total_video || 0} videos</span>
+                        <span><i class="fas fa-clock"></i> ${course.total_durasi_menit || 0} menit</span>
                     </div>
-                    <a href="/videos/${bookmark.vidio.vidio_id}"
-                       onclick="incrementViewCount(${bookmark.vidio.vidio_id})"
-                       class="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                        Tonton →
-                    </a>
+                    <div class="flex gap-2">
+                        <a href="/courses/${course.course_id}"
+                           class="inline-block bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition-colors">
+                           Belajar
+                        </a>
+                        <button onclick="toggleBookmark(${course.course_id})" 
+                                class="bg-yellow-100 text-yellow-700 text-xs px-3 py-1 rounded hover:bg-yellow-200 transition-colors">
+                            <i class="fas fa-bookmark"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    `).join('');
+    `}).join('');
 }
 function loadRecentlyWatched(watchHistory) {
     const container = document.getElementById('recently-watched');
@@ -473,10 +501,10 @@ function loadRecentlyWatched(watchHistory) {
     if (!watchHistory || watchHistory.length === 0) {
         container.innerHTML = `
             <div class="col-span-full text-center py-12">
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada riwayat tonton</h3>
-                <p class="text-gray-500 mb-4">Video yang kamu tonton akan muncul di sini</p>
-                <a href="/videos" class="btn-primary text-white px-6 py-3 rounded-xl">
-                    🔍 Jelajahi Video
+                <h3 class="text-xl font-semibold text-gray-700 mb-2">Belum ada riwayat belajar</h3>
+                <p class="text-gray-500 mb-4">Course yang kamu akses akan muncul di sini</p>
+                <a href="/courses" class="btn-primary text-white px-6 py-3 rounded-xl">
+                    🔍 Jelajahi Course
                 </a>
             </div>
         `;
@@ -484,7 +512,9 @@ function loadRecentlyWatched(watchHistory) {
     }
 
     container.innerHTML = watchHistory.slice(0, 6).map(history => {
-        const video = history.video || history; // Handle both watch history and fallback video objects
+        // Handle both history objects depending on the format
+        const course = history.course || (history.video ? history.video.course : null) || history;
+        const courseId = course.course_id || course.id;
         const watchedAt = history.waktu_ditonton ? new Date(history.waktu_ditonton).toLocaleDateString('id-ID', {
             day: 'numeric',
             month: 'short',
@@ -492,20 +522,21 @@ function loadRecentlyWatched(watchHistory) {
             hour: '2-digit',
             minute: '2-digit'
         }) : 'Baru saja';
-        const progress = history.persentase_progress || 0;
+        const progress = history.progress_percentage || history.persentase_progress || 0;
+        const videoTitle = history.video?.judul || (history.course_video ? history.course_video.vidio?.judul : null) || 'Video';
 
         return `
         <div class="group bg-gray-50 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:scale-105">
             <div class="aspect-video bg-gray-200 relative overflow-hidden">
-                <img src="${video.gambar || '/images/default-video.svg'}"
-                     alt="${video.nama}"
+                <img src="${course.gambar_course || '/images/default-course.svg'}"
+                     alt="${course.nama_course || 'Course'}"
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                     onerror="this.src='/images/default-video.svg'">
+                     onerror="this.src='/images/default-course.svg'">
                 <div class="absolute top-2 right-2">
                     <span class="bg-blue-500 text-white text-xs px-2 py-1 rounded">🕒 Riwayat</span>
                 </div>
                 <div class="absolute top-2 left-2">
-                    <span class="bg-black/70 text-white text-xs px-2 py-1 rounded">${video.kategori?.kategori || 'Umum'}</span>
+                    <span class="bg-black/70 text-white text-xs px-2 py-1 rounded">${course.kategori?.kategori || 'Umum'}</span>
                 </div>
                 ${progress > 0 ? `
                 <div class="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2">
@@ -527,22 +558,22 @@ function loadRecentlyWatched(watchHistory) {
             </div>
             <div class="p-4">
                 <h4 class="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    ${video.nama}
+                    ${course.nama_course || 'Course'}
                 </h4>
-                <p class="text-sm text-gray-600 mb-2 line-clamp-2">${video.deskripsi || 'Deskripsi tidak tersedia'}</p>
-                <p class="text-xs text-gray-500 mb-3">📅 Ditonton: ${watchedAt}</p>
+                <p class="text-sm text-gray-600 mb-1 line-clamp-1">${videoTitle}</p>
+                <p class="text-sm text-gray-600 mb-2 line-clamp-2">${course.deskripsi_course || 'Deskripsi tidak tersedia'}</p>
+                <p class="text-xs text-gray-500 mb-3">📅 Terakhir diakses: ${watchedAt}</p>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center text-sm text-gray-500">
-                        <span class="mr-3">👁️ ${video.jumlah_tayang || 0}</span>
-                        <span class="mr-3">💬 ${video.feedbacks_count || 0}</span>
+                        <span class="mr-3">� ${course.total_video || 0} video</span>
+                        <span class="mr-3">� ${course.total_students || 0}</span>
                     </div>
                     <div class="flex gap-2">
-                        <a href="/videos/${video.vidio_id}"
-                           onclick="recordWatchHistory(${video.vidio_id})"
+                        <a href="/courses/${courseId}" 
                            class="bg-blue-600 text-white text-xs px-3 py-1 rounded hover:bg-blue-700 transition-colors">
-                            ${progress > 0 ? 'Lanjutkan' : 'Tonton Lagi'}
+                            ${progress > 0 ? 'Lanjutkan' : 'Mulai Belajar'}
                         </a>
-                        <button onclick="toggleBookmark(${video.vidio_id})"
+                        <button onclick="toggleBookmark(${courseId})"
                                 class="bg-gray-200 text-gray-700 text-xs px-3 py-1 rounded hover:bg-gray-300 transition-colors">
                             ⭐
                         </button>
@@ -585,7 +616,7 @@ function loadCategories(categories) {
 
     container.innerHTML = categories.map(category => {
         const icon = categoryIcons[category.kategori] || categoryIcons.default;
-        const videoCount = category.vidios_count || 0;
+        const courseCount = category.courses_count || 0;
 
         return `
             <div class="group text-center p-6 bg-gray-50 rounded-xl hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 cursor-pointer">
@@ -596,10 +627,10 @@ function loadCategories(categories) {
                     ${category.kategori}
                 </h3>
                 <p class="text-sm text-gray-600">
-                    ${videoCount} video${videoCount !== 1 ? 's' : ''}
+                    ${courseCount} course${courseCount !== 1 ? 's' : ''}
                 </p>
                 <div class="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <a href="/videos?kategori=${category.kategori_id}"
+                    <a href="/courses?kategori=${category.kategori_id}"
                        class="inline-block bg-purple-600 text-white text-xs px-4 py-2 rounded-full hover:bg-purple-700 transition-colors">
                         Jelajahi →
                     </a>
@@ -610,10 +641,10 @@ function loadCategories(categories) {
 }
 
 // Bookmark functionality
-async function toggleBookmark(videoId) {
+async function toggleBookmark(courseId) {
     try {
         // Try API endpoint first, then fallback to web route
-        let response = await fetch('/api/bookmarks', {
+        let response = await fetch('/web/bookmark/course', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -622,13 +653,13 @@ async function toggleBookmark(videoId) {
             },
             credentials: 'same-origin',
             body: JSON.stringify({
-                vidio_vidio_id: videoId
+                course_id: courseId
             })
         });
 
-        // If API fails, try web route
+        // If API fails, try fallback
         if (!response.ok && response.status === 401) {
-            response = await fetch('/web/bookmark', {
+            response = await fetch('/web/bookmark/course', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -637,7 +668,7 @@ async function toggleBookmark(videoId) {
                 },
                 credentials: 'same-origin',
                 body: JSON.stringify({
-                    vidio_vidio_id: videoId
+                    course_id: courseId
                 })
             });
         }
@@ -683,10 +714,10 @@ async function toggleBookmark(videoId) {
     }
 }
 
-// Increment view count when user clicks on video
-async function incrementViewCount(videoId) {
+// Track course views when user accesses a course
+async function trackCourseAccess(courseId) {
     try {
-        await fetch(`/api/videos/${videoId}/increment-view`, {
+        await fetch(`/api/courses/${courseId}/track-view`, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -694,13 +725,14 @@ async function incrementViewCount(videoId) {
             },
             credentials: 'same-origin'
         });
+        console.log('Course view tracked successfully');
     } catch (error) {
-        console.error('Failed to increment view count:', error);
+        console.error('Failed to track course view:', error);
     }
 }
 
-// Record watch history when user watches a video
-async function recordWatchHistory(videoId, duration = 0, progress = 0) {
+// Record watch history when user watches a course video
+async function recordWatchHistory(courseId, videoId = null, duration = 0, progress = 0) {
     try {
         const response = await fetch('/api/watch-history', {
             method: 'POST',
@@ -711,6 +743,7 @@ async function recordWatchHistory(videoId, duration = 0, progress = 0) {
             },
             credentials: 'same-origin',
             body: JSON.stringify({
+                course_id: courseId,
                 video_id: videoId,
                 duration: duration,
                 progress: progress
@@ -720,10 +753,10 @@ async function recordWatchHistory(videoId, duration = 0, progress = 0) {
         const data = await response.json();
 
         if (data.success) {
-            console.log('Watch history recorded successfully');
+            console.log('Course watch history recorded successfully');
         }
     } catch (error) {
-        console.error('Failed to record watch history:', error);
+        console.error('Failed to record course watch history:', error);
     }
 }
 

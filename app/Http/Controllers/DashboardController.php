@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Vidio;
+use App\Models\Course;
 use App\Models\Kategori;
 use App\Models\Feedback;
 use App\Models\Bookmark;
@@ -35,7 +36,7 @@ class DashboardController extends Controller
             $feedbacksCount = Feedback::where('users_id', $user->users_id)->count();
 
             // Get recent bookmarks with error handling
-            $recentBookmarks = Bookmark::with(['vidio' => function($query) {
+            $recentBookmarks = Bookmark::with(['course' => function($query) {
                     $query->with('kategori');
                 }])
                 ->where('users_id', $user->users_id)
@@ -43,21 +44,23 @@ class DashboardController extends Controller
                 ->take(6)
                 ->get()
                 ->filter(function($bookmark) {
-                    return $bookmark->vidio !== null; // Filter out bookmarks with deleted videos
+                    return $bookmark->course !== null; // Filter out bookmarks with deleted courses
                 });
 
-            // Get popular videos with error handling
-            $popularVideos = Vidio::with('kategori')
-                ->whereNotNull('gambar')
-                ->whereNotNull('nama')
-                ->orderBy('jumlah_tayang', 'desc')
+            // Get popular courses with error handling
+            $popularCourses = Course::with('kategori')
+                ->active()
+                ->whereNotNull('gambar_course')
+                ->whereNotNull('nama_course')
+                ->orderBy('created_at', 'desc')
                 ->take(6)
                 ->get();
 
-            // Get latest videos as fallback if no popular videos
-            if ($popularVideos->count() === 0) {
-                $popularVideos = Vidio::with('kategori')
-                    ->whereNotNull('nama')
+            // Get latest courses as fallback if no popular courses
+            if ($popularCourses->count() === 0) {
+                $popularCourses = Course::with('kategori')
+                    ->active()
+                    ->whereNotNull('nama_course')
                     ->orderBy('created_at', 'desc')
                     ->take(6)
                     ->get();
@@ -108,7 +111,7 @@ class DashboardController extends Controller
                     'feedbacks_count' => $feedbacksCount,
                 ],
                 'recent_bookmarks' => $recentBookmarks->values(),
-                'popular_videos' => $popularVideos,
+                'popular_courses' => $popularCourses,
                 'categories' => $categories
             ]);
         } catch (\Exception $e) {
@@ -122,7 +125,7 @@ class DashboardController extends Controller
                     'feedbacks_count' => 0,
                 ],
                 'recent_bookmarks' => [],
-                'popular_videos' => [],
+                'popular_courses' => [],
                 'categories' => []
             ], 500);
         }
@@ -135,20 +138,21 @@ class DashboardController extends Controller
     {
         // Get overall statistics
         $totalUsers = User::where('role', 'CU')->count();
-        $totalVideos = Vidio::count();
+        $totalCourses = Course::count();
+        $totalVideos = DB::table('course_videos')->count();
+        $totalQuizzes = DB::table('quizzes')->count();
         $totalCategories = Kategori::count();
-        $totalFeedbacks = Feedback::count();
-        $totalBookmarks = Bookmark::count();
 
         // Get recent activities
-        $recentFeedbacks = Feedback::with(['user', 'vidio'])
+        $recentFeedbacks = Feedback::with(['user', 'course'])
             ->orderBy('tanggal', 'desc')
             ->take(5)
             ->get();
 
-        // Get most popular videos
-        $popularVideos = Vidio::with('kategori')
-            ->orderBy('jumlah_tayang', 'desc')
+        // Get most popular courses
+        $popularCourses = Course::with(['kategori'])
+            ->withCount(['userProgress', 'videos'])
+            ->orderBy('user_progress_count', 'desc')
             ->take(10)
             ->get();
 
@@ -160,34 +164,32 @@ class DashboardController extends Controller
             ->orderBy('date')
             ->get();
 
-        // Get video views stats (last 7 days)
-        $videoViews = Vidio::select(
-                DB::raw('DATE(updated_at) as date'),
-                DB::raw('SUM(jumlah_tayang) as total_views')
-            )
-            ->where('updated_at', '>=', now()->subDays(7))
+        // Get course enrollment stats (last 7 days)
+        $courseEnrollments = DB::table('user_course_progress')
+            ->where('created_at', '>=', now()->subDays(7))
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
-        // Get categories with video count
-        $categoriesStats = Kategori::withCount('vidios')
-            ->orderBy('vidios_count', 'desc')
+        // Get categories with course count
+        $categoriesStats = Kategori::withCount('courses')
+            ->orderBy('courses_count', 'desc')
             ->get();
 
         return response()->json([
             'success' => true,
             'stats' => [
                 'total_users' => $totalUsers,
+                'total_courses' => $totalCourses,
                 'total_videos' => $totalVideos,
+                'total_quizzes' => $totalQuizzes,
                 'total_categories' => $totalCategories,
-                'total_feedbacks' => $totalFeedbacks,
-                'total_bookmarks' => $totalBookmarks,
             ],
             'recent_feedbacks' => $recentFeedbacks,
-            'popular_videos' => $popularVideos,
+            'popular_courses' => $popularCourses,
             'user_registrations' => $userRegistrations,
-            'video_views' => $videoViews,
+            'course_enrollments' => $courseEnrollments,
             'categories_stats' => $categoriesStats
         ]);
     }

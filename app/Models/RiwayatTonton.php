@@ -14,15 +14,16 @@ class RiwayatTonton extends Model
 
     protected $fillable = [
         'id_pengguna',
-        'id_video',
+        'course_id',
+        'current_video_id',
+        'video_position',
         'waktu_ditonton',
-        'durasi_tonton',
-        'persentase_progress'
+        'persentase_tonton'
     ];
 
     protected $casts = [
         'waktu_ditonton' => 'datetime',
-        'persentase_progress' => 'decimal:2'
+        'persentase_tonton' => 'decimal:2'
     ];
 
     /**
@@ -34,11 +35,19 @@ class RiwayatTonton extends Model
     }
 
     /**
-     * Relationship dengan model Video
+     * Relationship dengan model Course
      */
-    public function video()
+    public function course()
     {
-        return $this->belongsTo(Vidio::class, 'id_video', 'vidio_id');
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
+    /**
+     * Relationship dengan model Video (current video being watched)
+     */
+    public function currentVideo()
+    {
+        return $this->belongsTo(Vidio::class, 'current_video_id', 'vidio_id');
     }
 
     /**
@@ -58,20 +67,56 @@ class RiwayatTonton extends Model
     }
 
     /**
-     * Method untuk mencatat atau memperbarui riwayat tonton
+     * Scope untuk mendapatkan riwayat berdasarkan course
      */
-    public static function recordWatch($userId, $videoId, $duration = 0, $progress = 0)
+    public function scopeByCourse($query, $courseId)
+    {
+        return $query->where('course_id', $courseId);
+    }
+
+    /**
+     * Method untuk mencatat atau memperbarui riwayat tonton course
+     */
+    public static function recordCourseWatch($userId, $courseId, $videoId = null, $videoPosition = 1, $progress = 0)
     {
         return self::updateOrCreate(
             [
                 'id_pengguna' => $userId,
-                'id_video' => $videoId,
-                'waktu_ditonton' => now()->format('Y-m-d H:i:s')
+                'course_id' => $courseId,
             ],
             [
-                'durasi_tonton' => $duration,
-                'persentase_progress' => $progress
+                'current_video_id' => $videoId,
+                'video_position' => $videoPosition,
+                'persentase_tonton' => $progress,
+                'waktu_ditonton' => now()
             ]
         );
+    }
+
+    /**
+     * Get next video in course sequence
+     */
+    public function getNextVideo()
+    {
+        if (!$this->course) return null;
+        
+        $videos = $this->course->videos()->orderBy('urutan_video')->get();
+        $currentIndex = $videos->search(function($video) {
+            return $video->vidio_vidio_id == $this->current_video_id;
+        });
+        
+        if ($currentIndex !== false && $currentIndex < $videos->count() - 1) {
+            return $videos[$currentIndex + 1];
+        }
+        
+        return null;
+    }
+
+    /**
+     * Check if course is completed
+     */
+    public function isCompleted()
+    {
+        return $this->persentase_tonton >= 100;
     }
 }

@@ -59,6 +59,16 @@ class User extends Authenticatable
         return $this->hasMany(Bookmark::class, 'users_id');
     }
 
+    public function courseProgress()
+    {
+        return $this->hasMany(UserCourseProgress::class, 'user_id', 'users_id');
+    }
+
+    public function videoProgress()
+    {
+        return $this->hasMany(UserVideoProgress::class, 'user_id', 'users_id');
+    }
+
     public function isAdmin()
     {
         return $this->role === 'AD';

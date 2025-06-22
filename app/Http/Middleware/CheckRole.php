@@ -27,10 +27,15 @@ class CheckRole
                 'ip' => $request->ip()
             ]);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized - User not authenticated'
-            ], 401);
+            // Return appropriate response based on request type
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized - User not authenticated'
+                ], 401);
+            }
+
+            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
         }
 
         $user = auth()->user();
@@ -52,6 +57,30 @@ class CheckRole
                     'required_roles' => $roles
                 ]
             ], 403);
+        }
+
+        // Check if user has one of the required roles
+        if (!in_array($user->role, $roles)) {
+            Log::warning('CheckRole middleware: Access denied', [
+                'user_id' => $user->users_id ?? $user->id,
+                'user_role' => $user->role,
+                'required_roles' => $roles,
+                'path' => $request->path()
+            ]);
+
+            // Return appropriate response based on request type
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Access denied. Insufficient permissions.',
+                    'debug' => [
+                        'user_role' => $user->role,
+                        'required_roles' => $roles
+                    ]
+                ], 403);
+            }
+
+            return redirect()->route('login')->with('error', 'Akses ditolak. Anda tidak memiliki izin untuk mengakses halaman ini.');
         }
 
         Log::info('CheckRole middleware: Access granted', [

@@ -18,7 +18,7 @@ class BookmarkController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $bookmarks = Bookmark::with('vidio.kategori')
+        $bookmarks = Bookmark::with('course.kategori')
             ->where('users_id', $user->users_id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -35,7 +35,7 @@ class BookmarkController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'vidio_vidio_id' => 'required|exists:vidio,vidio_id',
+            'course_id' => 'required|exists:courses,course_id',
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +51,7 @@ class BookmarkController extends Controller
 
         // Check if bookmark already exists
         $existingBookmark = Bookmark::where('users_id', $user->users_id)
-            ->where('vidio_vidio_id', $request->vidio_vidio_id)
+            ->where('course_id', $request->course_id)
             ->first();
 
         if ($existingBookmark) {
@@ -60,7 +60,7 @@ class BookmarkController extends Controller
 
             return response()->json([
                 'success' => true,
-                'message' => 'Video berhasil dihapus dari bookmark',
+                'message' => 'Course berhasil dihapus dari bookmark',
                 'action' => 'removed'
             ]);
         }
@@ -68,13 +68,13 @@ class BookmarkController extends Controller
         // Add new bookmark
         $bookmark = Bookmark::create([
             'users_id' => $user->users_id,
-            'vidio_vidio_id' => $request->vidio_vidio_id
+            'course_id' => $request->course_id
         ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Video berhasil ditambahkan ke bookmark',
-            'bookmark' => $bookmark->load('vidio.kategori'),
+            'message' => 'Course berhasil ditambahkan ke bookmark',
+            'bookmark' => $bookmark->load('course'),
             'action' => 'added'
         ], 201);
     }
@@ -94,7 +94,7 @@ class BookmarkController extends Controller
 
         return response()->json([
             'success' => true,
-            'bookmark' => $bookmark->load(['video.kategori'])
+            'bookmark' => $bookmark->load(['course.kategori'])
         ]);
     }
 
@@ -123,15 +123,166 @@ class BookmarkController extends Controller
     }
 
     /**
-     * Check if video is bookmarked by user
+     * Check if course is bookmarked by user
      */
-    public function checkBookmark($video)
+    public function checkBookmark($courseId)
     {
         /** @var User $user */
         $user = Auth::user();
 
         $bookmark = Bookmark::where('users_id', $user->users_id)
-            ->where('vidio_vidio_id', $video)
+            ->where('course_id', $courseId)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'bookmarked' => $bookmark !== null,
+            'bookmark_id' => $bookmark ? $bookmark->bookmark_id : null
+        ]);
+    }
+
+    /**
+     * Store a course bookmark
+     */
+    public function storeCourse(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'course_id' => 'required|exists:courses,course_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Check if bookmark already exists
+        $existingBookmark = Bookmark::where('users_id', $user->users_id)
+            ->where('course_id', $request->course_id)
+            ->first();
+
+        if ($existingBookmark) {
+            // Remove bookmark if exists (toggle)
+            $existingBookmark->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Course berhasil dihapus dari bookmark',
+                'action' => 'removed'
+            ]);
+        }
+
+        // Add new bookmark
+        $bookmark = Bookmark::create([
+            'users_id' => $user->users_id,
+            'course_id' => $request->course_id
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course berhasil ditambahkan ke bookmark',
+            'bookmark' => $bookmark->load('course'),
+            'action' => 'added'
+        ], 201);
+    }
+
+    /**
+     * Check if course is bookmarked by user
+     */
+    public function checkCourseBookmark($courseId)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $bookmark = Bookmark::where('users_id', $user->users_id)
+            ->where('course_id', $courseId)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'bookmarked' => $bookmark !== null,
+            'bookmark_id' => $bookmark ? $bookmark->bookmark_id : null
+        ]);
+    }
+
+    /**
+     * Toggle bookmark for specific course from course video
+     */
+    public function toggleVideoBookmark($videoId)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Get course video to find the associated course
+        $courseVideo = \App\Models\CourseVideo::with('course')
+            ->findOrFail($videoId);
+
+        if (!$courseVideo->course) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Course tidak ditemukan'
+            ], 404);
+        }
+
+        // Check if bookmark already exists for this course
+        $existingBookmark = Bookmark::where('users_id', $user->users_id)
+            ->where('course_id', $courseVideo->course_id)
+            ->first();
+
+        if ($existingBookmark) {
+            // Remove bookmark if exists (toggle)
+            $existingBookmark->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Course berhasil dihapus dari bookmark',
+                'bookmarked' => false,
+                'action' => 'removed'
+            ]);
+        }
+
+        // Add new bookmark for the course
+        $bookmark = Bookmark::create([
+            'users_id' => $user->users_id,
+            'course_id' => $courseVideo->course_id
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Course berhasil ditambahkan ke bookmark',
+            'bookmarked' => true,
+            'bookmark' => $bookmark->load('course'),
+            'action' => 'added'
+        ], 201);
+    }
+
+    /**
+     * Check if course is bookmarked by user (for course video)
+     */
+    public function checkVideoBookmark($videoId)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        // Get course video to find the associated course
+        $courseVideo = \App\Models\CourseVideo::with('course')
+            ->findOrFail($videoId);
+
+        if (!$courseVideo->course) {
+            return response()->json([
+                'success' => true,
+                'bookmarked' => false,
+                'bookmark_id' => null
+            ]);
+        }
+
+        $bookmark = Bookmark::where('users_id', $user->users_id)
+            ->where('course_id', $courseVideo->course_id)
             ->first();
 
         return response()->json([

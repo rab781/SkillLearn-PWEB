@@ -13,7 +13,7 @@ class KategoriController extends Controller
      */
     public function index()
     {
-        $categories = Kategori::withCount('vidios')->get();
+        $categories = Kategori::withCount(['vidios', 'courses'])->get();
 
         return response()->json([
             'success' => true,

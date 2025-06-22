@@ -31,6 +31,10 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery for AJAX support -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="{{ asset('resources/js/notifications.js') }}"></script>
     <script src="{{ asset('resources/js/responsive.js') }}"></script>
     <script src="{{ asset('resources/js/search.js') }}"></script>
@@ -96,6 +100,130 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        /* SweetAlert2 Custom Styling */
+        .swal2-popup-custom {
+            border-radius: 1rem !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .swal2-title-custom {
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 700 !important;
+            color: #1f2937 !important;
+        }
+
+        .swal2-content-custom {
+            font-family: 'Inter', sans-serif !important;
+            color: #4b5563 !important;
+        }
+
+        .swal2-confirm-custom {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+            color: white !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.75rem !important;
+            font-weight: 600 !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39) !important;
+        }
+
+        .swal2-confirm-custom:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.5) !important;
+        }
+
+        .swal2-cancel-custom {
+            background: #f3f4f6 !important;
+            color: #374151 !important;
+            padding: 0.75rem 1.5rem !important;
+            border-radius: 0.75rem !important;
+            font-weight: 600 !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+            margin-right: 0.5rem !important;
+        }
+
+        .swal2-cancel-custom:hover {
+            background: #e5e7eb !important;
+            transform: translateY(-1px) !important;
+        }
+
+        .swal2-input-custom {
+            border: 2px solid #e5e7eb !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+            font-family: 'Inter', sans-serif !important;
+            transition: border-color 0.3s ease !important;
+        }
+
+        .swal2-input-custom:focus {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .swal2-textarea-custom {
+            border: 2px solid #e5e7eb !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+            font-family: 'Inter', sans-serif !important;
+            resize: vertical !important;
+        }
+
+        .swal2-select-custom {
+            border: 2px solid #e5e7eb !important;
+            border-radius: 0.75rem !important;
+            padding: 0.75rem 1rem !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+
+        .swal2-progress-steps {
+            margin: 0 0 1.25rem 0 !important;
+        }
+
+        .swal2-progress-step {
+            background: #3b82f6 !important;
+            color: white !important;
+            border-radius: 50% !important;
+            width: 2rem !important;
+            height: 2rem !important;
+            line-height: 2rem !important;
+            font-weight: 600 !important;
+        }
+
+        .swal2-progress-step-line {
+            background: #e5e7eb !important;
+        }
+
+        .swal2-timer-progress-bar {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        }
+
+        /* Animation untuk SweetAlert */
+        @keyframes swalBounceIn {
+            0% { transform: scale3d(0.3, 0.3, 0.3); }
+            50% { transform: scale3d(1.05, 1.05, 1.05); }
+            70% { transform: scale3d(0.9, 0.9, 0.9); }
+            100% { transform: scale3d(1, 1, 1); }
+        }
+
+        @keyframes swalBounceOut {
+            20% { transform: scale3d(0.9, 0.9, 0.9); }
+            50%, 55% { transform: scale3d(1.1, 1.1, 1.1); }
+            100% { transform: scale3d(0.3, 0.3, 0.3); }
+        }
+
+        .swal2-show {
+            animation: swalBounceIn 0.6s !important;
+        }
+
+        .swal2-hide {
+            animation: swalBounceOut 0.6s !important;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
@@ -121,7 +249,7 @@
                                 <span class="text-white text-sm font-medium">{{ substr(auth()->user()->nama_lengkap, 0, 1) }}</span>
                             </div>
 
-                           
+
                         @auth
                             <a href="{{ route('profil.show') }}" class="text-gray-700 hover:text-blue-600 font-medium">
                             Hi, {{ auth()->user()->nama_lengkap }}</a>
@@ -224,6 +352,178 @@
     @stack('scripts')
 
     <script>
+        // SweetAlert2 Global Configuration
+        window.Swal = Swal.mixin({
+            customClass: {
+                popup: 'swal2-popup-custom',
+                title: 'swal2-title-custom',
+                content: 'swal2-content-custom',
+                confirmButton: 'swal2-confirm-custom',
+                cancelButton: 'swal2-cancel-custom',
+                input: 'swal2-input-custom'
+            },
+            buttonsStyling: false,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown animate__faster'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp animate__faster'
+            }
+        });
+
+        // Global SweetAlert Functions
+        window.showSuccess = function(message, title = 'Berhasil!') {
+            return Swal.fire({
+                icon: 'success',
+                title: title,
+                text: message,
+                confirmButtonText: 'OK',
+                timer: 3000,
+                timerProgressBar: true
+            });
+        };
+
+        window.showError = function(message, title = 'Oops...') {
+            return Swal.fire({
+                icon: 'error',
+                title: title,
+                text: message,
+                confirmButtonText: 'OK'
+            });
+        };
+
+        window.showWarning = function(message, title = 'Peringatan') {
+            return Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: message,
+                confirmButtonText: 'OK'
+            });
+        };
+
+        window.showInfo = function(message, title = 'Info') {
+            return Swal.fire({
+                icon: 'info',
+                title: title,
+                text: message,
+                confirmButtonText: 'OK'
+            });
+        };
+
+        window.showConfirm = function(message, title = 'Konfirmasi', confirmText = 'Ya', cancelText = 'Batal') {
+            return Swal.fire({
+                icon: 'question',
+                title: title,
+                text: message,
+                showCancelButton: true,
+                confirmButtonText: confirmText,
+                cancelButtonText: cancelText,
+                reverseButtons: true
+            });
+        };
+
+        window.showDeleteConfirm = function(message = 'Data yang dihapus tidak dapat dikembalikan!', title = 'Hapus Data?') {
+            return Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: message,
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#dc2626',
+                reverseButtons: true
+            });
+        };
+
+        window.showLoading = function(message = 'Memproses...') {
+            return Swal.fire({
+                title: message,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        };
+
+        window.showInputModal = function(title, inputPlaceholder, inputType = 'text', inputValue = '') {
+            return Swal.fire({
+                title: title,
+                input: inputType,
+                inputValue: inputValue,
+                inputPlaceholder: inputPlaceholder,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Input tidak boleh kosong!';
+                    }
+                }
+            });
+        };
+
+        window.showTextareaModal = function(title, textareaPlaceholder, textareaValue = '') {
+            return Swal.fire({
+                title: title,
+                input: 'textarea',
+                inputValue: textareaValue,
+                inputPlaceholder: textareaPlaceholder,
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Input tidak boleh kosong!';
+                    }
+                }
+            });
+        };
+
+        window.showSelectModal = function(title, options, placeholder = 'Pilih salah satu') {
+            return Swal.fire({
+                title: title,
+                input: 'select',
+                inputOptions: options,
+                inputPlaceholder: placeholder,
+                showCancelButton: true,
+                confirmButtonText: 'Pilih',
+                cancelButtonText: 'Batal',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Anda harus memilih salah satu!';
+                    }
+                }
+            });
+        };
+
+        // Handle Laravel Session Messages
+        @if(session('success'))
+            showSuccess('{{ session('success') }}');
+        @endif
+
+        @if(session('error'))
+            showError('{{ session('error') }}');
+        @endif
+
+        @if(session('warning'))
+            showWarning('{{ session('warning') }}');
+        @endif
+
+        @if(session('info'))
+            showInfo('{{ session('info') }}');
+        @endif
+
+        // CSRF Token for AJAX requests
+        window.csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Global AJAX Setup
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': window.csrfToken
+            }
+        });
+
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');

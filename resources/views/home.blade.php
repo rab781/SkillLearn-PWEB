@@ -35,13 +35,13 @@
                 <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
                     Belajar Skill Baru dengan
                     <span class="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 bg-clip-text text-transparent animate-pulse">
-                        Video Terkurasi
+                        Course Terkurasi
                     </span>
                     <span class="block text-3xl sm:text-4xl lg:text-5xl mt-2">🚀 Terarah</span>
                 </h1>
 
                 <p class="text-lg sm:text-xl mb-7 text-blue-100 max-w-2xl leading-relaxed">
-                    🎯 Platform pembelajaran online modern dengan kurasi video berkualitas tinggi.
+                    🎯 Platform pembelajaran online modern dengan kurasi course berkualitas tinggi.
                     Tingkatkan skill dengan pembelajaran terarah dari expert terpercaya.
                 </p>
 
@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-3 gap-6 mb-7">
                     <div class="text-center glass-effect rounded-xl p-4">
                         <div class="text-2xl font-bold" id="stats-videos">-</div>
-                        <div class="text-sm text-blue-200">Video Berkualitas</div>
+                        <div class="text-sm text-blue-200">Course Berkualitas</div>
                     </div>
                     <div class="text-center glass-effect rounded-xl p-4">
                         <div class="text-2xl font-bold" id="stats-categories">-</div>
@@ -72,8 +72,8 @@
                             </svg>
                         </span>
                     </a>
-                    <a href="/videos" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
-                        Jelajahi Video
+                    <a href="/courses" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
+                        Jelajahi Courses
                     </a>
 
                     @else
@@ -85,8 +85,8 @@
                                 </svg>
                             </span>
                         </a>
-                        <a href="/videos" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
-                            Jelajahi Video
+                        <a href="/courses" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all backdrop-blur-sm">
+                            Jelajahi Courses
                         </a>
                     @endguest
                 </div>
@@ -106,7 +106,7 @@
                                 </div>
                                 <div>
                                     <div class="font-semibold">Programming</div>
-                                    <div class="text-sm text-blue-200">25+ Video</div>
+                                    <div class="text-sm text-blue-200">25+ Course</div>
                                 </div>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
                                 </div>
                                 <div>
                                     <div class="font-semibold">Design</div>
-                                    <div class="text-sm text-blue-200">15+ Video</div>
+                                    <div class="text-sm text-blue-200">15+ Course</div>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +134,7 @@
                                 </div>
                                 <div>
                                     <div class="font-semibold">Business</div>
-                                    <div class="text-sm text-blue-200">20+ Video</div>
+                                    <div class="text-sm text-blue-200">20+ Course</div>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +169,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Konten Terkurasi</h3>
-                <p class="text-gray-600">Video pembelajaran dipilih oleh expert untuk memastikan kualitas dan relevansi materi.</p>
+                <p class="text-gray-600">Course pembelajaran dipilih oleh expert untuk memastikan kualitas dan relevansi materi.</p>
             </div>
 
             <!-- Feature 2 -->
@@ -180,7 +180,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Personal Dashboard</h3>
-                <p class="text-gray-600">Pantau progress belajar, bookmark video favorit, dan kelola aktivitas pembelajaran Anda.</p>
+                <p class="text-gray-600">Pantau progress belajar, bookmark course favorit, dan kelola aktivitas pembelajaran Anda.</p>
             </div>
 
             <!-- Feature 3 -->
@@ -211,7 +211,7 @@
                     </svg>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Bookmark System</h3>
-                <p class="text-gray-600">Simpan video favorit Anda untuk dapat diakses dengan mudah di kemudian hari.</p>
+                <p class="text-gray-600">Simpan course favorit Anda untuk dapat diakses dengan mudah di kemudian hari.</p>
             </div>
 
             <!-- Feature 6 -->
@@ -232,15 +232,11 @@
 <section class="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full text-sm font-medium mb-4">
-                <span class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
-                🎯 Top Categories
-            </div> --}}
             <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-900 to-purple-400 bg-clip-text text-transparent mb-4">
-                Kategori Pembelajaran Populer
+                Kategori Course Populer
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                Temukan 3 kategori dengan konten pembelajaran terlengkap dan paling diminati
+                Temukan kategori dengan course pembelajaran terlengkap dan paling diminati
             </p>
         </div>
 
@@ -259,29 +255,25 @@
 
         <!-- View All Categories Button -->
         <div class="text-center mt-12">
-            <a href="/videos" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
+            <a href="/courses" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
-                Lihat Semua Kategori
+                Lihat Semua Courses
             </a>
         </div>
     </div>
 </section>
 
-<!-- Popular Videos Section -->
+<!-- Popular Courses Section -->
 <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-100 to-orange-100 rounded-full text-sm font-medium mb-4">
-                <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
-                🔥 Trending Now
-            </div> --}}
             <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent mb-4">
-                Video Populer
+                Course Populer
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                3 video pembelajaran terpopuler dengan rating tertinggi dari community
+                Course pembelajaran terpopuler dengan rating tertinggi dari community
             </p>
         </div>
 
@@ -289,18 +281,18 @@
         <div id="popular-loading" class="flex justify-center">
             <div class="flex items-center space-x-2">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600"></div>
-                <span class="text-gray-600">Memuat video populer...</span>
+                <span class="text-gray-600">Memuat course populer...</span>
             </div>
         </div>
 
-        <!-- Popular Videos Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="popular-videos" style="display: none;">
-            <!-- Videos will be loaded here -->
+        <!-- Popular Courses Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="popular-courses" style="display: none;">
+            <!-- Courses will be loaded here -->
         </div>
 
         <div class="text-center mt-12">
-            <a href="/videos?sort=popular" class="inline-flex items-center px-6 py-3 bg-gradient-to-r  from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
-                Lihat Semua Video Populer
+            <a href="/courses" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all shadow-lg hover:scale-105 hover:shadow-xl">
+                Lihat Semua Course Populer
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
@@ -309,19 +301,15 @@
     </div>
 </section>
 
-<!-- Latest Videos Section -->
+<!-- Latest Courses Section -->
 <section class="py-20 bg-gradient-to-br from-blue-50 to-purple-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16">
-            {{-- <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-green-100 to-blue-100 rounded-full text-sm font-medium mb-4">
-                <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                ✨ Fresh Content
-            </div> --}}
             <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
-                Video Terbaru
+                Course Terbaru
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                3 konten pembelajaran terkini yang baru saja ditambahkan untuk Anda
+                Course pembelajaran terkini yang baru saja ditambahkan untuk Anda
             </p>
         </div>
 
@@ -329,18 +317,18 @@
         <div id="latest-loading" class="flex justify-center">
             <div class="flex items-center space-x-2">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                <span class="text-gray-600">Memuat video terbaru...</span>
+                <span class="text-gray-600">Memuat course terbaru...</span>
             </div>
         </div>
 
-        <!-- Latest Videos Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="latest-videos" style="display: none;">
-            <!-- Videos will be loaded here -->
+        <!-- Latest Courses Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="latest-courses" style="display: none;">
+            <!-- Courses will be loaded here -->
         </div>
 
         <div class="text-center mt-12">
-            <a href="/videos?sort=newest" class="inline-flex items-center px-6 py-3 bg-gradient-to-r  from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all hover:scale-105 shadow-lg hover:shadow-xl">
-                Lihat Semua Video Terbaru
+            <a href="/courses" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white font-semibold rounded-xl hover:from-gray-700 hover:to-gray-800 transition-all hover:scale-105 shadow-lg hover:shadow-xl">
+                Lihat Semua Course Terbaru
                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                 </svg>
@@ -361,8 +349,8 @@
                 <a href="/register" class="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition-all shadow-lg hover:shadow-xl">
                     Daftar Sekarang - Gratis!
                 </a>
-                <a href="/videos" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all">
-                    Jelajahi Konten
+                <a href="/courses" class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all">
+                    Jelajahi Courses
                 </a>
             </div>
         @else
@@ -386,10 +374,10 @@ async function loadCategories() {
         const data = await response.json();
 
         if (data.success) {
-            // Sort categories by video count and take top 3
+            // Sort categories by course count and take top 3
             const topCategories = data.categories
-                .filter(category => category.vidios_count > 0)
-                .sort((a, b) => b.vidios_count - a.vidios_count)
+                .filter(category => category.courses_count > 0)
+                .sort((a, b) => b.courses_count - a.courses_count)
                 .slice(0, 3);
 
             const categoriesGrid = document.getElementById('categories-grid');
@@ -443,17 +431,17 @@ async function loadCategories() {
                                 ${category.kategori}
                             </h3>
 
-                            <!-- Video Count -->
+                            <!-- Course Count -->
                             <div class="flex items-center justify-center space-x-1 text-gray-600 mb-4">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z"></path>
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"></path>
                                 </svg>
-                                <span class="font-semibold">${category.vidios_count}</span>
-                                <span class="text-sm">video</span>
+                                <span class="font-semibold">${category.courses_count || 0}</span>
+                                <span class="text-sm">course</span>
                             </div>
 
                             <!-- CTA Button -->
-                            <a href="/videos?kategori_id=${category.kategori_id}"
+                            <a href="/courses?kategori_id=${category.kategori_id}"
                                class="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r ${gradient} text-white font-medium rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 group-hover:shadow-xl">
                                 <span>Jelajahi</span>
                                 <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -499,26 +487,32 @@ async function loadCategories() {
     }
 }
 
-// Load popular videos
-async function loadPopularVideos() {
+// Load popular courses
+async function loadPopularCourses() {
     try {
-        const response = await fetch('/api/videos?sort=jumlah_tayang&order=desc');
+        const response = await fetch('/api/courses?sort=popular&limit=3');
         const data = await response.json();
 
         if (data.success) {
-            // Get top 3 most viewed videos
-            const topVideos = data.videos.data ? data.videos.data.slice(0, 3) : data.videos.slice(0, 3);
+            // Get top 3 most popular courses
+            const topCourses = data.courses.slice(0, 3);
 
-            const grid = document.getElementById('popular-videos');
+            const grid = document.getElementById('popular-courses');
             const loadingState = document.getElementById('popular-loading');
 
-            grid.innerHTML = topVideos.map((video, index) => {
+            grid.innerHTML = topCourses.map((course, index) => {
                 const rankBadges = ['🥇', '🥈', '🥉'];
                 const rankColors = [
                     'from-yellow-400 to-yellow-600',
                     'from-gray-400 to-gray-600',
                     'from-orange-400 to-orange-600'
                 ];
+
+                const levelColors = {
+                    'pemula': 'from-green-100 to-green-200 text-green-700',
+                    'menengah': 'from-yellow-100 to-yellow-200 text-yellow-700',
+                    'lanjut': 'from-red-100 to-red-200 text-red-700'
+                };
 
                 return `
                     <div class="group relative overflow-hidden bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 card-hover">
@@ -527,23 +521,23 @@ async function loadPopularVideos() {
                             ${rankBadges[index]}
                         </div>
 
-                        <!-- Views Badge -->
+                        <!-- Enrollment Badge -->
                         <div class="absolute top-3 right-3 z-10 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                            👁️ ${video.jumlah_tayang} views
+                            👥 ${course.user_progress_count || 0} enrolled
                         </div>
 
-                        <!-- Video Thumbnail -->
+                        <!-- Course Image -->
                         <div class="relative aspect-video overflow-hidden">
-                            <img src="${video.gambar || '/images/default-video.jpg'}"
-                                 alt="${video.nama}"
+                            <img src="${course.gambar_course || '/images/default-course.jpg'}"
+                                 alt="${course.nama_course}"
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                 onerror="this.src='/images/default-video.jpg'">
+                                 onerror="this.src='/images/default-course.jpg'">
 
-                            <!-- Play Button Overlay -->
+                            <!-- Overlay -->
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
                                 <div class="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 shadow-xl">
-                                    <svg class="w-8 h-8 text-red-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z"/>
+                                    <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"></path>
                                     </svg>
                                 </div>
                             </div>
@@ -551,43 +545,53 @@ async function loadPopularVideos() {
 
                         <!-- Content -->
                         <div class="p-6">
-                            <!-- Category Badge -->
-                            <div class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-red-100 to-orange-100 text-red-700 text-xs font-medium rounded-full mb-3">
-                                ${video.kategori?.kategori || 'Umum'}
+                            <!-- Level & Category -->
+                            <div class="flex items-center gap-2 mb-3">
+                                <div class="inline-flex items-center px-3 py-1 bg-gradient-to-r ${levelColors[course.level] || 'from-gray-100 to-gray-200 text-gray-700'} text-xs font-medium rounded-full">
+                                    ${course.level ? course.level.charAt(0).toUpperCase() + course.level.slice(1) : 'Umum'}
+                                </div>
+                                <div class="inline-flex items-center px-3 py-1 bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 text-xs font-medium rounded-full">
+                                    ${course.kategori?.kategori || 'Umum'}
+                                </div>
                             </div>
 
                             <!-- Title -->
-                            <h3 class="text-lg font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors">
-                                ${video.nama}
+                            <h3 class="text-lg font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                                ${course.nama_course}
                             </h3>
 
                             <!-- Description -->
                             <p class="text-gray-600 text-sm mb-4 line-clamp-2">
-                                ${video.deskripsi || 'Tidak ada deskripsi tersedia'}
+                                ${course.deskripsi_course || 'Tidak ada deskripsi tersedia'}
                             </p>
 
-                            <!-- Meta Info -->
+                            <!-- Course Stats -->
                             <div class="flex items-center justify-between text-sm text-gray-500 mb-4">
-                                <div class="flex items-center space-x-2">
-                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                    </svg>
-                                    <span>${video.created_at ? new Date(video.created_at).toLocaleDateString('id-ID') : 'Tanggal tidak tersedia'}</span>
-                                </div>
-                                <div class="flex items-center space-x-1">
-                                    <span class="text-red-600 font-semibold">#${index + 1} Populer</span>
-                                </div>
-                            </div>
+                                <div class="flex items-center space-x-4">
+                                    <div class="flex items-center space-x-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
+                                        </svg>
+                                        <span>${course.total_video || 0} videos</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1">
+                                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span>${course.total_durasi_menit || 0} min</span>
+                                    </div>                            </div>
+                            <span class="text-red-600 font-semibold">#${index + 1} Populer</span>
+                        </div>
 
-                            <!-- CTA Button -->
-                            <a href="/videos/${video.vidio_id}"
-                               class="block w-full text-center bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold py-3 rounded-xl hover:from-red-700 hover:to-orange-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
-                                🎬 Tonton Sekarang
-                            </a>
+                        <!-- CTA Button -->
+                        <a href="/courses/${course.course_id}"
+                           class="block w-full text-center bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            🎓 Mulai Belajar
+                        </a>
                         </div>
 
                         <!-- Decorative Corner -->
-                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-red-500 to-orange-500 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
+                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-300"></div>
                     </div>
                 `;
             }).join('');
@@ -597,8 +601,8 @@ async function loadPopularVideos() {
             grid.style.display = 'grid';
 
             // Add stagger animation
-            const videoCards = grid.children;
-            Array.from(videoCards).forEach((card, index) => {
+            const courseCards = grid.children;
+            Array.from(courseCards).forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(20px)';
                 setTimeout(() => {
@@ -609,33 +613,33 @@ async function loadPopularVideos() {
             });
         }
     } catch (error) {
-        console.error('Error loading popular videos:', error);
+        console.error('Error loading popular courses:', error);
         const loadingState = document.getElementById('popular-loading');
         loadingState.innerHTML = `
             <div class="text-center text-gray-500">
                 <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <p>Gagal memuat video populer</p>
+                <p>Gagal memuat course populer</p>
             </div>
         `;
     }
 }
 
-// Load latest videos
-async function loadLatestVideos() {
+// Load latest courses
+async function loadLatestCourses() {
     try {
-        const response = await fetch('/api/videos?sort=created_at&order=desc');
+        const response = await fetch('/api/courses?sort=created_at&order=desc&limit=3');
         const data = await response.json();
 
         if (data.success) {
-            // Get 3 newest videos
-            const latestVideos = data.videos.data ? data.videos.data.slice(0, 3) : data.videos.slice(0, 3);
+            // Get 3 newest courses
+            const latestCourses = data.courses.slice(0, 3);
 
-            const grid = document.getElementById('latest-videos');
+            const grid = document.getElementById('latest-courses');
             const loadingState = document.getElementById('latest-loading');
 
-            grid.innerHTML = latestVideos.map((video, index) => {
+            grid.innerHTML = latestCourses.map((course, index) => {
                 const gradients = [
                     'from-green-500 to-blue-500',
                     'from-blue-500 to-purple-500',
@@ -649,17 +653,17 @@ async function loadLatestVideos() {
                             ✨ BARU
                         </div>
 
-                        <!-- Category Badge -->
+                        <!-- Level Badge -->
                         <div class="absolute top-3 right-3 z-10 bg-white bg-opacity-90 text-gray-700 text-xs px-2 py-1 rounded-full backdrop-blur-sm">
-                            ${video.kategori?.kategori || 'Umum'}
+                            ${course.level ? course.level.charAt(0).toUpperCase() + course.level.slice(1) : 'Umum'}
                         </div>
 
-                        <!-- Video Thumbnail -->
+                        <!-- Course Image -->
                         <div class="relative aspect-video overflow-hidden">
-                            <img src="${video.gambar || '/images/default-video.jpg'}"
-                                 alt="${video.nama}"
+                            <img src="${course.gambar_course || '/images/default-course.jpg'}"
+                                 alt="${course.nama_course}"
                                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                 onerror="this.src='/images/default-video.jpg'">
+                                 onerror="this.src='/images/default-course.jpg'">
 
                             <!-- Gradient Overlay -->
                             <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -667,8 +671,8 @@ async function loadLatestVideos() {
                             <!-- Play Button Overlay -->
                             <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <div class="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 shadow-xl">
-                                    <svg class="w-8 h-8 text-green-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z"/>
+                                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"></path>
                                     </svg>
                                 </div>
                             </div>
@@ -683,12 +687,12 @@ async function loadLatestVideos() {
 
                             <!-- Title -->
                             <h3 class="text-lg font-bold text-gray-800 mb-3 line-clamp-2 group-hover:text-green-600 transition-colors">
-                                ${video.nama}
+                                ${course.nama_course}
                             </h3>
 
                             <!-- Description -->
                             <p class="text-gray-600 text-sm mb-4 line-clamp-2">
-                                ${video.deskripsi || 'Konten pembelajaran terbaru yang siap untuk Anda pelajari'}
+                                ${course.deskripsi_course || 'Course pembelajaran terbaru yang siap untuk Anda pelajari'}
                             </p>
 
                             <!-- Meta Info -->
@@ -698,20 +702,19 @@ async function loadLatestVideos() {
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                                     </svg>
                                     <span class="text-green-600 font-medium">
-                                        ${video.created_at ? new Date(video.created_at).toLocaleDateString('id-ID') : 'Baru ditambahkan'}
+                                        ${course.created_at ? new Date(course.created_at).toLocaleDateString('id-ID') : 'Baru ditambahkan'}
                                     </span>
                                 </div>
                                 <div class="flex items-center space-x-1">
                                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                        <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
                                     </svg>
-                                    <span>${video.jumlah_tayang || 0} views</span>
+                                    <span>${course.total_video || 0} video</span>
                                 </div>
                             </div>
 
                             <!-- CTA Button -->
-                            <a href="/videos/${video.vidio_id}"
+                            <a href="/courses/${course.course_id}"
                                class="block w-full text-center bg-gradient-to-r ${gradients[index]} text-white font-semibold py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-200 shadow-md">
                                 🚀 Mulai Belajar
                             </a>
@@ -729,8 +732,8 @@ async function loadLatestVideos() {
             grid.style.display = 'grid';
 
             // Add stagger animation
-            const videoCards = grid.children;
-            Array.from(videoCards).forEach((card, index) => {
+            const courseCards = grid.children;
+            Array.from(courseCards).forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(20px)';
                 setTimeout(() => {
@@ -741,14 +744,14 @@ async function loadLatestVideos() {
             });
         }
     } catch (error) {
-        console.error('Error loading latest videos:', error);
+        console.error('Error loading latest courses:', error);
         const loadingState = document.getElementById('latest-loading');
         loadingState.innerHTML = `
             <div class="text-center text-gray-500">
                 <svg class="w-12 h-12 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-                <p>Gagal memuat video terbaru</p>
+                <p>Gagal memuat course terbaru</p>
             </div>
         `;
     }
@@ -756,14 +759,12 @@ async function loadLatestVideos() {
 
 // Load all data when page loads
 document.addEventListener('DOMContentLoaded', function() {
-    loadCategories();
-    loadPopularVideos();
     loadStats();
 
-    // Stagger other content loading for smooth experience
+    // Stagger content loading for smooth experience
     setTimeout(() => loadCategories(), 200);
-    setTimeout(() => loadPopularVideos(), 400);
-    setTimeout(() => loadLatestVideos(), 600);
+    setTimeout(() => loadPopularCourses(), 400);
+    setTimeout(() => loadLatestCourses(), 600);
 });
 
 // Animate counter function
@@ -785,18 +786,18 @@ function animateCounter(element, target, duration = 2000) {
 // Load statistics with animation
 async function loadStats() {
     try {
-        const [categoriesRes, videosRes] = await Promise.all([
+        const [categoriesRes, coursesRes] = await Promise.all([
             fetch('/api/categories'),
-            fetch('/api/videos')
+            fetch('/api/courses')
         ]);
 
         const categoriesData = await categoriesRes.json();
-        const videosData = await videosRes.json();
+        const coursesData = await coursesRes.json();
 
-        if (categoriesData.success && videosData.success) {
+        if (categoriesData.success && coursesData.success) {
             // Animate counters
             setTimeout(() => {
-                animateCounter(document.getElementById('stats-videos'), videosData.videos.total || videosData.videos.data?.length || 0);
+                animateCounter(document.getElementById('stats-videos'), coursesData.courses.length || 0);
                 animateCounter(document.getElementById('stats-categories'), categoriesData.categories.length);
                 animateCounter(document.getElementById('stats-users'), 150 + Math.floor(Math.random() * 50)); // Simulated user count
             }, 500);

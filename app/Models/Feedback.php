@@ -16,7 +16,10 @@ class Feedback extends Model
         'tanggal',
         'pesan',
         'balasan',
-        'vidio_vidio_id',
+        'course_id',
+        'course_video_id',
+        'rating',
+        'catatan',
         'users_id',
     ];
 
@@ -25,9 +28,14 @@ class Feedback extends Model
     ];
 
     // Relationships
-    public function vidio()
+    public function course()
     {
-        return $this->belongsTo(Vidio::class, 'vidio_vidio_id');
+        return $this->belongsTo(Course::class, 'course_id');
+    }
+
+    public function courseVideo()
+    {
+        return $this->belongsTo(CourseVideo::class, 'course_video_id');
     }
 
     public function user()

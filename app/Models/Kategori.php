@@ -21,4 +21,9 @@ class Kategori extends Model
     {
         return $this->hasMany(Vidio::class, 'kategori_kategori_id');
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class, 'kategori_kategori_id');
+    }
 }

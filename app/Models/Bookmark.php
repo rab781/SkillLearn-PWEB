@@ -14,17 +14,17 @@ class Bookmark extends Model
 
     protected $fillable = [
         'users_id',
-        'vidio_vidio_id',
+        'course_id',
     ];
 
     // Relationships
     public function user()
     {
-        return $this->belongsTo(User::class, 'users_id');
+        return $this->belongsTo(User::class, 'users_id', 'users_id');
     }
 
-    public function vidio()
+    public function course()
     {
-        return $this->belongsTo(Vidio::class, 'vidio_vidio_id');
+        return $this->belongsTo(Course::class, 'course_id', 'course_id');
     }
 }

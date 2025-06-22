@@ -1,478 +1,337 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - Skillearn')
+@section('title', 'Admin Dashboard')
+
+@push('styles')
+<style>
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.stats-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,1));
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+</style>
+@endpush
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 py-8">
-    <!-- Enhanced Admin Header -->
-    <div class="mb-8">
-        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+<!-- Enhanced Admin Header -->
+<div class="mb-8">
+    <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+        <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
-                <h1 class="text-4xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                    👑 Admin Control Center
+                <h1 class="text-4xl lg:text-5xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-crown mr-4 text-yellow-300 animate-pulse"></i>
+                    Admin Control Center
                 </h1>
-                <p class="text-xl text-gray-600 mt-2">
-                    Selamat datang, <span class="font-semibold text-orange-600">{{ auth()->user()->nama_lengkap }}</span>!
-                    <span class="text-2xl">⚡</span> Kelola platform Skillearn dengan mudah
+                <p class="text-xl text-purple-100 mb-2">
+                    Selamat datang, <span class="font-bold text-yellow-200">{{ auth()->user()->nama_lengkap }}</span>!
+                    <i class="fas fa-sparkles ml-2 text-yellow-300"></i>
                 </p>
+                <p class="text-purple-200">Kelola platform SkillLearn dengan mudah</p>
+                <p class="text-purple-200 text-sm mt-1">Dashboard lengkap untuk mengelola course, user, dan konten pembelajaran</p>
             </div>
-            <div class="mt-4 lg:mt-0">
-                <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-full text-sm font-medium shadow-lg">
-                    {{-- <span class="text-lg mr-2">🔥</span> --}}
+            <div class="mt-6 lg:mt-0">
+                <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-full text-sm font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    <i class="fas fa-shield-alt mr-2"></i>
                     Super Admin Access
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Enhanced Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8" id="stats-cards">
-        <!-- Enhanced loading stats -->
-        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 text-white card-hover">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-blue-100">👥 Total Users</p>
-                    <p class="text-3xl font-bold">
-                        <span class="loading-spinner inline-block"></span>
-                    </p>
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <!-- Users Card -->
+    <div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-users text-white text-xl"></i>
                 </div>
-                <div class="text-4xl opacity-80">👨‍💼</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-lg p-6 text-white card-hover">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-green-100">📹 Total Videos</p>
-                    <p class="text-3xl font-bold">
-                        <span class="loading-spinner inline-block"></span>
-                    </p>
-                </div>
-                <div class="text-4xl opacity-80">🎬</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-lg p-6 text-white card-hover">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-purple-100">📚 Categories</p>
-                    <p class="text-3xl font-bold">
-                        <span class="loading-spinner inline-block"></span>
-                    </p>
-                </div>
-                <div class="text-4xl opacity-80">📖</div>
-            </div>
-        </div>
-        <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl shadow-lg p-6 text-white card-hover">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-orange-100">💬 Feedbacks</p>
-                    <p class="text-3xl font-bold">
-                        <span class="loading-spinner inline-block"></span>
-                    </p>
-                </div>
-                <div class="text-4xl opacity-80">📝</div>
-            </div>
-        </div>        <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl shadow-lg p-6 text-white card-hover">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-pink-100">📚 Bookmarks</p>
-                    <p class="text-3xl font-bold">
-                        <span class="loading-spinner inline-block"></span>
-                    </p>
-                </div>
-                <div class="text-4xl opacity-80">📖</div>
+                <p class="text-blue-100 text-sm font-medium">Total Users</p>
+                <p class="text-3xl font-bold text-white" id="total-users">
+                    {{ $stats['total_users'] ?? 0 }}
+                </p>
+                <p class="text-blue-200 text-xs mt-1">Registered members</p>
             </div>
         </div>
     </div>
 
-    <!-- Enhanced Quick Actions -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
-        <div class="text-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center justify-center">
-                <span class="text-3xl mr-2">⚡</span>
+    <!-- Courses Card -->
+    <div class="bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <p class="text-green-100 text-sm font-medium">Total Courses</p>
+                <p class="text-3xl font-bold text-white" id="total-courses">
+                    {{ $stats['total_courses'] ?? 0 }}
+                </p>
+                <p class="text-green-200 text-xs mt-1">Available courses</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Videos Card -->
+    <div class="bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-video text-white text-xl"></i>
+                </div>
+                <p class="text-purple-100 text-sm font-medium">Total Videos</p>
+                <p class="text-3xl font-bold text-white" id="total-videos">
+                    {{ $stats['total_videos'] ?? 0 }}
+                </p>
+                <p class="text-purple-200 text-xs mt-1">Learning content</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Categories Card -->
+    <div class="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-tags text-white text-xl"></i>
+                </div>
+                <p class="text-orange-100 text-sm font-medium">Categories</p>
+                <p class="text-3xl font-bold text-white" id="total-categories">
+                    {{ $stats['total_categories'] ?? 0 }}
+                </p>
+                <p class="text-orange-200 text-xs mt-1">Course categories</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Quick Actions -->
+<div class="bg-white rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
+    
+    <div class="relative z-10">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-3 flex items-center justify-center">
+                <i class="fas fa-bolt text-yellow-500 mr-3 text-4xl animate-pulse"></i>
                 Quick Actions
             </h2>
-            <p class="text-gray-600 mt-2">Aksi cepat untuk mengelola konten platform</p>
+            <p class="text-gray-600">Aksi cepat untuk mengelola konten platform dengan mudah</p>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <button onclick="openAddVideoModal()" class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl hover:from-blue-600 hover:to-blue-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
-                <div class="text-5xl mb-3 group-hover:animate-bounce">🎬</div>
-                <h3 class="text-lg font-semibold mb-2">Tambah Video</h3>
-                <p class="text-blue-100 text-sm">Upload video pembelajaran baru</p>
-            </button>
-            <button onclick="openAddCategoryModal()" class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl hover:from-green-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
-                <div class="text-5xl mb-3 group-hover:animate-bounce">📚</div>
-                <h3 class="text-lg font-semibold mb-2">Tambah Kategori</h3>
-                <p class="text-green-100 text-sm">Buat kategori skill baru</p>
-            </button>
-            <a href="/admin/reports" class="group bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-xl hover:from-purple-600 hover:to-purple-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg block">
-                <div class="text-5xl mb-3 group-hover:animate-bounce">📊</div>
-                <h3 class="text-lg font-semibold mb-2">Lihat Reports</h3>
-                <p class="text-purple-100 text-sm">Analisis data platform</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <a href="{{ route('admin.courses.create') }}" 
+               class="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-8 rounded-2xl hover:from-blue-600 hover:to-indigo-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+                <div class="text-6xl mb-4 group-hover:animate-bounce">
+                    <i class="fas fa-plus-circle"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Buat Course Baru</h3>
+                <p class="text-blue-100 text-sm">Tambah course pembelajaran baru dengan mudah</p>
+            </a>
+            
+            <a href="{{ route('admin.courses.index') }}" 
+               class="group bg-gradient-to-br from-emerald-500 to-green-600 text-white p-8 rounded-2xl hover:from-emerald-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+                <div class="text-6xl mb-4 group-hover:animate-bounce">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Kelola Courses</h3>
+                <p class="text-green-100 text-sm">Manage semua courses & video content</p>
+            </a>
+            
+            <a href="{{ route('admin.feedback.index') }}" 
+               class="group bg-gradient-to-br from-purple-500 to-violet-600 text-white p-8 rounded-2xl hover:from-purple-600 hover:to-violet-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
+                <div class="text-6xl mb-4 group-hover:animate-bounce">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Kelola Feedback</h3>
+                <p class="text-purple-100 text-sm">Manage feedback dan review dari user</p>
             </a>
         </div>
     </div>
+</div>
+        </div>
+    </div>
 
-    <!-- Enhanced Recent Feedbacks -->
-    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 card-hover">
+    <!-- Feedbacks Card -->
+    <div class="stats-card card-hover rounded-2xl shadow-xl p-6">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-comments text-white text-xl"></i>
+                </div>
+                <p class="text-gray-600 text-sm font-medium">Feedbacks</p>
+                <p class="text-3xl font-bold text-gray-900" id="total-feedbacks">
+                    {{ $stats['total_feedbacks'] ?? 0 }}
+                </p>
+                <p class="text-gray-500 text-xs mt-1">User feedback</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
+    <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Quick Actions</h2>
+        <p class="text-gray-600">Aksi cepat untuk mengelola konten platform</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{{ route('admin.courses.create') }}" 
+           class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-8 rounded-2xl hover:from-blue-600 hover:to-blue-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <div class="text-6xl mb-4 group-hover:animate-bounce">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Buat Course Baru</h3>
+            <p class="text-blue-100 text-sm">Tambah course pembelajaran baru</p>
+        </a>
+        
+        <a href="{{ route('admin.courses.index') }}" 
+           class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-2xl hover:from-green-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <div class="text-6xl mb-4 group-hover:animate-bounce">
+                <i class="fas fa-cog"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Kelola Courses</h3>
+            <p class="text-green-100 text-sm">Manage semua courses & video</p>
+        </a>
+        
+        <a href="{{ route('admin.feedback.index') }}" 
+           class="group bg-gradient-to-br from-purple-500 to-purple-600 text-white p-8 rounded-2xl hover:from-purple-600 hover:to-purple-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
+            <div class="text-6xl mb-4 group-hover:animate-bounce">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3 class="text-xl font-semibold mb-2">Kelola Feedback</h3>
+            <p class="text-purple-100 text-sm">Manage feedback dari user</p>
+        </a>
+    </div>
+</div>
+<!-- Recent Feedbacks -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <div class="bg-white rounded-2xl shadow-xl p-6">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold text-gray-800 flex items-center">
-                <span class="text-3xl mr-2">💬</span>
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                <i class="fas fa-comments text-blue-500 mr-3"></i>
                 Feedback Terbaru
             </h2>
-            <div class="flex space-x-2">
-                <span class="skill-badge bg-gradient-to-r from-blue-500 to-purple-500">🔔 Real-time</span>
-            </div>
+            <a href="{{ route('admin.feedback.index') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                Lihat Semua →
+            </a>
         </div>
         <div class="space-y-4" id="recent-feedbacks">
-            <!-- Enhanced loading state -->
-            <div class="animate-pulse flex space-x-4 p-4 bg-gray-50 rounded-lg">
-                <div class="rounded-full bg-gray-200 h-12 w-12"></div>
-                <div class="flex-1 space-y-2">
-                    <div class="h-4 bg-gray-200 rounded w-1/4"></div>
-                    <div class="h-3 bg-gray-200 rounded w-3/4"></div>
+            @if($recentFeedbacks && $recentFeedbacks->count() > 0)
+                @foreach($recentFeedbacks as $feedback)
+                <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        {{ strtoupper(substr($feedback->user->name ?? 'U', 0, 1)) }}
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-center justify-between mb-1">
+                            <h4 class="font-semibold text-gray-900">{{ $feedback->user->name ?? 'Unknown User' }}</h4>
+                            <span class="text-xs text-gray-500">{{ $feedback->created_at->diffForHumans() }}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm">{{ Str::limit($feedback->feedback_text, 80) }}</p>
+                        <div class="flex items-center mt-2">
+                            <div class="flex text-yellow-400">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star{{ $i <= $feedback->rating ? '' : '-o' }} text-xs"></i>
+                                @endfor
+                            </div>
+                            <span class="ml-2 text-xs text-gray-500">{{ $feedback->rating }}/5</span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                @endforeach
+            @else
+                <div class="text-center py-8">
+                    <i class="fas fa-comment-slash text-gray-300 text-4xl mb-4"></i>
+                    <p class="text-gray-500">Belum ada feedback terbaru</p>
+                </div>
+            @endif
         </div>
     </div>
 
-    <!-- Enhanced Popular Videos -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-xl font-semibold mb-4">Video Terpopuler</h2>
-        <div class="overflow-x-auto">
-            <table class="min-w-full" id="popular-videos-table">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Video</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Views</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="popular-videos-body">
-                    <!-- Popular videos will be loaded here -->
-                </tbody>
-            </table>
+    <!-- Popular Courses -->
+    <div class="bg-white rounded-2xl shadow-xl p-6">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-bold text-gray-900 flex items-center">
+                <i class="fas fa-star text-yellow-500 mr-3"></i>
+                Course Terpopuler
+            </h2>
+            <a href="{{ route('admin.courses.index') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium">
+                Kelola Semua →
+            </a>
+        </div>
+        <div class="space-y-4" id="popular-courses">
+            @if($popularCourses && $popularCourses->count() > 0)
+                @foreach($popularCourses as $course)
+                <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                    <div class="w-16 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        @if($course->gambar_course)
+                            <img src="{{ Storage::url($course->gambar_course) }}" alt="{{ $course->nama_course }}" class="w-full h-full object-cover rounded-lg">
+                        @else
+                            <i class="fas fa-graduation-cap text-white text-lg"></i>
+                        @endif
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-gray-900 mb-1">{{ Str::limit($course->nama_course, 40) }}</h4>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                                {{ $course->kategori->nama_kategori ?? 'Uncategorized' }}
+                            </span>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-users mr-1"></i>
+                                {{ $course->enrollments ?? 0 }} siswa
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            @else
+                <div class="text-center py-8">
+                    <i class="fas fa-graduation-cap text-gray-300 text-4xl mb-4"></i>
+                    <p class="text-gray-500">Belum ada data course</p>
+                </div>
+            @endif
         </div>
     </div>
 </div>
-
-<!-- Add Video Modal -->
-<div id="addVideoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold mb-4">Tambah Video Baru</h3>
-        <form id="addVideoForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Video</label>
-                <input type="text" name="nama" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Deskripsi</label>
-                <textarea name="deskripsi" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">URL Video</label>
-                <input type="url" name="url" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">URL Gambar</label>
-                <input type="url" name="gambar" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Kategori</label>
-                <select name="kategori_kategori_id" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" id="categorySelect">
-                    <!-- Categories will be loaded here -->
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Channel</label>
-                <input type="text" name="channel" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button type="button" onclick="closeAddVideoModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Simpan</button>
-            </div>
-        </form>
-    </div>
 </div>
 
-<!-- Add Category Modal -->
-<div id="addCategoryModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-    <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4">
-        <h3 class="text-lg font-semibold mb-4">Tambah Kategori Baru</h3>
-        <form id="addCategoryForm" class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Nama Kategori</label>
-                <input type="text" name="kategori" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button type="button" onclick="closeAddCategoryModal()" class="px-4 py-2 text-gray-600 hover:text-gray-800">Batal</button>
-                <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Simpan</button>
-            </div>
-        </form>
-    </div>
-</div>
 @endsection
 
 @push('scripts')
 <script>
-// Load admin dashboard data
-async function loadAdminDashboard() {
-    try {
-        const response = await fetch('/api/admin/dashboard');
-        const data = await response.json();
-
-        if (data.success) {
-            loadAdminStats(data.stats);
-            loadRecentFeedbacks(data.recent_feedbacks);
-            loadPopularVideosTable(data.popular_videos);
-        }
-    } catch (error) {
-        console.error('Error loading admin dashboard:', error);
-    }
-}
-
-// Load categories for dropdown
-async function loadCategories() {
-    try {
-        const response = await fetch('/api/categories');
-        const data = await response.json();
-
-        if (data.success) {
-            const select = document.getElementById('categorySelect');
-            select.innerHTML = data.categories.map(cat =>
-                `<option value="${cat.kategori_id}">${cat.kategori}</option>`
-            ).join('');
-        }
-    } catch (error) {
-        console.error('Error loading categories:', error);
-    }
-}
-
-function loadAdminStats(stats) {
-    const statsContainer = document.getElementById('stats-cards');
-    statsContainer.innerHTML = `
-        <div class="bg-blue-50 p-6 rounded-lg">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-blue-600">${stats.total_users}</p>
-                <p class="text-sm text-gray-600">Total Users</p>
-            </div>
-        </div>
-        <div class="bg-green-50 p-6 rounded-lg">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-green-600">${stats.total_videos}</p>
-                <p class="text-sm text-gray-600">Total Videos</p>
-            </div>
-        </div>
-        <div class="bg-yellow-50 p-6 rounded-lg">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-yellow-600">${stats.total_categories}</p>
-                <p class="text-sm text-gray-600">Categories</p>
-            </div>
-        </div>
-        <div class="bg-purple-50 p-6 rounded-lg">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-purple-600">${stats.total_feedbacks}</p>
-                <p class="text-sm text-gray-600">Feedbacks</p>
-            </div>
-        </div>
-        <div class="bg-red-50 p-6 rounded-lg">
-            <div class="text-center">
-                <p class="text-3xl font-bold text-red-600">${stats.total_bookmarks}</p>
-                <p class="text-sm text-gray-600">Bookmarks</p>
-            </div>
-        </div>
-    `;
-}
-
-function loadRecentFeedbacks(feedbacks) {
-    const container = document.getElementById('recent-feedbacks');
-    if (feedbacks.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center">Belum ada feedback</p>';
-        return;
-    }
-
-    container.innerHTML = feedbacks.map(feedback => `
-        <div class="border-l-4 border-blue-500 pl-4 py-2">
-            <div class="flex justify-between items-start">
-                <div>
-                    <p class="font-semibold text-sm">${feedback.user?.nama_lengkap || 'Unknown User'}</p>
-                    <p class="text-gray-600 text-sm mb-1">${feedback.vidio?.nama || 'Unknown Video'}</p>
-                    <p class="text-gray-800">${feedback.pesan}</p>
-                </div>
-                <span class="text-xs text-gray-500">${new Date(feedback.tanggal).toLocaleDateString('id-ID')}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-function loadPopularVideosTable(videos) {
-    const tbody = document.getElementById('popular-videos-body');
-    tbody.innerHTML = videos.slice(0, 10).map(video => `
-        <tr class="border-b">
-            <td class="px-6 py-4">
-                <div class="flex items-center">
-                    <img src="${video.gambar}" alt="${video.nama}" class="w-12 h-12 object-cover rounded mr-3">
-                    <span class="font-medium">${video.nama}</span>
-                </div>
-            </td>
-            <td class="px-6 py-4">${video.kategori?.kategori || 'Umum'}</td>
-            <td class="px-6 py-4">${video.jumlah_tayang}</td>
-            <td class="px-6 py-4">
-                <button onclick="editVideo(${video.vidio_id})" class="text-blue-600 hover:text-blue-800 mr-2">Edit</button>
-                <button onclick="deleteVideo(${video.vidio_id})" class="text-red-600 hover:text-red-800">Delete</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-// Modal functions
-function openAddVideoModal() {
-    loadCategories();
-    document.getElementById('addVideoModal').classList.remove('hidden');
-    document.getElementById('addVideoModal').classList.add('flex');
-}
-
-function closeAddVideoModal() {
-    document.getElementById('addVideoModal').classList.add('hidden');
-    document.getElementById('addVideoModal').classList.remove('flex');
-}
-
-function openAddCategoryModal() {
-    document.getElementById('addCategoryModal').classList.remove('hidden');
-    document.getElementById('addCategoryModal').classList.add('flex');
-}
-
-function closeAddCategoryModal() {
-    document.getElementById('addCategoryModal').classList.add('hidden');
-    document.getElementById('addCategoryModal').classList.remove('flex');
-}
-
-// Form submissions
-document.getElementById('addVideoForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData);
-
-    try {
-        const response = await fetch('/api/admin/videos', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            Swal.fire({
-                title: 'Berhasil!',
-                text: result.message,
-                icon: 'success'
-            }).then(() => {
-                closeAddVideoModal();
-                loadAdminDashboard();
-                this.reset();
+// Simple dashboard initialization
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth animations to stats cards
+    const statsCards = document.querySelectorAll('[class*="bg-white"]');
+    
+    statsCards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.5s ease';
+            
+            requestAnimationFrame(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
             });
-        } else {
-            Swal.fire({
-                title: 'Gagal!',
-                text: result.message,
-                icon: 'error'
-            });
-        }
-    } catch (error) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Terjadi kesalahan sistem',
-            icon: 'error'
-        });
-    }
-});
-
-document.getElementById('addCategoryForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-    const data = Object.fromEntries(formData);
-
-    try {
-        const response = await fetch('/api/admin/categories', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify(data)
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            Swal.fire({
-                title: 'Berhasil!',
-                text: result.message,
-                icon: 'success'
-            }).then(() => {
-                closeAddCategoryModal();
-                loadAdminDashboard();
-                this.reset();
-            });
-        } else {
-            Swal.fire({
-                title: 'Gagal!',
-                text: result.message,
-                icon: 'error'
-            });
-        }
-    } catch (error) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Terjadi kesalahan sistem',
-            icon: 'error'
-        });
-    }
-});
-
-// Video actions
-async function deleteVideo(videoId) {
-    const result = await Swal.fire({
-        title: 'Apakah Anda yakin?',
-        text: "Video ini akan dihapus permanen!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
+        }, index * 100);
     });
-
-    if (result.isConfirmed) {
-        try {
-            const response = await fetch(`/api/admin/videos/${videoId}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                }
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                Swal.fire('Dihapus!', data.message, 'success');
-                loadAdminDashboard();
-            } else {
-                Swal.fire('Gagal!', data.message, 'error');
-            }
-        } catch (error) {
-            Swal.fire('Error!', 'Terjadi kesalahan sistem', 'error');
-        }
-    }
-}
-
-// Load data when page loads
-document.addEventListener('DOMContentLoaded', loadAdminDashboard);
+});
 </script>
 @endpush
