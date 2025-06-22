@@ -236,7 +236,7 @@
                 <span class="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></span>
                 🎯 Top Categories
             </div> --}}
-            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-900 to-purple-400 bg-clip-text text-transparent mb-4">
+            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
                 Kategori Pembelajaran Populer
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -277,7 +277,7 @@
                 <span class="w-2 h-2 bg-red-500 rounded-full mr-2 animate-pulse"></span>
                 🔥 Trending Now
             </div> --}}
-            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent mb-4">
+            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-red-600 to-orange-300 bg-clip-text text-transparent mb-4">
                 Video Populer
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -317,7 +317,7 @@
                 <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
                 ✨ Fresh Content
             </div> --}}
-            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            <h2 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-700 bg-clip-text text-transparent mb-4">
                 Video Terbaru
             </h2>
             <p class="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -677,8 +677,8 @@ async function loadLatestVideos() {
                         <!-- Content -->
                         <div class="p-6">
                             <!-- Fresh Badge -->
-                            <div class="inline-flex items-center px-3 py-1 bg-gradient-to-r ${gradients[index]} bg-opacity-10 text-gray-700 text-xs font-medium rounded-full mb-3">
-                                🆕 Fresh Content
+                            <div class="inline-flex items-center px-3 py-1 bg-gradient-to-r ${gradients[index]} bg-opacity-10 text-white text-xs font-medium rounded-full mb-3">
+                                🆕 Terbaru
                             </div>
 
                             <!-- Title -->

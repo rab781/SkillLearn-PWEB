@@ -8,6 +8,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\QuizController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,14 +59,16 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::put('/feedbacks/{feedback}', [FeedbackController::class, 'update']);
         Route::delete('/feedbacks/{feedback}', [FeedbackController::class, 'destroy']);
 
-
-
         // Dashboard customer
         Route::get('/dashboard', [DashboardController::class, 'customerDashboard']);
         Route::get('/customer/stats', [DashboardController::class, 'customerStats']);
 
         // Watch history
         Route::post('/watch-history', [DashboardController::class, 'recordWatchHistory']);
+
+        // Quiz routes
+        Route::get('/quiz/{vidio_id}', [QuizController::class, 'showQuizForUser'])->name('quiz.show');
+        Route::post('/quiz/{vidio_id}/submit', [QuizController::class, 'submitQuiz'])->name('quiz.submit')->middleware('auth');
     });
 
     // Admin routes
@@ -89,6 +92,14 @@ Route::middleware(['web', 'auth'])->group(function () {
         Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard']);
         Route::get('/admin/reports/users', [DashboardController::class, 'usersReport']);
         Route::get('/admin/reports/videos', [DashboardController::class, 'videosReport']);
+
+        // Quiz Management
+        Route::get('/admin/quiz/{vidio_id}', [QuizController::class, 'index'])->name('quiz.index');
+        Route::get('/admin/quiz/{vidio_id}/create', [QuizController::class, 'create'])->name('quiz.create');
+        Route::post('/admin/quiz', [QuizController::class, 'store'])->name('quiz.store');
+        Route::delete('/admin/quiz/{id}', [QuizController::class, 'destroy'])->name('quiz.destroy');
+
+
     });
 });
 

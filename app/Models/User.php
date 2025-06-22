@@ -68,4 +68,8 @@ class User extends Authenticatable
     {
         return $this->role === 'CU';
     }
+    public function detailQuiz()
+    {
+        return $this->hasMany(DetailQuiz::class, 'users_id');
+    }
 }

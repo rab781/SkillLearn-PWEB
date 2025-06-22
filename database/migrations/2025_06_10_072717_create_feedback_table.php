@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('balasan')->nullable();
             $table->unsignedBigInteger('vidio_vidio_id');
             $table->unsignedBigInteger('users_id');
+            
             $table->foreign('vidio_vidio_id')->references('vidio_id')->on('vidio')->onDelete('cascade');
             $table->foreign('users_id')->references('users_id')->on('users')->onDelete('cascade');
             $table->timestamps();

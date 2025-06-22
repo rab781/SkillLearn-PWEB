@@ -89,7 +89,7 @@
                         <div class="mb-4">
                             <textarea name="pesan"
                                     placeholder="💭 Ketik feedback, pertanyaan, atau insights Anda tentang video ini..."
-                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl  focus:border-blue-500 transition-all duration-200 resize-none focus:ring-0.5 focus:outline-none"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-xl  transition-all duration-200 resize-none focus:border-blue-500 focus:ring-0.5 focus:outline-none"
                                     rows="4"></textarea>
                         </div>
                         <div class="flex justify-between items-center">
@@ -267,10 +267,27 @@
                     </div>
 
                     <!-- Button Quiz -->
-                    <button onclick="saveNotes()"
+                    {{-- <button
+                    onclick="saveNotes()"
                             class="w-full bg-orange-400 hover:bg-orange-500 text-white rounded-xl p-4 border border-orange-300 transition-all duration-200 transform hover:scale-105 hover:shadow-lg">
                         📝 Latihan Quiz
-                    </button>
+                    </button> --}}
+                   @if(auth()->check() && auth()->user()->isAdmin())
+                        <button
+                            type="button"
+                            onclick="window.location.href='{{ route('admin.quiz.index', ['vidio_id' => $id]) }}'"
+                            class="w-full bg-orange-400 hover:bg-orange-500 text-white rounded-xl p-4 border border-orange-300 transition-all duration-200 transform hover:scale-105 hover:shadow-lg block text-center">
+                            +Lihat & Buat Soal
+                        </button>
+                    @else
+                        <button
+                            type="button"
+                            onclick="window.location.href='{{ route('pelanggan.quiz.show', ['vidio_id' => $id]) }}'"
+                            class="w-full bg-orange-400 hover:bg-orange-500 text-white rounded-xl p-4 border border-orange-300 transition-all duration-200 transform hover:scale-105 hover:shadow-lg block text-center">
+                            📝 Latihan Quiz
+                        </button>
+                    @endif
+
                     </div>
                 </div>
                 <!-- Enhanced Related Videos -->
@@ -809,6 +826,7 @@ function displayCategories(categories) {
         </a>
     `).join('');
 }
+
 
 // Feedback actions
 document.getElementById('feedbackForm')?.addEventListener('submit', async function(e) {
@@ -1436,7 +1454,7 @@ function showLoginPrompt() {
     if (typeof Swal !== 'undefined') {
         Swal.fire({
             title: '🔐 Perlu Login',
-            text: 'Silakan login untuk menggunakan fitur ini',
+            text: 'Silakan login untuk melihat video ini',
             icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'Login',
@@ -1445,11 +1463,16 @@ function showLoginPrompt() {
             if (result.isConfirmed) {
                 window.location.href = '/login';
             }
+            else if (result.dismiss === Swal.DismissReason.cancel) {
+                window.location.href = '/';
+            }
         });
     } else {
-        const shouldLogin = confirm('🔐 Silakan login untuk menggunakan fitur ini. Ingin login sekarang?');
+        const shouldLogin = confirm('🔐 Silakan login untuk melihat video ini. Login sekarang?');
         if (shouldLogin) {
             window.location.href = '/login';
+        } else {
+            window.location.href = '/';
         }
     }
 }
@@ -1483,7 +1506,7 @@ async function deleteFeedback(feedbackId) {
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal'
         })
-        : confirm('⚠️ Apakah Anda yakin ingin menghapus feedback ini?');
+        : confirm('⚠️ Apakah Anda yakin menghapus feedback ini?');
 
     if ((typeof Swal !== 'undefined' && confirmDelete.isConfirmed) || (typeof Swal === 'undefined' && confirmDelete)) {
         try {

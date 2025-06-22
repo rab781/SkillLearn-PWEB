@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\QuizController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -39,12 +39,13 @@ Route::get('/videos/{id}', function ($id) {
     return view('videos.show')->with('id', $id);
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Dashboard umum untuk customer (tanpa middleware role karena sudah di cek di controller)
     Route::get('/dashboard', function () {
-        /** @var \App\Models\User $user */
+        // @var \App\Models\User $user
         $user = Auth::user();
         if ($user->isAdmin()) {
             return redirect('/admin/dashboard');
@@ -58,6 +59,7 @@ Route::middleware('auth')->group(function () {
         return view('dashboard.customer')->with('dashboardData', $dashboardData);
     })->name('dashboard');
 
+
     // Customer routes
     Route::middleware('check.role:CU')->group(function () {
         Route::get('/customer/dashboard', function () {
@@ -69,6 +71,8 @@ Route::middleware('auth')->group(function () {
             return view('dashboard.customer')->with('dashboardData', $dashboardData);
         });
 
+        Route::get('/videos/{vidio}', [VidioController::class, 'show'])->name('videos.show');
+
         // Add web routes for customer feedback and bookmark
         Route::prefix('web')->group(function () {
             Route::post('/feedback', [App\Http\Controllers\FeedbackController::class, 'store'])->name('web.feedback.store');
@@ -77,14 +81,16 @@ Route::middleware('auth')->group(function () {
             Route::get('/bookmark/check/{video}', [App\Http\Controllers\BookmarkController::class, 'checkBookmark'])->name('web.bookmark.check');
         });
 
-        //Add Profil 
+        //Add Profil
         Route::middleware('check.role:CU')->prefix('pelanggan')->as('pelanggan.')->group(function () {
             Route::get('/', [App\Http\Controllers\ProfilPelangganController::class, 'show'])->name('show');
             Route::get('/{id}/edit', [App\Http\Controllers\ProfilPelangganController::class, 'edit'])->name('edit');
             Route::put('/{id}', [App\Http\Controllers\ProfilPelangganController::class, 'update'])->name('update');
+
+            // User
+            Route::get('/quiz/{vidio_id}', [QuizController::class, 'showQuizForUser'])->name('quiz.show');
+            Route::post('/quiz/{vidio_id}/submit', [QuizController::class, 'submitQuiz'])->name('quiz.submit')->middleware('auth');
         });
-
-
     });
 
     // Admin routes
@@ -92,5 +98,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/dashboard', function () {
             return view('dashboard.admin');
         });
+        Route::get('/admin/quiz/{vidio_id}', [QuizController::class, 'index'])->name('admin.quiz.index');
+        Route::post('/admin/quiz', [QuizController::class, 'store'])->name('admin.quiz.index');
     });
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Vidio;
 use App\Models\Kategori;
+use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -91,15 +92,31 @@ class VidioController extends Controller
     /**
      * Display the specified resource.
      */
+    // public function show(Vidio $vidio)
+    // {
+    //     // Increment view count
+    //     $vidio->increment('jumlah_tayang');
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'video' => $vidio->load(['kategori', 'feedbacks.user'])
+    //     ]);
+    // }
+    
     public function show(Vidio $vidio)
     {
-        // Increment view count
         $vidio->increment('jumlah_tayang');
+        $vidio->load(['kategori', 'feedbacks.user']);
 
-        return response()->json([
-            'success' => true,
-            'video' => $vidio->load(['kategori', 'feedbacks.user'])
-        ]);
+        //  request JSON (API/AJAX)
+        if (request()->wantsJson() || request()->is('api/*')) {
+            return response()->json([
+                'success' => true,
+                'video' => $vidio
+            ]);
+        }
+        //  request web
+        return view('videos.show', compact('vidio'));
     }
 
     /**
