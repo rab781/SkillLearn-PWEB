@@ -3,364 +3,463 @@
 @section('title', 'Quiz Management - ' . $course->nama_course)
 
 @push('styles')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-/* Modern Quiz Management Styling */
-:root {
-    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --success-gradient: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    --warning-gradient: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-    --danger-gradient: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-    --shadow-light: 0 2px 10px rgba(0,0,0,0.08);
-    --shadow-medium: 0 8px 25px rgba(0,0,0,0.15);
-    --border-radius: 12px;
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.quiz-management-container {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-.page-header {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    box-shadow: var(--shadow-light);
+/* Override potential Tailwind conflicts */
+.quiz-management-container * {
+    box-sizing: border-box;
 }
 
-.quiz-builder {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-    border: 2px dashed #e9ecef;
-    border-radius: var(--border-radius);
-    transition: var(--transition);
-    box-shadow: var(--shadow-light);
+/* Page Header */
+.quiz-page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 32px !important;
+    margin-bottom: 32px !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2) !important;
 }
 
-.quiz-builder:hover {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #ffffff 0%, #e7f1ff 100%);
-    transform: translateY(-2px);
+.quiz-page-header .breadcrumb {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    margin-bottom: 0 !important;
 }
 
+.quiz-page-header .breadcrumb a {
+    color: rgba(255, 255, 255, 0.9) !important;
+    text-decoration: none !important;
+}
+
+.quiz-page-header .breadcrumb-item.active {
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.quiz-page-header h1 {
+    color: white !important;
+    margin-bottom: 0 !important;
+}
+
+.quiz-page-header p {
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-bottom: 0 !important;
+}
+
+.quiz-page-header .header-icon {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50% !important;
+    padding: 8px !important;
+    margin-right: 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Quiz Cards */
 .quiz-card {
-    background: white;
-    border-radius: var(--border-radius);
-    border: 1px solid #e9ecef;
-    transition: var(--transition);
-    overflow: hidden;
-    box-shadow: var(--shadow-light);
-    height: 100%;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(102, 126, 234, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
+    position: relative !important;
+    height: 100% !important;
+}
+
+.quiz-card::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 4px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
 }
 
 .quiz-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-medium);
-    border-color: #667eea;
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2) !important;
+    border-color: rgba(102, 126, 234, 0.3) !important;
 }
 
 .quiz-header {
-    background: var(--primary-gradient);
-    color: white;
-    padding: 1.5rem;
-    position: relative;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    padding: 24px !important;
+    position: relative !important;
+}
+
+.quiz-header h5 {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    margin-bottom: 8px !important;
+    color: white !important;
+}
+
+.quiz-header p {
+    font-size: 14px !important;
+    opacity: 0.85 !important;
+    margin-bottom: 0 !important;
 }
 
 .quiz-status-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
+    position: absolute !important;
+    top: 16px !important;
+    right: 16px !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
+.quiz-status-badge.bg-success {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(69, 160, 73, 0.9)) !important;
+    color: white !important;
+}
+
+.quiz-status-badge.bg-secondary {
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.9), rgba(90, 98, 104, 0.9)) !important;
+    color: white !important;
+}
+
+/* Quiz Stats */
 .quiz-stats {
-    display: flex;
-    gap: 1.5rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    margin-top: 16px !important;
 }
 
 .quiz-stat {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: rgba(255,255,255,0.95);
-    font-size: 0.85rem;
-    background: rgba(255,255,255,0.1);
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    backdrop-filter: blur(10px);
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 8px 12px !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)) !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(15px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    transition: all 0.3s ease !important;
 }
 
-.quiz-actions {
-    padding: 1.25rem;
-    border-top: 1px solid #f1f3f4;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    display: flex;
-    gap: 0.75rem;
-}
-
-.form-builder {
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-medium);
-    border: 1px solid #e9ecef;
-}
-
-.form-section {
-    padding: 2rem;
-    border-bottom: 1px solid #f1f3f4;
-}
-
-.form-section:last-child {
-    border-bottom: none;
-}
-
-.form-section h4 {
-    color: #2d3748;
-    margin-bottom: 1.5rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.input-group-modern {
-    position: relative;
-    margin-bottom: 1.5rem;
-}
-
-.input-group-modern input,
-.input-group-modern textarea,
-.input-group-modern select {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    transition: var(--transition);
-    background: #ffffff;
-    font-family: inherit;
-}
-
-.input-group-modern input:focus,
-.input-group-modern textarea:focus,
-.input-group-modern select:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    outline: none;
-    background: #ffffff;
-}
-
-.input-group-modern label {
-    position: absolute;
-    left: 1.25rem;
-    top: 1rem;
-    background: white;
-    padding: 0 0.5rem;
-    color: #718096;
-    font-size: 0.95rem;
-    transition: var(--transition);
-    pointer-events: none;
-    font-weight: 500;
-}
-
-.input-group-modern input:focus + label,
-.input-group-modern textarea:focus + label,
-.input-group-modern select:focus + label,
-.input-group-modern input:not(:placeholder-shown) + label,
-.input-group-modern textarea:not(:placeholder-shown) + label,
-.input-group-modern select:not([value=""]) + label {
-    top: -0.5rem;
-    font-size: 0.8rem;
-    color: #667eea;
-    font-weight: 600;
-}
-
-.btn-modern {
-    padding: 0.875rem 1.75rem;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-modern::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,0.2);
-    transition: var(--transition);
-}
-
-.btn-modern:hover::before {
-    left: 0;
-}
-
-.btn-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-medium);
-}
-
-.btn-modern:active {
-    transform: translateY(0);
-}
-
-.btn-primary-modern {
-    background: var(--primary-gradient);
-    color: white;
-}
-
-.btn-success-modern {
-    background: var(--success-gradient);
-    color: white;
-}
-
-.btn-warning-modern {
-    background: var(--warning-gradient);
-    color: white;
-}
-
-.btn-danger-modern {
-    background: var(--danger-gradient);
-    color: white;
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-    color: white;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: var(--border-radius);
-    border: 2px dashed #e9ecef;
-}
-
-.empty-state i {
-    font-size: 4rem;
-    color: #cbd5e0;
-    margin-bottom: 1.5rem;
-}
-
-.empty-state h4 {
-    color: #4a5568;
-    margin-bottom: 1rem;
-}
-
-.empty-state p {
-    color: #718096;
-    margin-bottom: 2rem;
+.quiz-stat:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.2)) !important;
+    transform: scale(1.05) !important;
 }
 
 .quiz-content {
-    padding: 1.25rem;
-    flex: 1;
+    padding: 20px !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
 }
 
 .quiz-meta {
-    display: flex;
-    justify-content: between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 8px;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 16px !important;
+    padding: 12px !important;
+    background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%) !important;
+    border-radius: 12px !important;
+    border: 1px solid rgba(102, 126, 234, 0.1) !important;
 }
 
 .quiz-meta small {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-    color: #6c757d;
-    font-weight: 500;
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    color: #6c757d !important;
+    font-weight: 500 !important;
 }
 
-.fade-in {
-    animation: fadeIn 0.5s ease-in-out;
+.quiz-actions {
+    padding: 16px !important;
+    border-top: 1px solid #dee2e6 !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    display: flex !important;
+    gap: 12px !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Buttons */
+.quiz-btn {
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    overflow: hidden !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
 }
 
+.quiz-btn i {
+    font-size: 16px !important;
+    line-height: 1 !important;
+}
+
+.quiz-btn:hover {
+    transform: translateY(-2px) !important;
+    text-decoration: none !important;
+}
+
+.quiz-btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+}
+
+.quiz-btn-primary:hover {
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+}
+
+.quiz-btn-success {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3) !important;
+}
+
+.quiz-btn-success:hover {
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4) !important;
+}
+
+.quiz-btn-warning {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3) !important;
+}
+
+.quiz-btn-warning:hover {
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4) !important;
+}
+
+.quiz-btn-danger {
+    background: linear-gradient(135deg, #F44336 0%, #D32F2F 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3) !important;
+}
+
+.quiz-btn-danger:hover {
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.4) !important;
+}
+
+.quiz-btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3) !important;
+}
+
+.quiz-btn-secondary:hover {
+    color: white !important;
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4) !important;
+}
+
+/* Form Builder */
+.quiz-form-builder {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15) !important;
+    border: 1px solid rgba(102, 126, 234, 0.1) !important;
+    overflow: hidden !important;
+}
+
+.quiz-form-section {
+    padding: 32px !important;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1) !important;
+}
+
+.quiz-form-section:last-child {
+    border-bottom: none !important;
+}
+
+.quiz-form-section h4 {
+    color: #667eea !important;
+    margin-bottom: 24px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Form Inputs */
+.quiz-input-group {
+    position: relative !important;
+    margin-bottom: 24px !important;
+}
+
+.quiz-input-group input,
+.quiz-input-group textarea,
+.quiz-input-group select {
+    width: 100% !important;
+    padding: 16px 20px !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    font-size: 15px !important;
+    transition: all 0.3s ease !important;
+    background: #ffffff !important;
+    font-family: inherit !important;
+}
+
+.quiz-input-group input:focus,
+.quiz-input-group textarea:focus,
+.quiz-input-group select:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+    outline: none !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fdff 100%) !important;
+}
+
+.quiz-input-group label {
+    position: absolute !important;
+    left: 20px !important;
+    top: 16px !important;
+    background: white !important;
+    padding: 0 8px !important;
+    color: #718096 !important;
+    font-size: 15px !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    font-weight: 500 !important;
+}
+
+.quiz-input-group input:focus + label,
+.quiz-input-group textarea:focus + label,
+.quiz-input-group select:focus + label,
+.quiz-input-group input:not(:placeholder-shown) + label,
+.quiz-input-group textarea:not(:placeholder-shown) + label,
+.quiz-input-group select:not([value=""]) + label,
+.quiz-input-group .has-value + label {
+    top: -8px !important;
+    font-size: 12px !important;
+    color: #667eea !important;
+    font-weight: 600 !important;
+}
+
+/* Empty State */
+.quiz-empty-state {
+    text-align: center !important;
+    padding: 64px 32px !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+    border-radius: 16px !important;
+    border: 2px dashed rgba(102, 126, 234, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1) !important;
+}
+
+.quiz-empty-state i {
+    font-size: 64px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    margin-bottom: 24px !important;
+}
+
+.quiz-empty-state h4 {
+    color: #667eea !important;
+    margin-bottom: 16px !important;
+    font-weight: 600 !important;
+}
+
+.quiz-empty-state p {
+    color: #6c757d !important;
+    margin-bottom: 32px !important;
+}
+
+/* Alert */
+.quiz-alert-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%) !important;
+    border-color: #4CAF50 !important;
+    color: #155724 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.2) !important;
+}
+
+/* Animation */
+.quiz-fade-in {
+    animation: quizFadeIn 0.5s ease-in-out !important;
+}
+
+@keyframes quizFadeIn {
+    from {
+        opacity: 0 !important;
+        transform: translateY(20px) !important;
+    }
+    to {
+        opacity: 1 !important;
+        transform: translateY(0) !important;
+    }
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     .quiz-stats {
-        gap: 1rem;
+        gap: 8px !important;
     }
 
     .quiz-stat {
-        font-size: 0.8rem;
-        padding: 0.3rem 0.6rem;
+        font-size: 11px !important;
+        padding: 6px 10px !important;
     }
 
     .quiz-actions {
-        flex-direction: column;
+        flex-direction: column !important;
+        gap: 8px !important;
     }
 
-    .btn-modern {
-        justify-content: center;
+    .quiz-btn {
+        justify-content: center !important;
+        width: 100% !important;
     }
-}
 
-.btn-modern:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-}
+    .quiz-page-header {
+        padding: 24px !important;
+    }
 
-.btn-primary-modern {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.btn-success-modern {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-    color: white;
-}
-
-.btn-warning-modern {
-    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-    color: white;
-}
-
-.btn-danger-modern {
-    background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-    color: white;
+    .quiz-form-section {
+        padding: 24px !important;
+    }
 }
 </style>
 @endpush
 
 @section('content')
+<div class="quiz-management-container">
 <div class="container-fluid px-4 py-3">
     <!-- Page Header -->
-    <div class="page-header fade-in mb-4">
+    <div class="quiz-page-header quiz-fade-in mb-4">
         <div class="d-flex justify-content-between align-items-start">
             <div>
                 <nav aria-label="breadcrumb" class="mb-3">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.courses.index') }}" class="text-decoration-none">
+                            <a href="{{ route('admin.courses.index') }}">
                                 <i class="fas fa-graduation-cap me-1"></i>Courses
                             </a>
                         </li>
                         <li class="breadcrumb-item">
-                            <a href="{{ route('admin.courses.show', $course->course_id) }}" class="text-decoration-none">
+                            <a href="{{ route('admin.courses.show', $course->course_id) }}">
                                 {{ Str::limit($course->nama_course, 30) }}
                             </a>
                         </li>
@@ -368,18 +467,18 @@
                     </ol>
                 </nav>
                 <div class="d-flex align-items-center mb-2">
-                    <div class="bg-primary text-white rounded-circle p-2 me-3">
+                    <div class="header-icon">
                         <i class="fas fa-question-circle fa-lg"></i>
                     </div>
                     <div>
-                        <h1 class="h3 mb-0 text-gray-800">Quiz Management</h1>
-                        <p class="text-muted mb-0">
+                        <h1 class="h3 mb-0">Quiz Management</h1>
+                        <p class="mb-0">
                             Kelola quiz untuk course: <strong>{{ $course->nama_course }}</strong>
                         </p>
                     </div>
                 </div>
             </div>
-            <button class="btn-modern btn-primary-modern" onclick="showQuizBuilder()">
+            <button class="quiz-btn quiz-btn-primary" onclick="showQuizBuilder()">
                 <i class="fas fa-plus"></i>
                 <span>Buat Quiz Baru</span>
             </button>
@@ -387,15 +486,15 @@
     </div>
 
     @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <div class="alert quiz-alert-success alert-dismissible fade show" role="alert">
             <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     @endif
 
     <!-- Quiz Builder (Hidden by default) -->
-    <div id="quizBuilderCard" class="card form-builder mb-4 fade-in" style="display: none;">
-        <div class="form-section">
+    <div id="quizBuilderCard" class="card quiz-form-builder mb-4 quiz-fade-in" style="display: none;">
+        <div class="quiz-form-section">
             <h4>
                 <i class="fas fa-plus-circle text-primary"></i>
                 Buat Quiz Baru
@@ -406,13 +505,13 @@
 
                 <div class="row">
                     <div class="col-md-8">
-                        <div class="input-group-modern">
+                        <div class="quiz-input-group">
                             <input type="text" id="judulQuiz" name="judul_quiz" placeholder=" " required>
                             <label for="judulQuiz">Judul Quiz</label>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <div class="input-group-modern">
+                        <div class="quiz-input-group">
                             <select id="tipeQuiz" name="tipe_quiz" required>
                                 <option value="">Pilih Tipe</option>
                                 <option value="setelah_video">Setelah Video</option>
@@ -424,14 +523,14 @@
                     </div>
                 </div>
 
-                <div class="input-group-modern">
+                <div class="quiz-input-group">
                     <textarea id="deskripsiQuiz" name="deskripsi_quiz" rows="3" placeholder=" "></textarea>
                     <label for="deskripsiQuiz">Deskripsi Quiz (opsional)</label>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="input-group-modern">
+                        <div class="quiz-input-group">
                             <input type="number" id="durasiQuiz" name="durasi_menit" min="1" max="180" value="30" placeholder=" " required>
                             <label for="durasiQuiz">Durasi (menit)</label>
                         </div>
@@ -447,11 +546,11 @@
                 </div>
 
                 <div class="d-flex gap-3 mt-4">
-                    <button type="button" class="btn-modern btn-success-modern" onclick="saveQuiz()">
+                    <button type="button" class="quiz-btn quiz-btn-success" onclick="saveQuiz()">
                         <i class="fas fa-save"></i>
                         <span>Simpan Quiz</span>
                     </button>
-                    <button type="button" class="btn-modern btn-secondary" onclick="cancelQuizBuilder()">
+                    <button type="button" class="quiz-btn quiz-btn-secondary" onclick="cancelQuizBuilder()">
                         <i class="fas fa-times"></i>
                         <span>Batal</span>
                     </button>
@@ -465,7 +564,7 @@
         @if($quizzes->count() > 0)
             @foreach($quizzes as $quiz)
             <div class="col-lg-6 col-xl-4 mb-4">
-                <div class="quiz-card fade-in">
+                <div class="quiz-card quiz-fade-in">
                     <div class="quiz-header position-relative">
                         <span class="quiz-status-badge {{ $quiz->is_active ? 'bg-success' : 'bg-secondary' }}">
                             <i class="fas fa-{{ $quiz->is_active ? 'check' : 'pause' }} me-1"></i>
@@ -519,17 +618,17 @@
 
                     <div class="quiz-actions">
                         <a href="{{ route('admin.courses.quizzes.questions.index', $quiz->quiz_id) }}"
-                           class="btn-modern btn-primary-modern flex-fill text-center">
+                           class="quiz-btn quiz-btn-primary flex-fill text-center">
                             <i class="fas fa-edit"></i>
                             <span>Kelola Soal</span>
                         </a>
 
-                        <button class="btn-modern btn-warning-modern" onclick="editQuiz({{ $quiz->quiz_id }})"
+                        <button class="quiz-btn quiz-btn-warning" onclick="editQuiz({{ $quiz->quiz_id }})"
                                 title="Edit Quiz">
                             <i class="fas fa-cog"></i>
                         </button>
 
-                        <button class="btn-modern btn-danger-modern" onclick="deleteQuiz({{ $quiz->quiz_id }})"
+                        <button class="quiz-btn quiz-btn-danger" onclick="deleteQuiz({{ $quiz->quiz_id }})"
                                 title="Hapus Quiz">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -539,17 +638,18 @@
             @endforeach
         @else
             <div class="col-12">
-                <div class="empty-state fade-in">
+                <div class="quiz-empty-state quiz-fade-in">
                     <i class="fas fa-question-circle"></i>
                     <h4>Belum Ada Quiz</h4>
                     <p>Mulai buat quiz pertama untuk course ini dan tingkatkan pembelajaran siswa!</p>
-                    <button class="btn-modern btn-primary-modern" onclick="showQuizBuilder()">
+                    <button class="quiz-btn quiz-btn-primary" onclick="showQuizBuilder()">
                         <i class="fas fa-plus"></i> Buat Quiz Pertama
                     </button>
                 </div>
             </div>
         @endif
     </div>
+</div>
 </div>
 @endsection
 
@@ -818,7 +918,7 @@ function deleteQuiz(quizId) {
 
 // Trigger label animation for filled inputs
 function triggerLabelAnimation() {
-    const inputs = document.querySelectorAll('.input-group-modern input, .input-group-modern textarea, .input-group-modern select');
+    const inputs = document.querySelectorAll('.quiz-input-group input, .quiz-input-group textarea, .quiz-input-group select');
     inputs.forEach(input => {
         if (input.value) {
             input.classList.add('has-value');
@@ -828,7 +928,7 @@ function triggerLabelAnimation() {
 
 // Add event listeners for modern input animations
 document.addEventListener('DOMContentLoaded', function() {
-    const inputs = document.querySelectorAll('.input-group-modern input, .input-group-modern textarea, .input-group-modern select');
+    const inputs = document.querySelectorAll('.quiz-input-group input, .quiz-input-group textarea, .quiz-input-group select');
 
     inputs.forEach(input => {
         input.addEventListener('blur', function() {

@@ -15,36 +15,51 @@ class AdminMonitoringController extends Controller
 {
     public function index()
     {
-        $courses = Course::with(['kategori', 'userProgress'])
+        $courses = Course::with(['kategori', 'userProgress', 'videos'])
                         ->withCount('userProgress')
-                        ->get();
+                        ->get()
+                        ->map(function ($course) {
+                            // Add computed properties for consistency
+                            $course->total_video = $course->videos->count();
+                            $course->total_durasi_menit = $course->videos->sum('durasi_menit');
+                            return $course;
+                        });
 
         $totalStudents = User::where('role', 'CU')->count();
         $totalCourses = Course::count();
         $activeCourses = Course::where('is_active', true)->count();
         $totalCompletions = UserCourseProgress::where('status', 'completed')->count();
 
-        // Get recent activities - simplify the query first
-        $recentActivities = RiwayatTonton::with(['user'])
+        // Get recent activities with proper relationships
+        $recentActivities = RiwayatTonton::with(['pengguna'])
                                        ->orderBy('waktu_ditonton', 'desc')
                                        ->limit(10)
                                        ->get();
 
         // Add video and course information manually
         $recentActivities = $recentActivities->map(function ($activity) {
-            // Get video information
-            $video = Vidio::find($activity->vidio_vidio_id);
+            // Get video information using the correct column name
+            $video = null;
+            if ($activity->id_video) {
+                $video = Vidio::find($activity->id_video);
+            }
             $activity->video = $video;
 
-            // Get course information through video
-            if ($video) {
-                $course = DB::table('course_video')
-                           ->join('courses', 'course_video.course_id', '=', 'courses.course_id')
-                           ->where('course_video.vidio_id', $video->vidio_id)
-                           ->select('courses.*')
-                           ->first();
-                $activity->course = $course;
+            // Get course information 
+            $course = null;
+            if ($activity->course_id) {
+                $course = Course::find($activity->course_id);
+            } elseif ($video) {
+                // Try to find course through course_videos table
+                $courseVideo = DB::table('course_videos')
+                              ->where('vidio_vidio_id', $video->vidio_id)
+                              ->first();
+                if ($courseVideo) {
+                    $course = Course::find($courseVideo->course_id);
+                }
             }
+            $activity->course = $course;
+            $activity->user = $activity->pengguna; // Add alias for compatibility
 
             return $activity;
         });
@@ -95,13 +110,14 @@ class AdminMonitoringController extends Controller
                                            ->map(function ($progress) use ($course) {
                                                $totalVideos = $course->videos->count();
 
-                                               // Get video progress for this user
+                                               // Get video progress for this user from course videos
+                                               $courseVideoIds = $course->videos()->pluck('vidio_vidio_id');
                                                $videoProgress = UserVideoProgress::where('user_id', $progress->user_id)
-                                                                                ->whereIn('video_id', $course->videos->pluck('vidio_id'))
+                                                                                ->whereIn('vidio_vidio_id', $courseVideoIds)
                                                                                 ->get();
 
                                                $completedVideos = $videoProgress->where('is_completed', true)->count();
-                                               $watchedMinutes = $videoProgress->sum('watched_duration');
+                                               $watchedMinutes = $videoProgress->sum('watch_time_seconds') / 60; // Convert to minutes
 
                                                return [
                                                    'user' => $progress->user,
@@ -117,14 +133,22 @@ class AdminMonitoringController extends Controller
 
         // Get video watching statistics from course videos
         $videoStats = collect();
-        if ($course->videos) {
-            $videoStats = $course->videos->map(function ($courseVideo) {
-                $video = Vidio::find($courseVideo->vidio_id);
-                if (!$video) return null;
+        if ($course->videos()->exists()) {
+            $videoStats = $course->videos()->with('vidio')->get()->map(function ($courseVideo) {
+                if (!$courseVideo->vidio) return null;
+                
+                $video = $courseVideo->vidio;
 
-                $watchCount = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->count();
-                $totalWatchTime = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->sum('durasi_tonton') ?? 0;
-                $uniqueViewers = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->distinct('users_id')->count();
+                // Use only id_video column for RiwayatTonton
+                $watchCount = RiwayatTonton::where('id_video', $video->vidio_id)
+                                         ->count();
+                                         
+                $totalWatchTime = RiwayatTonton::where('id_video', $video->vidio_id)
+                                             ->sum('durasi_tonton') ?? 0;
+                                             
+                $uniqueViewers = RiwayatTonton::where('id_video', $video->vidio_id)
+                                            ->distinct('id_pengguna')
+                                            ->count();
 
                 return [
                     'video' => $video,
@@ -182,16 +206,17 @@ class AdminMonitoringController extends Controller
             $course = $progress->course;
             $totalVideos = $course->videos ? $course->videos->count() : 0;
 
-            // Get video progress for this user
+            // Get video progress for this user from course videos
             $videoProgress = collect();
             if ($totalVideos > 0) {
+                $courseVideoIds = $course->videos()->pluck('vidio_vidio_id');
                 $videoProgress = UserVideoProgress::where('user_id', $progress->user_id)
-                                                 ->whereIn('video_id', $course->videos->pluck('vidio_id'))
+                                                 ->whereIn('vidio_vidio_id', $courseVideoIds)
                                                  ->get();
             }
 
             $completedVideos = $videoProgress->where('is_completed', true)->count();
-            $watchedMinutes = $videoProgress->sum('watched_duration');
+            $watchedMinutes = $videoProgress->sum('watch_time_seconds') / 60; // Convert to minutes
 
             return [
                 'course' => $course,
@@ -203,32 +228,41 @@ class AdminMonitoringController extends Controller
             ];
         })->sortByDesc('completion_percentage');
 
-        // Get recent activities
-        $recentActivities = RiwayatTonton::with(['user'])
-                                        ->where('users_id', $userId)
+        // Get recent activities for this user
+        $recentActivities = RiwayatTonton::with(['pengguna'])
+                                        ->where('id_pengguna', $userId)
                                         ->orderBy('waktu_ditonton', 'desc')
                                         ->limit(20)
                                         ->get()
                                         ->map(function ($activity) {
-                                            // Get video information
-                                            $video = Vidio::find($activity->vidio_vidio_id);
+                                            // Get video information using correct column
+                                            $video = null;
+                                            if ($activity->id_video) {
+                                                $video = Vidio::find($activity->id_video);
+                                            }
                                             $activity->video = $video;
 
-                                            // Get course information through video
-                                            if ($video) {
-                                                $course = DB::table('course_video')
-                                                           ->join('courses', 'course_video.course_id', '=', 'courses.course_id')
-                                                           ->where('course_video.vidio_id', $video->vidio_id)
-                                                           ->select('courses.*')
-                                                           ->first();
-                                                $activity->course = $course;
+                                            // Get course information
+                                            $course = null;
+                                            if ($activity->course_id) {
+                                                $course = Course::find($activity->course_id);
+                                            } elseif ($video) {
+                                                // Try to find course through course_videos table
+                                                $courseVideo = DB::table('course_videos')
+                                                              ->where('vidio_vidio_id', $video->vidio_id)
+                                                              ->first();
+                                                if ($courseVideo) {
+                                                    $course = Course::find($courseVideo->course_id);
+                                                }
                                             }
+                                            $activity->course = $course;
+                                            $activity->user = $activity->pengguna; // Add alias
 
                                             return $activity;
                                         });
 
-        // Learning time statistics
-        $userActivities = RiwayatTonton::where('users_id', $userId)->get();
+        // Learning time statistics using correct column names
+        $userActivities = RiwayatTonton::where('id_pengguna', $userId)->get();
         $totalWatchTime = $userActivities->sum('durasi_tonton');
         $averageSessionTime = $userActivities->avg('durasi_tonton');
         $activeDays = $userActivities->groupBy(function ($item) {

@@ -14,22 +14,35 @@ class RiwayatTonton extends Model
 
     protected $fillable = [
         'id_pengguna',
+        'id_video',
         'course_id',
-        'current_video_id',
-        'video_position',
+        'course_video_id',
         'waktu_ditonton',
-        'persentase_tonton'
+        'last_watched_at',
+        'durasi_tonton',
+        'persentase_progress',
+        'progress_percentage'
     ];
 
     protected $casts = [
         'waktu_ditonton' => 'datetime',
-        'persentase_tonton' => 'decimal:2'
+        'last_watched_at' => 'datetime',
+        'persentase_progress' => 'decimal:2',
+        'progress_percentage' => 'decimal:2'
     ];
 
     /**
      * Relationship dengan model User
      */
     public function pengguna()
+    {
+        return $this->belongsTo(User::class, 'id_pengguna', 'users_id');
+    }
+
+    /**
+     * Alias untuk relasi user (untuk kompatibilitas)
+     */
+    public function user()
     {
         return $this->belongsTo(User::class, 'id_pengguna', 'users_id');
     }
@@ -43,11 +56,19 @@ class RiwayatTonton extends Model
     }
 
     /**
-     * Relationship dengan model Video (current video being watched)
+     * Relationship dengan model Video (dari kolom id_video)
      */
-    public function currentVideo()
+    public function video()
     {
-        return $this->belongsTo(Vidio::class, 'current_video_id', 'vidio_id');
+        return $this->belongsTo(Vidio::class, 'id_video', 'vidio_id');
+    }
+
+    /**
+     * Relationship dengan CourseVideo
+     */
+    public function courseVideo()
+    {
+        return $this->belongsTo(CourseVideo::class, 'course_video_id', 'course_video_id');
     }
 
     /**
@@ -99,16 +120,16 @@ class RiwayatTonton extends Model
     public function getNextVideo()
     {
         if (!$this->course) return null;
-        
+
         $videos = $this->course->videos()->orderBy('urutan_video')->get();
         $currentIndex = $videos->search(function($video) {
             return $video->vidio_vidio_id == $this->current_video_id;
         });
-        
+
         if ($currentIndex !== false && $currentIndex < $videos->count() - 1) {
             return $videos[$currentIndex + 1];
         }
-        
+
         return null;
     }
 

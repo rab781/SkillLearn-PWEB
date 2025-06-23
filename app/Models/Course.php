@@ -4,7 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property-read int $total_video
+ * @property-read int $total_durasi_menit
+ */
 class Course extends Model
 {
     use HasFactory;
@@ -90,14 +95,20 @@ class Course extends Model
     }
 
     // Accessors
-    public function getTotalDurasiMenitAttribute()
-    {
-        return $this->videos()->sum('durasi_menit') ?? 0;
-    }
-
+    /**
+     * Dynamic property to get total videos count.
+     */
     public function getTotalVideoAttribute()
     {
-        return $this->videos()->count();
+        return $this->videos->count();
+    }
+
+    /**
+     * Dynamic property to get total duration in minutes.
+     */
+    public function getTotalDurasiMenitAttribute()
+    {
+        return $this->videos->sum('durasi_menit');
     }
 
     public function getTotalQuizzesAttribute()
@@ -118,7 +129,7 @@ class Course extends Model
 
         // Check if it's a storage path
         if (strpos($this->gambar_course, 'public/') === 0) {
-            return \Storage::url($this->gambar_course);
+            return Storage::url($this->gambar_course);
         }
 
         // Default to uploads directory

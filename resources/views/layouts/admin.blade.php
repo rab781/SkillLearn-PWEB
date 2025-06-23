@@ -26,9 +26,6 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Sortable.js for drag and drop functionality -->
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
     <!-- Custom Admin Styles -->
     <style>
         /* Fix for potential conflicts between Bootstrap and Tailwind */

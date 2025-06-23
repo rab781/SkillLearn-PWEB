@@ -375,7 +375,7 @@
                             </div>
                             <div class="flex items-center space-x-2">
                                 <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}"
-                                   class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30">
+                                   class="bg-white bg-opacity-20 text-black px-3 py-1 rounded text-sm hover:bg-opacity-30">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})"
