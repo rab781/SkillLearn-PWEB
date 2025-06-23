@@ -58,6 +58,11 @@ class Course extends Model
         return $this->hasMany(Quiz::class, 'course_id');
     }
 
+    public function courseQuizzes()
+    {
+        return $this->hasMany(CourseQuiz::class, 'course_id')->orderBy('order');
+    }
+
     public function feedback()
     {
         return $this->hasMany(Feedback::class, 'course_id');

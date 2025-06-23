@@ -84,6 +84,7 @@ Route::middleware(['web', 'auth'])->group(function () {
 
         // Dashboard customer
         Route::get('/dashboard', [DashboardController::class, 'customerDashboard']);
+        Route::get('/dashboard/data', [DashboardController::class, 'customerDashboard']); // Alternative endpoint
         Route::get('/customer/stats', [DashboardController::class, 'customerStats']);
 
         // Watch history (legacy - redirect to course history)

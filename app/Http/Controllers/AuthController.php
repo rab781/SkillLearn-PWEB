@@ -82,7 +82,7 @@ class AuthController extends Controller
                     'message' => 'Login berhasil',
                     'user' => $user,
                     'token' => $token,
-                    'redirect' => '/admin/dashboard'
+                    'redirect' => route('dashboard.admin')
                 ]);
             } else {
                 return response()->json([
@@ -90,7 +90,7 @@ class AuthController extends Controller
                     'message' => 'Login berhasil',
                     'user' => $user,
                     'token' => $token,
-                    'redirect' => '/customer/dashboard'
+                    'redirect' => route('dashboard')
                 ]);
             }
         }
@@ -125,44 +125,38 @@ class AuthController extends Controller
         // Cek apakah login menggunakan email atau username
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        if (Auth::attempt([$loginType => $request->login, 'password' => $request->password])) {
+        // Attempt login
+        if (Auth::attempt([$loginType => $request->login, 'password' => $request->password], $request->remember)) {
             $request->session()->regenerate();
 
             /** @var User $user */
             $user = Auth::user();
 
-            // Redirect berdasarkan role - untuk web request
+            // Handle JSON request (API)
             if ($request->wantsJson()) {
-                // Create token for API access
                 $token = $user->createToken('auth-token')->plainTextToken;
+                $redirectUrl = $user->role === 'AD' ? route('dashboard.admin') : route('dashboard');
 
-                if ($user->isAdmin()) {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Login berhasil',
-                        'user' => $user,
-                        'token' => $token,
-                        'redirect' => '/admin/dashboard'
-                    ]);
-                } else {
-                    return response()->json([
-                        'success' => true,
-                        'message' => 'Login berhasil',
-                        'user' => $user,
-                        'token' => $token,
-                        'redirect' => '/customer/dashboard'
-                    ]);
-                }
-            } else {
-                // Direct redirect for web forms
-                if ($user->isAdmin()) {
-                    return redirect()->intended('/admin/dashboard');
-                } else {
-                    return redirect()->intended('/customer/dashboard');
-                }
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Login berhasil',
+                    'user' => $user,
+                    'token' => $token,
+                    'redirect' => $redirectUrl
+                ]);
             }
+
+                // Handle web form request (normal browser request)
+            // Get intended URL if any, otherwise use default dashboard
+            $intended = redirect()->intended($user->role === 'AD' ? route('dashboard.admin') : route('dashboard'));
+
+            // Clear any intended URL to prevent issues on next login
+            $request->session()->forget('url.intended');
+
+            return $intended;
         }
 
+        // Login failed
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => false,

@@ -28,7 +28,8 @@ class UserCourseProgress extends Model
     protected $casts = [
         'progress_percentage' => 'decimal:2',
         'started_at' => 'datetime',
-        'completed_at' => 'datetime',    ];
+        'completed_at' => 'datetime',
+    ];
 
     // Relationships
     public function user()
@@ -44,7 +45,9 @@ class UserCourseProgress extends Model
     public function currentSection()
     {
         return $this->belongsTo(CourseSection::class, 'current_section_id');
-    }    public function currentVideo()
+    }
+
+    public function currentVideo()
     {
         return $this->belongsTo(Vidio::class, 'current_video_id');
     }
@@ -81,7 +84,7 @@ class UserCourseProgress extends Model
             ->count();
 
         $percentage = $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100, 2) : 0;
-        
+
         $status = 'not_started';
         if ($completedVideos > 0 && $completedVideos < $totalVideos) {
             $status = 'in_progress';
@@ -117,7 +120,7 @@ class UserCourseProgress extends Model
             'in_progress' => 'Sedang Berlangsung',
             'completed' => 'Selesai'
         ];
-        
+
         return $statuses[$this->status] ?? $this->status;
     }
 }

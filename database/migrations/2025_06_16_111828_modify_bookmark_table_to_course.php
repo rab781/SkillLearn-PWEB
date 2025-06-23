@@ -12,21 +12,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // First, clear existing bookmarks to avoid foreign key issues
-        DB::table('bookmark')->truncate();
-        
-        Schema::table('bookmark', function (Blueprint $table) {
-            // Drop foreign key and column for video
-            $table->dropForeign(['vidio_vidio_id']);
-            $table->dropColumn('vidio_vidio_id');
-            
-            // Add column for course
-            $table->unsignedBigInteger('course_id')->after('users_id');
-            $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade');
-            
-            // Add unique constraint to prevent duplicate bookmarks
-            $table->unique(['users_id', 'course_id']);
-        });
+        // Skip this migration entirely
+        // Previously this migration was trying to add a course_id column
+        // that already exists in the schema
     }
 
     /**
@@ -34,15 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bookmark', function (Blueprint $table) {
-            // Drop foreign key and column for course
-            $table->dropForeign(['course_id']);
-            $table->dropUnique(['users_id', 'course_id']);
-            $table->dropColumn('course_id');
-            
-            // Add back column for video
-            $table->unsignedBigInteger('vidio_vidio_id')->after('users_id');
-            $table->foreign('vidio_vidio_id')->references('vidio_id')->on('vidio')->onDelete('cascade');
-        });
+        // No action needed since up() is skipped
     }
 };

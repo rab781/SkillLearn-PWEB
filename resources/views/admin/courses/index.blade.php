@@ -1,17 +1,17 @@
 @extends('layouts.admin')
 
-@section('title', 'Course Management')
+@section('title', isset($tab) && $tab === 'quizzes' ? 'Quiz Management' : 'Course Management')
 
 @section('content')
 <!-- Page Header -->
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-3xl font-bold text-gray-900">Course Management</h1>
-        <p class="text-gray-600 mt-1">Kelola semua course yang tersedia di platform</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ isset($tab) && $tab === 'quizzes' ? 'Quiz Management' : 'Course Management' }}</h1>
+        <p class="text-gray-600 mt-1">{{ isset($tab) && $tab === 'quizzes' ? 'Kelola semua quiz untuk course' : 'Kelola semua course yang tersedia di platform' }}</p>
     </div>
-    <a href="{{ route('admin.courses.create') }}" 
+    <a href="{{ route('admin.courses.create') }}"
        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200">
-        <i class="fas fa-plus mr-2"></i> Buat Course Baru
+        <i class="fas fa-plus mr-2"></i> {{ isset($tab) && $tab === 'quizzes' ? 'Buat Quiz Baru' : 'Buat Course Baru' }}
     </a>
 </div>
 
@@ -26,10 +26,24 @@
     </div>
 @endif
 
+<!-- Tabs Navigation -->
+<div class="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
+    <div class="flex border-b">
+        <a href="{{ route('admin.courses.index') }}"
+           class="px-6 py-4 text-center font-medium text-sm {{ (!isset($tab) || $tab === 'courses') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">
+            <i class="fas fa-graduation-cap mr-2"></i>All Courses
+        </a>
+        <a href="{{ route('admin.courses.index', ['tab' => 'quizzes']) }}"
+           class="px-6 py-4 text-center font-medium text-sm {{ (isset($tab) && $tab === 'quizzes') ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700' }}">
+            <i class="fas fa-question-circle mr-2"></i>Courses with Quizzes
+        </a>
+    </div>
+</div>
+
 <!-- Courses Table -->
 <div class="bg-white rounded-xl shadow-lg overflow-hidden">
     <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-semibold text-gray-900">Daftar Course</h3>
+        <h3 class="text-lg font-semibold text-gray-900">{{ isset($tab) && $tab === 'quizzes' ? 'Daftar Course dengan Quiz' : 'Daftar Course' }}</h3>
     </div>
     <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 data-table">
@@ -49,31 +63,39 @@
                 @foreach($courses as $course)
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <img src="{{ $course->gambar_course ? Storage::url($course->gambar_course) : $course->gambar_course }}" 
-                             alt="{{ $course->nama_course }}" 
+                        <img src="{{ $course->gambar_course ? Storage::url($course->gambar_course) : $course->gambar_course }}"
+                             alt="{{ $course->nama_course }}"
                              class="w-20 h-15 object-cover rounded-lg shadow-sm">
                     </td>                    <td class="px-6 py-4">
                         <div class="text-sm font-medium text-gray-900">{{ $course->nama_course }}</div>
                         <div class="text-sm text-gray-500 mt-1">{{ Str::limit($course->deskripsi_course, 50) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="text-sm text-gray-900">{{ $course->kategori->kategori ?? 'N/A' }}</span>
+                        <span class="text-sm text-gray-900">{{ $course->kategori->nama_kategori ?? 'N/A' }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full
-                            @switch($course->level)
-                                @case('pemula') bg-green-100 text-green-800 @break
-                                @case('menengah') bg-yellow-100 text-yellow-800 @break
-                                @case('lanjut') bg-red-100 text-red-800 @break
-                                @default bg-gray-100 text-gray-800
-                            @endswitch
-                        ">
+                        @php
+                            $levelClass = match($course->level) {
+                                'pemula' => 'bg-green-100 text-green-800',
+                                'menengah' => 'bg-yellow-100 text-yellow-800',
+                                'lanjut' => 'bg-red-100 text-red-800',
+                                default => 'bg-gray-100 text-gray-800',
+                            };
+                        @endphp
+                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full {{ $levelClass }}">
                             {{ ucfirst($course->level) }}
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="text-sm text-gray-900">{{ $course->videos_count }} videos</div>
-                        <div class="text-sm text-gray-500">{{ $course->total_durasi_menit }} menit</div>
+                        <div class="text-sm text-gray-500">{{ $course->total_durasi_menit ?? '0' }} menit</div>
+                        @if(isset($tab) && $tab === 'quizzes')
+                        <div class="text-sm text-indigo-600 mt-1">
+                            <span class="px-2 py-1 bg-indigo-100 rounded-full text-xs font-semibold">
+                                <i class="fas fa-question-circle mr-1"></i>{{ $course->quizzes->count() }} quiz
+                            </span>
+                        </div>
+                        @endif
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="text-sm text-gray-900">{{ $course->user_progress_count }} students</span>
@@ -85,17 +107,27 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-1">
-                            <a href="{{ route('admin.courses.show', $course->course_id) }}" 
-                               class="inline-flex items-center px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded-md transition-colors duration-150" 
+                            <a href="{{ route('admin.courses.show', $course->course_id) }}"
+                               class="inline-flex items-center px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded-md transition-colors duration-150"
                                title="Lihat Detail">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a href="{{ route('admin.courses.edit', $course->course_id) }}" 
-                               class="inline-flex items-center px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-medium rounded-md transition-colors duration-150" 
+
+                            @if(isset($tab) && $tab === 'quizzes')
+                                <a href="{{ route('admin.courses.quizzes', $course->course_id) }}"
+                                   class="inline-flex items-center px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 text-xs font-medium rounded-md transition-colors duration-150"
+                                   title="Kelola Quiz">
+                                    <i class="fas fa-question-circle"></i>
+                                </a>
+                            @endif
+
+                            <a href="{{ route('admin.courses.edit', $course->course_id) }}"
+                               class="inline-flex items-center px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 text-xs font-medium rounded-md transition-colors duration-150"
                                title="Edit">
                                 <i class="fas fa-edit"></i>
-                            </a>                            <button onclick="deleteCourse({{ $course->course_id }}, '{{ $course->nama_course }}')" 
-                                    class="inline-flex items-center px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded-md transition-colors duration-150" 
+                            </a>
+                            <button onclick="deleteCourse({{ $course->course_id }}, '{{ $course->nama_course }}')"
+                                    class="inline-flex items-center px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded-md transition-colors duration-150"
                                     title="Hapus">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -139,17 +171,17 @@ function deleteCourse(courseId, courseName) {
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/admin/courses/${courseId}`;
-            
+
             const csrfToken = document.createElement('input');
             csrfToken.type = 'hidden';
             csrfToken.name = '_token';
             csrfToken.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
+
             const methodInput = document.createElement('input');
             methodInput.type = 'hidden';
             methodInput.name = '_method';
             methodInput.value = 'DELETE';
-            
+
             form.appendChild(csrfToken);
             form.appendChild(methodInput);
             document.body.appendChild(form);

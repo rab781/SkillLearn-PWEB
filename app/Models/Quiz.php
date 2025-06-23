@@ -13,10 +13,13 @@ class Quiz extends Model
     protected $primaryKey = 'quiz_id';
 
     protected $fillable = [
-        'course_id',
         'judul_quiz',
         'deskripsi_quiz',
         'tipe_quiz',
+        'course_id',
+        'section_id',
+        'vidio_vidio_id',
+        'urutan',
         'durasi_menit',
         'konten_quiz',
         'is_active',
@@ -32,7 +35,17 @@ class Quiz extends Model
     // Relationships
     public function course()
     {
-        return $this->belongsTo(Course::class, 'course_id');
+        return $this->belongsTo(Course::class, 'course_id', 'course_id');
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(CourseSection::class, 'section_id', 'section_id');
+    }
+
+    public function video()
+    {
+        return $this->belongsTo(Vidio::class, 'vidio_vidio_id', 'vidio_id');
     }
 
     public function userAnswers()
@@ -43,6 +56,11 @@ class Quiz extends Model
     public function results()
     {
         return $this->hasMany(QuizResult::class, 'quiz_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(QuizQuestion::class, 'quiz_id', 'quiz_id')->orderBy('urutan_pertanyaan');
     }
 
     // Helper methods

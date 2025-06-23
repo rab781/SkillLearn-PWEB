@@ -32,11 +32,13 @@ class FeedbackController extends Controller
      */
     public function store(Request $request)
     {
+        // Support both formats: 'pesan' (old format) and 'feedback_text' (new format)
         $validator = Validator::make($request->all(), [
-            'pesan' => 'required|string',
+            'pesan' => 'required_without:feedback_text|string',
+            'feedback_text' => 'required_without:pesan|string',
             'course_id' => 'required|exists:courses,course_id',
             'course_video_id' => 'nullable|exists:course_videos,course_video_id',
-            'rating' => 'nullable|integer|min:1|max:5',
+            'rating' => 'required|integer|min:1|max:5',
             'catatan' => 'nullable|string',
         ]);
 
@@ -51,9 +53,25 @@ class FeedbackController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
+        // Check if user already has feedback for this course
+        $existingFeedback = Feedback::where('users_id', $user->users_id)
+            ->where('course_id', $request->course_id)
+            ->first();
+
+        if ($existingFeedback) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Anda sudah memberikan feedback untuk course ini. Gunakan tombol edit untuk mengubah feedback Anda.',
+                'existing_feedback' => $existingFeedback->load(['user', 'course'])
+            ], 409);
+        }
+
+        // Get the feedback message from either field
+        $feedbackMessage = $request->input('feedback_text') ?: $request->input('pesan');
+
         $feedback = Feedback::create([
             'tanggal' => now()->toDateString(),
-            'pesan' => $request->pesan,
+            'pesan' => $feedbackMessage,
             'course_id' => $request->course_id,
             'course_video_id' => $request->course_video_id,
             'rating' => $request->rating,
@@ -167,6 +185,26 @@ class FeedbackController extends Controller
     }
 
     /**
+     * Get user's feedback for a specific course
+     */
+    public function getUserCourseFeedback($courseId)
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $feedback = Feedback::with(['course'])
+            ->where('users_id', $user->users_id)
+            ->where('course_id', $courseId)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'feedback' => $feedback,
+            'has_feedback' => $feedback !== null
+        ]);
+    }
+
+    /**
      * Reply to feedback (Admin only)
      */
     public function reply(Request $request, Feedback $feedback)
@@ -239,7 +277,7 @@ class FeedbackController extends Controller
         $averageRating = Feedback::where('course_id', $course->course_id)
             ->whereNotNull('rating')
             ->avg('rating');
-        
+
         $ratingDistribution = Feedback::where('course_id', $course->course_id)
             ->whereNotNull('rating')
             ->selectRaw('rating, COUNT(*) as count')

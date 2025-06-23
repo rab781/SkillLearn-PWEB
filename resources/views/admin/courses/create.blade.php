@@ -31,18 +31,18 @@
         <div class="p-6">
             <form action="{{ route('admin.courses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
-                
+
                 <!-- Nama Course -->
                 <div>
                     <label for="nama_course" class="block text-sm font-medium text-gray-700 mb-2">
                         Nama Course <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" 
-                           class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('nama_course') border-red-500 @enderror" 
-                           id="nama_course" 
-                           name="nama_course" 
-                           value="{{ old('nama_course') }}" 
-                           placeholder="Contoh: PHP untuk Pemula" 
+                    <input type="text"
+                           class="block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('nama_course') ? 'border-red-500' : 'border-gray-300' }}"
+                           id="nama_course"
+                           name="nama_course"
+                           value="{{ old('nama_course') }}"
+                           placeholder="Contoh: PHP untuk Pemula"
                            required>
                     @error('nama_course')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -54,11 +54,11 @@
                     <label for="deskripsi_course" class="block text-sm font-medium text-gray-700 mb-2">
                         Deskripsi Course <span class="text-red-500">*</span>
                     </label>
-                    <textarea class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('deskripsi_course') border-red-500 @enderror" 
-                              id="deskripsi_course" 
-                              name="deskripsi_course" 
-                              rows="4" 
-                              placeholder="Jelaskan tentang course ini, apa yang akan dipelajari, dan siapa target audiensnya..." 
+                    <textarea class="block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('deskripsi_course') ? 'border-red-500' : 'border-gray-300' }}"
+                              id="deskripsi_course"
+                              name="deskripsi_course"
+                              rows="4"
+                              placeholder="Jelaskan tentang course ini, apa yang akan dipelajari, dan siapa target audiensnya..."
                               required>{{ old('deskripsi_course') }}</textarea>
                     @error('deskripsi_course')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -71,13 +71,13 @@
                         <label for="kategori_kategori_id" class="block text-sm font-medium text-gray-700 mb-2">
                             Kategori <span class="text-red-500">*</span>
                         </label>
-                        <select class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('kategori_kategori_id') border-red-500 @enderror" 
-                                id="kategori_kategori_id" 
-                                name="kategori_kategori_id" 
+                        <select class="block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('kategori_kategori_id') ? 'border-red-500' : 'border-gray-300' }}"
+                                id="kategori_kategori_id"
+                                name="kategori_kategori_id"
                                 required>
                             <option value="">-- Pilih Kategori --</option>
                             @foreach($kategoris as $kategori)
-                                <option value="{{ $kategori->kategori_id }}" 
+                                <option value="{{ $kategori->kategori_id }}"
                                         {{ old('kategori_kategori_id') == $kategori->kategori_id ? 'selected' : '' }}>
                                     {{ $kategori->kategori }}
                                 </option>                            @endforeach
@@ -92,9 +92,9 @@
                         <label for="level" class="block text-sm font-medium text-gray-700 mb-2">
                             Level Course <span class="text-red-500">*</span>
                         </label>
-                        <select class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('level') border-red-500 @enderror" 
-                                id="level" 
-                                name="level" 
+                        <select class="block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('level') ? 'border-red-500' : 'border-gray-300' }}"
+                                id="level"
+                                name="level"
                                 required>
                             <option value="">-- Pilih Level --</option>
                             <option value="pemula" {{ old('level') == 'pemula' ? 'selected' : '' }}>Pemula</option>
@@ -109,10 +109,10 @@
 
                 <!-- Gambar Course -->                <div>
                     <label for="gambar_course" class="block text-sm font-medium text-gray-700 mb-2">Gambar Course</label>
-                    <input type="file" 
-                           class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 @error('gambar_course') border-red-500 @enderror" 
-                           id="gambar_course" 
-                           name="gambar_course" 
+                    <input type="file"
+                           class="block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 {{ $errors->has('gambar_course') ? 'border-red-500' : 'border-gray-300' }}"
+                           id="gambar_course"
+                           name="gambar_course"
                            accept="image/*">
                     <p class="mt-1 text-sm text-gray-500">Upload gambar untuk course (opsional). Format: JPG, PNG, GIF. Maksimal 2MB.</p>
                     @error('gambar_course')
@@ -130,11 +130,11 @@
 
                 <!-- Buttons -->
                 <div class="flex justify-between items-center pt-6">
-                    <a href="{{ route('admin.courses.index') }}" 
+                    <a href="{{ route('admin.courses.index') }}"
                        class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali
                     </a>
-                    <button type="submit" 
+                    <button type="submit"
                             class="inline-flex items-center px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200">
                         <i class="fas fa-save mr-2"></i> Simpan Course
                     </button>
@@ -161,6 +161,8 @@
         </ol>
     </div>
 </div>
+@endsection
+
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -168,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gambarCourse = document.getElementById('gambar_course');
     const imagePreview = document.getElementById('imagePreview');
     const previewImg = document.getElementById('previewImg');
-    
+
     gambarCourse.addEventListener('change', function() {
         const file = this.files[0];
         if (file) {

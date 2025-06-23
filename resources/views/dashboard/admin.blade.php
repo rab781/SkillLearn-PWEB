@@ -29,7 +29,7 @@
         <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
         <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
         <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
-        
+
         <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
                 <h1 class="text-4xl lg:text-5xl font-bold mb-4 flex items-center">
@@ -118,13 +118,29 @@
             </div>
         </div>
     </div>
+
+    <!-- Feedbacks Card -->
+    <div class="bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl shadow-xl p-6 text-white transform hover:scale-105 transition-all duration-300 hover:shadow-2xl">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-comments text-white text-xl"></i>
+                </div>
+                <p class="text-pink-100 text-sm font-medium">Feedbacks</p>
+                <p class="text-3xl font-bold text-white" id="total-feedbacks">
+                    {{ $stats['total_feedbacks'] ?? 0 }}
+                </p>
+                <p class="text-pink-200 text-xs mt-1">User feedback</p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Enhanced Quick Actions -->
 <div class="bg-white rounded-3xl shadow-2xl p-8 mb-8 relative overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50"></div>
-    
+
     <div class="relative z-10">
         <div class="text-center mb-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-3 flex items-center justify-center">
@@ -133,9 +149,9 @@
             </h2>
             <p class="text-gray-600">Aksi cepat untuk mengelola konten platform dengan mudah</p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <a href="{{ route('admin.courses.create') }}" 
+            <a href="{{ route('admin.courses.create') }}"
                class="group bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-8 rounded-2xl hover:from-blue-600 hover:to-indigo-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
                 <div class="text-6xl mb-4 group-hover:animate-bounce">
                     <i class="fas fa-plus-circle"></i>
@@ -143,8 +159,8 @@
                 <h3 class="text-xl font-semibold mb-2">Buat Course Baru</h3>
                 <p class="text-blue-100 text-sm">Tambah course pembelajaran baru dengan mudah</p>
             </a>
-            
-            <a href="{{ route('admin.courses.index') }}" 
+
+            <a href="{{ route('admin.courses.index') }}"
                class="group bg-gradient-to-br from-emerald-500 to-green-600 text-white p-8 rounded-2xl hover:from-emerald-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
                 <div class="text-6xl mb-4 group-hover:animate-bounce">
                     <i class="fas fa-cog"></i>
@@ -152,8 +168,8 @@
                 <h3 class="text-xl font-semibold mb-2">Kelola Courses</h3>
                 <p class="text-green-100 text-sm">Manage semua courses & video content</p>
             </a>
-            
-            <a href="{{ route('admin.feedback.index') }}" 
+
+            <a href="{{ route('admin.feedback.index') }}"
                class="group bg-gradient-to-br from-purple-500 to-violet-600 text-white p-8 rounded-2xl hover:from-purple-600 hover:to-violet-700 text-center transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl">
                 <div class="text-6xl mb-4 group-hover:animate-bounce">
                     <i class="fas fa-comments"></i>
@@ -164,61 +180,7 @@
         </div>
     </div>
 </div>
-        </div>
-    </div>
 
-    <!-- Feedbacks Card -->
-    <div class="stats-card card-hover rounded-2xl shadow-xl p-6">
-        <div class="flex items-center justify-between">
-            <div>
-                <div class="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center mb-4">
-                    <i class="fas fa-comments text-white text-xl"></i>
-                </div>
-                <p class="text-gray-600 text-sm font-medium">Feedbacks</p>
-                <p class="text-3xl font-bold text-gray-900" id="total-feedbacks">
-                    {{ $stats['total_feedbacks'] ?? 0 }}
-                </p>
-                <p class="text-gray-500 text-xs mt-1">User feedback</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Quick Actions -->
-<div class="bg-white rounded-2xl shadow-xl p-8 mb-8">
-    <div class="text-center mb-8">
-        <h2 class="text-3xl font-bold text-gray-900 mb-2">Quick Actions</h2>
-        <p class="text-gray-600">Aksi cepat untuk mengelola konten platform</p>
-    </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="{{ route('admin.courses.create') }}" 
-           class="group bg-gradient-to-br from-blue-500 to-blue-600 text-white p-8 rounded-2xl hover:from-blue-600 hover:to-blue-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
-            <div class="text-6xl mb-4 group-hover:animate-bounce">
-                <i class="fas fa-plus-circle"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Buat Course Baru</h3>
-            <p class="text-blue-100 text-sm">Tambah course pembelajaran baru</p>
-        </a>
-        
-        <a href="{{ route('admin.courses.index') }}" 
-           class="group bg-gradient-to-br from-green-500 to-green-600 text-white p-8 rounded-2xl hover:from-green-600 hover:to-green-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
-            <div class="text-6xl mb-4 group-hover:animate-bounce">
-                <i class="fas fa-cog"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Kelola Courses</h3>
-            <p class="text-green-100 text-sm">Manage semua courses & video</p>
-        </a>
-        
-        <a href="{{ route('admin.feedback.index') }}" 
-           class="group bg-gradient-to-br from-purple-500 to-purple-600 text-white p-8 rounded-2xl hover:from-purple-600 hover:to-purple-700 text-center transition-all duration-300 transform hover:scale-105 shadow-lg">
-            <div class="text-6xl mb-4 group-hover:animate-bounce">
-                <i class="fas fa-comments"></i>
-            </div>
-            <h3 class="text-xl font-semibold mb-2">Kelola Feedback</h3>
-            <p class="text-purple-100 text-sm">Manage feedback dari user</p>
-        </a>
-    </div>
-</div>
 <!-- Recent Feedbacks -->
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
     <div class="bg-white rounded-2xl shadow-xl p-6">
@@ -309,8 +271,6 @@
         </div>
     </div>
 </div>
-</div>
-
 @endsection
 
 @push('scripts')
@@ -319,13 +279,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Add smooth animations to stats cards
     const statsCards = document.querySelectorAll('[class*="bg-white"]');
-    
+
     statsCards.forEach((card, index) => {
         setTimeout(() => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
             card.style.transition = 'all 0.5s ease';
-            
+
             requestAnimationFrame(() => {
                 card.style.opacity = '1';
                 card.style.transform = 'translateY(0)';

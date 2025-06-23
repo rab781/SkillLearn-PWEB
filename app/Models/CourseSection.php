@@ -28,11 +28,14 @@ class CourseSection extends Model
     public function videos()
     {
         return $this->hasMany(CourseVideo::class, 'section_id')->orderBy('urutan_video');
-    }
-
-    public function quickReviews()
+    }    public function quickReviews()
     {
         return $this->hasMany(QuickReview::class, 'section_id')->orderBy('urutan_review');
+    }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class, 'section_id')->orderBy('urutan');
     }
 
     // Helper methods

@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             KategoriSeeder::class,
             VidioSeeder::class,
+            // Using the new SimpleCourseSeeder instead of CompleteCourseSeeder
+            SimpleCourseSeeder::class,
+            // Add CourseQuizProgressSeeder for student progress data
+            CourseQuizProgressSeeder::class,
         ]);
     }
 }

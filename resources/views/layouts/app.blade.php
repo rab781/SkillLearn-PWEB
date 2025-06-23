@@ -524,6 +524,68 @@
             }
         });
 
+        // Utility Functions for SweetAlert2
+        window.showLoading = function(message = 'Loading...') {
+            return Swal.fire({
+                title: message,
+                html: '<div class="text-center"><i class="fas fa-spinner fa-spin text-4xl text-blue-600 mb-3"></i></div>',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        };
+
+        window.showSuccess = function(message, title = 'Berhasil!') {
+            return Swal.fire({
+                icon: 'success',
+                title: title,
+                text: message,
+                confirmButtonColor: '#10b981'
+            });
+        };
+
+        window.showError = function(message, title = 'Error!') {
+            return Swal.fire({
+                icon: 'error',
+                title: title,
+                text: message,
+                confirmButtonColor: '#dc3545'
+            });
+        };
+
+        window.showWarning = function(message, title = 'Peringatan!') {
+            return Swal.fire({
+                icon: 'warning',
+                title: title,
+                text: message,
+                confirmButtonColor: '#f59e0b'
+            });
+        };
+
+        window.showInfo = function(message, title = 'Info') {
+            return Swal.fire({
+                icon: 'info',
+                title: title,
+                text: message,
+                confirmButtonColor: '#3b82f6'
+            });
+        };
+
+        window.showDeleteConfirm = function(message = 'Data akan dihapus permanen!') {
+            return Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: message,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            });
+        };
+
         // Mobile menu toggle
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');

@@ -19,9 +19,11 @@ return new class extends Migration
             $table->text('gambar');
             $table->integer('jumlah_tayang')->default(0);
             $table->unsignedBigInteger('kategori_kategori_id');
+            $table->integer('durasi_menit')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->foreign('kategori_kategori_id')->references('kategori_id')->on('kategori')->onDelete('cascade');
             $table->timestamps();
-            $table->text('channel');
+            $table->text('channel')->nullable();
         });
     }
 

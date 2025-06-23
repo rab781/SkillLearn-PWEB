@@ -20,6 +20,8 @@ class Vidio extends Model
         'jumlah_tayang',
         'kategori_kategori_id',
         'channel',
+        'durasi_menit',
+        'is_active',
     ];
 
     // Relationships

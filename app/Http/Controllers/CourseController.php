@@ -84,32 +84,63 @@ class CourseController extends Controller
         $course = Course::with([
             'kategori',
             'sections.videos.vidio',
-            'quickReviews' => function($query) {
-                $query->active()->orderBy('urutan_review');
-            }
+            'sections.quizzes.questions', // Load quizzes for each section
+            'quizzes', // Load all course quizzes
+            'quizzes.questions' // Load quiz questions
         ])->active()->findOrFail($id);
 
         $userProgress = null;
+        $quizResults = null;
+
         if (Auth::check()) {
             $userProgress = UserCourseProgress::where('user_id', Auth::id())
                 ->where('course_id', $id)
                 ->first();
 
             // Load video progress for each course video if user has progress
-            if ($userProgress) {
+            if ($userProgress && $course->sections) {
                 foreach ($course->sections as $section) {
-                    foreach ($section->videos as $courseVideo) {
-                        $videoProgress = UserVideoProgress::where('user_id', Auth::id())
-                            ->where('vidio_vidio_id', $courseVideo->vidio_vidio_id)
-                            ->where('course_id', $id)
-                            ->first();
-                        $courseVideo->video_progress = $videoProgress;
+                    if ($section->videos) {
+                        foreach ($section->videos as $courseVideo) {
+                            $videoProgress = UserVideoProgress::where('user_id', Auth::id())
+                                ->where('vidio_vidio_id', $courseVideo->vidio_vidio_id)
+                                ->where('course_id', $id)
+                                ->first();
+                            $courseVideo->video_progress = $videoProgress;
+                        }
                     }
                 }
             }
+
+            // Load quiz results for the course
+            $quizIds = collect();
+            if ($course->quizzes) {
+                $quizIds = $course->quizzes->pluck('quiz_id');
+            }
+            
+            $quizResults = \App\Models\QuizResult::with(['quiz', 'answerDetails'])
+                ->whereIn('quiz_id', $quizIds)
+                ->where('users_id', Auth::id())
+                ->get();
+
+            // Calculate overall quiz stats
+            $totalQuizzes = $course->quizzes ? $course->quizzes->count() : 0;
+            $completedQuizzes = $quizResults->count();
+            $averageScore = $quizResults->avg('nilai_total') ?? 0;
+            $totalCorrect = $quizResults->sum('jumlah_benar');
+            $totalWrong = $quizResults->sum('jumlah_salah');
+
+            $quizStats = [
+                'total_quizzes' => $totalQuizzes,
+                'completed_quizzes' => $completedQuizzes,
+                'completion_rate' => $totalQuizzes > 0 ? round(($completedQuizzes / $totalQuizzes) * 100, 2) : 0,
+                'average_score' => round($averageScore, 2),
+                'total_correct' => $totalCorrect,
+                'total_wrong' => $totalWrong,
+            ];
         }
 
-        return view('courses.show', compact('course', 'userProgress'));
+        return view('courses.show', compact('course', 'userProgress', 'quizResults', 'quizStats'));
     }
 
     /**
@@ -133,12 +164,16 @@ class CourseController extends Controller
         $userProgress->startCourse();
 
         // Get first video
-        $firstVideo = $course->sections()
+        $firstSection = $course->sections()
             ->orderBy('urutan_section')
-            ->first()
-            ->videos()
-            ->orderBy('urutan_video')
             ->first();
+        
+        $firstVideo = null;
+        if ($firstSection) {
+            $firstVideo = $firstSection->videos()
+                ->orderBy('urutan_video')
+                ->first();
+        }
 
         if ($firstVideo) {
             return redirect()->route('courses.video', [
@@ -156,7 +191,12 @@ class CourseController extends Controller
      */
     public function video($courseId, $videoId)
     {
-        $course = Course::active()->findOrFail($courseId);
+        $course = Course::with([
+            'sections.videos.vidio',
+            'sections.quizzes.questions', // Load quizzes for each section
+            'quizzes.questions' // Load quizzes with questions
+        ])->active()->findOrFail($courseId);
+        
         $courseVideo = CourseVideo::with(['vidio', 'section'])
             ->where('course_id', $courseId)
             ->where('course_video_id', $videoId)
@@ -217,32 +257,51 @@ class CourseController extends Controller
 
         $userId = Auth::id();
 
-        $videoProgress = UserVideoProgress::where('user_id', $userId)
-            ->where('vidio_vidio_id', $courseVideo->vidio_vidio_id)
-            ->where('course_id', $courseId)
-            ->first();
+        // Get or create video progress
+        $videoProgress = UserVideoProgress::firstOrCreate(
+            [
+                'user_id' => $userId,
+                'vidio_vidio_id' => $courseVideo->vidio_vidio_id,
+                'course_id' => $courseId
+            ],
+            [
+                'is_completed' => false,
+                'watch_time_seconds' => 0,
+                'completion_percentage' => 0,
+                'total_duration_seconds' => $courseVideo->durasi_menit * 60
+            ]
+        );
 
-        if ($videoProgress) {
+        // Get completion status from request
+        $isCompleted = $request->input('is_completed', true);
+        
+        if ($isCompleted) {
             $videoProgress->markAsCompleted();
+        } else {
+            $videoProgress->is_completed = false;
+            $videoProgress->completion_percentage = 0;
+            $videoProgress->completed_at = null;
+            $videoProgress->save();
         }
 
-        // Check for section reviews
-        $sectionReviews = QuickReview::where('course_id', $courseId)
-            ->where('section_id', $courseVideo->section_id)
-            ->where('tipe_review', 'setelah_section')
-            ->active()
-            ->get();
+        // Update course progress
+        $this->updateCourseProgress($userId, $courseId);
+
+        // Get updated progress percentage
+        $userProgress = UserCourseProgress::where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->first();
 
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Video berhasil diselesaikan!',
-                'has_section_reviews' => $sectionReviews->count() > 0,
-                'section_reviews' => $sectionReviews
+                'message' => $isCompleted ? 'Video berhasil diselesaikan!' : 'Video berhasil ditandai belum selesai!',
+                'is_completed' => $videoProgress->is_completed,
+                'progress_percentage' => $userProgress ? $userProgress->progress_percentage : 0
             ]);
         }
 
-        return redirect()->back()->with('success', 'Video berhasil diselesaikan!');
+        return redirect()->back()->with('success', $isCompleted ? 'Video berhasil diselesaikan!' : 'Video berhasil ditandai belum selesai!');
     }
 
     /**
@@ -251,33 +310,117 @@ class CourseController extends Controller
     public function updateWatchTime(Request $request, $courseId, $videoId)
     {
         $request->validate([
-            'watch_time' => 'required|integer|min:0',
-            'total_duration' => 'nullable|integer|min:0',
+            'duration' => 'required|integer|min:0', // in minutes
+            'current_time' => 'nullable|integer|min:0', // in seconds
+            'video_duration' => 'nullable|integer|min:0', // in seconds
+            'source' => 'nullable|string|in:youtube,local',
         ]);
 
+        // Find the video by vidio_id (not course_video_id)
         $courseVideo = CourseVideo::where('course_id', $courseId)
-            ->where('course_video_id', $videoId)
+            ->where('vidio_vidio_id', $videoId)
             ->firstOrFail();
 
         $userId = Auth::id();
 
-        $videoProgress = UserVideoProgress::getOrCreateProgress(
-            $userId,
-            $courseVideo->vidio_vidio_id,
-            $courseId
+        // Get or create video progress
+        $videoProgress = UserVideoProgress::firstOrCreate(
+            [
+                'user_id' => $userId,
+                'vidio_vidio_id' => $videoId,
+                'course_id' => $courseId
+            ],
+            [
+                'watch_time_seconds' => 0,
+                'is_completed' => false,
+                'total_duration_seconds' => $request->video_duration ?? ($courseVideo->durasi_menit * 60),
+                'completion_percentage' => 0
+            ]
         );
 
-        if ($request->filled('total_duration')) {
-            $videoProgress->total_duration_seconds = $request->total_duration;
+        // Update watched duration (convert minutes to seconds)
+        $additionalMinutes = $request->duration;
+        $additionalSeconds = $additionalMinutes * 60;
+        $videoProgress->watch_time_seconds = max($videoProgress->watch_time_seconds, $additionalSeconds);
+
+        // Update total duration if provided
+        if ($request->filled('video_duration')) {
+            $videoProgress->total_duration_seconds = $request->video_duration;
         }
 
-        $videoProgress->updateWatchTime($request->watch_time);
+        // Calculate completion percentage
+        if ($videoProgress->total_duration_seconds > 0) {
+            $completionPercentage = min(100, ($videoProgress->watch_time_seconds / $videoProgress->total_duration_seconds) * 100);
+            $videoProgress->completion_percentage = $completionPercentage;
+
+            // Auto-complete if watched more than 80%
+            if ($completionPercentage >= 80) {
+                $videoProgress->is_completed = true;
+            }
+        }
+
+        $videoProgress->save();
+
+        // Record watch history
+        \App\Models\RiwayatTonton::create([
+            'id_pengguna' => $userId,
+            'current_video_id' => $videoId,
+            'course_id' => $courseId,
+            'waktu_ditonton' => now(),
+            'video_position' => $request->current_time ?? 0,
+            'persentase_tonton' => $videoProgress->completion_percentage ?? 0,
+        ]);
+
+        // Update course progress
+        $this->updateCourseProgress($userId, $courseId);
 
         return response()->json([
             'success' => true,
             'completion_percentage' => $videoProgress->completion_percentage,
-            'is_completed' => $videoProgress->is_completed
+            'is_completed' => $videoProgress->is_completed,
+            'watch_time_seconds' => $videoProgress->watch_time_seconds,
+            'message' => 'Watch time updated successfully'
         ]);
+    }
+
+    /**
+     * Update course progress based on video completions
+     */
+    private function updateCourseProgress($userId, $courseId)
+    {
+        $course = Course::findOrFail($courseId);
+        
+        // Check if course has sections before accessing videos
+        if (!$course->sections || $course->sections->isEmpty()) {
+            return;
+        }
+        
+        $totalVideos = $course->sections->flatMap->videos->count();
+
+        if ($totalVideos == 0) return;
+
+        $completedVideos = UserVideoProgress::where('user_id', $userId)
+            ->where('course_id', $courseId)
+            ->where('is_completed', true)
+            ->count();
+
+        $completionPercentage = ($completedVideos / $totalVideos) * 100;
+
+        $userProgress = UserCourseProgress::firstOrCreate(
+            ['user_id' => $userId, 'course_id' => $courseId],
+            ['status' => 'in_progress', 'progress_percentage' => 0]
+        );
+
+        $userProgress->progress_percentage = $completionPercentage;
+
+        if ($completionPercentage >= 100) {
+            $userProgress->status = 'completed';
+            $userProgress->completed_at = now();
+        } elseif ($completionPercentage > 0) {
+            $userProgress->status = 'in_progress';
+        }
+
+        $userProgress->save();
     }
 
     /**
@@ -318,6 +461,11 @@ class CourseController extends Controller
             'previous' => null,
             'next' => null,
         ];
+
+        // Check if section exists
+        if (!$courseVideo->section) {
+            return $navigation;
+        }
 
         // Try to find next video in same section
         $nextVideo = CourseVideo::where('section_id', $courseVideo->section_id)
@@ -448,5 +596,77 @@ class CourseController extends Controller
             'success' => true,
             'courses' => $courses
         ]);
+    }
+
+    /**
+     * Get quiz report for a specific course and user
+     */
+    public function getQuizReport($courseId)
+    {
+        try {
+            $course = Course::findOrFail($courseId);
+            $userId = Auth::id();
+
+            // Get all quiz results for this course and user
+            $quizResults = \App\Models\QuizResult::whereHas('quiz', function($query) use ($courseId) {
+                $query->where('course_id', $courseId);
+            })
+            ->where('users_id', $userId)
+            ->with(['quiz', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+            if ($quizResults->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Belum ada hasil quiz untuk course ini'
+                ]);
+            }
+
+            // Calculate summary statistics
+            $totalAttempts = $quizResults->count();
+            $averageScore = round($quizResults->avg('nilai_total'), 1);
+            $passedCount = $quizResults->where('nilai_total', '>=', 60)->count();
+            $highestScore = $quizResults->max('nilai_total');
+            $lowestScore = $quizResults->min('nilai_total');
+
+            // Format quiz results for display
+            $formattedResults = $quizResults->map(function($result) {
+                return [
+                    'quiz_title' => $result->quiz->judul_quiz,
+                    'nilai_total' => $result->nilai_total,
+                    'grade' => $result->getGrade(),
+                    'jumlah_benar' => $result->jumlah_benar,
+                    'jumlah_salah' => $result->jumlah_salah,
+                    'total_soal' => $result->total_soal,
+                    'duration' => $result->getDuration(),
+                    'date' => $result->created_at->format('d/m/Y H:i'),
+                    'passed' => $result->isPassed()
+                ];
+            });
+
+            $summary = [
+                'total_attempts' => $totalAttempts,
+                'average_score' => $averageScore,
+                'passed_count' => $passedCount,
+                'highest_score' => $highestScore,
+                'lowest_score' => $lowestScore,
+                'pass_rate' => $totalAttempts > 0 ? round(($passedCount / $totalAttempts) * 100, 1) : 0
+            ];
+
+            return response()->json([
+                'success' => true,
+                'course_name' => $course->nama_course,
+                'summary' => $summary,
+                'quiz_results' => $formattedResults
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat memuat laporan quiz',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

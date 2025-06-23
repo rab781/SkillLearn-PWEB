@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { margin: 0; padding: 0; }
+        .thumbnail {
+            width: 640px;
+            height: 360px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #3b82f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 30px solid white;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            margin-bottom: 20px;
+        }
+        .text {
+            color: white;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="thumbnail">
+        <div class="header">SkillLearn</div>
+        <div class="play-icon"></div>
+        <div class="text">Video Thumbnail</div>
+    </div>
+    <script>
+        // Convert to canvas and save as image
+        function createThumbnail() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 640;
+            canvas.height = 360;
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 640, 360);
+            gradient.addColorStop(0, '#2d3748');
+            gradient.addColorStop(1, '#4a5568');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 640, 360);
+
+            // Header
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(0, 0, 640, 60);
+
+            // Header text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('SkillLearn', 320, 35);
+
+            // Play icon
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(290, 160);
+            ctx.lineTo(290, 200);
+            ctx.lineTo(330, 180);
+            ctx.closePath();
+            ctx.fill();
+
+            // Text
+            ctx.font = '16px Arial';
+            ctx.fillText('Video Thumbnail', 320, 220);
+
+            // Download
+            const link = document.createElement('a');
+            link.download = 'default-video-thumbnail.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Auto-create thumbnail when page loads
+        setTimeout(createThumbnail, 1000);
+    </script>
+</body>
+</html>

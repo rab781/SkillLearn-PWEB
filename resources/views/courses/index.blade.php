@@ -50,21 +50,21 @@
         <form method="GET" action="{{ route('courses.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
                 <label for="search" class="block text-sm font-medium text-gray-700 mb-2">Cari Course</label>
-                <input type="text" 
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                       id="search" 
-                       name="search" 
-                       value="{{ request('search') }}" 
+                <input type="text"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                       id="search"
+                       name="search"
+                       value="{{ request('search') }}"
                        placeholder="Nama course...">
             </div>
             <div>
                 <label for="kategori" class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                        id="kategori" 
+                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="kategori"
                         name="kategori">
                     <option value="">Semua Kategori</option>
                     @foreach($kategoris as $kategori)
-                        <option value="{{ $kategori->kategori_id }}" 
+                        <option value="{{ $kategori->kategori_id }}"
                                 {{ request('kategori') == $kategori->kategori_id ? 'selected' : '' }}>
                             {{ $kategori->kategori }}
                         </option>
@@ -73,8 +73,8 @@
             </div>
             <div>
                 <label for="level" class="block text-sm font-medium text-gray-700 mb-2">Level</label>
-                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                        id="level" 
+                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        id="level"
                         name="level">
                     <option value="">Semua Level</option>
                     @foreach($levels as $key => $label)
@@ -85,7 +85,7 @@
                 </select>
             </div>
             <div class="flex items-end">
-                <button type="submit" 
+                <button type="submit"
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -102,42 +102,92 @@
         <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden">
             <!-- Course Image -->
             <div class="relative aspect-video overflow-hidden">
-                <img src="{{ $course->gambar_course ?: 'https://via.placeholder.com/400x200/4f46e5/ffffff?text=' . urlencode($course->nama_course) }}" 
-                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                     alt="{{ $course->nama_course }}">
-                
+                @php
+                    $thumbnailPath = null;
+                    if ($course->gambar_course) {
+                        // Check if it's a file path or URL
+                        if (strpos($course->gambar_course, 'http') === 0) {
+                            $thumbnailPath = $course->gambar_course;
+                        } else {
+                            // Check if file exists in uploads
+                            $uploadPath = public_path('uploads/' . $course->gambar_course);
+                            if (file_exists($uploadPath)) {
+                                $thumbnailPath = asset('uploads/' . $course->gambar_course);
+                            }
+                        }
+                    }
+
+                    // Fallback to placeholder if no valid thumbnail
+                    if (!$thumbnailPath) {
+                        $thumbnailPath = 'https://via.placeholder.com/400x200/6366f1/ffffff?text=' . urlencode($course->nama_course);
+                    }
+                @endphp
+
+                <img src="{{ $thumbnailPath }}"
+                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                     alt="{{ $course->nama_course }}"
+                     loading="lazy">
+
                 <!-- Level Badge -->
-                <div class="absolute top-3 right-3">
+                <div class="absolute top-3 right-3 z-10">
                     @switch($course->level)
                         @case('pemula')
-                            <span class="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">Pemula</span>
+                            <span class="inline-flex items-center bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                <i class="fas fa-leaf mr-1"></i>Pemula
+                            </span>
                             @break
                         @case('menengah')
-                            <span class="bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-medium">Menengah</span>
+                            <span class="inline-flex items-center bg-yellow-500 text-black px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                <i class="fas fa-star mr-1"></i>Menengah
+                            </span>
                             @break
                         @case('lanjut')
-                            <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">Lanjut</span>
+                            <span class="inline-flex items-center bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                <i class="fas fa-fire mr-1"></i>Lanjut
+                            </span>
                             @break
                         @default
-                            <span class="bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium">Umum</span>
+                            <span class="inline-flex items-center bg-gray-500 text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                <i class="fas fa-graduation-cap mr-1"></i>Umum
+                            </span>
                     @endswitch
                 </div>
 
                 <!-- Category Badge -->
-                <div class="absolute top-3 left-3">
-                    <span class="bg-black bg-opacity-75 text-white px-3 py-1 rounded-full text-sm">
+                <div class="absolute top-3 left-3 z-10">
+                    <span class="inline-flex items-center bg-black bg-opacity-75 text-white px-3 py-1 rounded-full text-sm backdrop-blur-sm">
+                        <i class="fas fa-tag mr-1 text-xs"></i>
                         {{ $course->kategori->kategori ?? 'N/A' }}
                     </span>
                 </div>
 
-                <!-- Play Button Overlay -->
-                <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
-                    <div class="w-16 h-16 bg-white bg-opacity-90 rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform duration-300 shadow-xl">
-                        <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z"></path>
-                        </svg>
+                <!-- Play Button Overlay with Enhanced Animation -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center">
+                    <div class="relative">
+                        <!-- Outer Ring -->
+                        <div class="w-20 h-20 border-4 border-white border-opacity-50 rounded-full absolute inset-0 animate-pulse"></div>
+
+                        <!-- Main Play Button -->
+                        <div class="w-16 h-16 bg-white bg-opacity-95 rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-all duration-500 shadow-2xl hover:shadow-white/20 hover:bg-opacity-100">
+                            <svg class="w-8 h-8 text-blue-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+
+                        <!-- Ripple Effect -->
+                        <div class="absolute inset-0 w-16 h-16 border-2 border-white rounded-full animate-ping opacity-75"></div>
                     </div>
                 </div>
+
+                <!-- Duration Badge (if available) -->
+                @if($course->total_durasi_menit > 0)
+                <div class="absolute bottom-3 right-3 z-10">
+                    <span class="inline-flex items-center bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs backdrop-blur-sm">
+                        <i class="fas fa-clock mr-1"></i>
+                        {{ $course->total_durasi_menit }} min
+                    </span>
+                </div>
+                @endif
             </div>
 
             <div class="p-6">
@@ -145,7 +195,7 @@
                 <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-blue-600 transition-colors">
                     {{ $course->nama_course }}
                 </h3>
-                
+
                 <!-- Course Description -->
                 <p class="text-gray-600 mb-4 line-clamp-3">
                     {{ Str::limit($course->deskripsi_course, 120) }}
@@ -153,32 +203,32 @@
 
                 <!-- Course Stats -->
                 <div class="grid grid-cols-3 gap-4 mb-4 text-center">
-                    <div class="text-sm">
+                    <div class="bg-blue-50 rounded-lg p-3 group-hover:bg-blue-100 transition-colors">
                         <div class="flex items-center justify-center mb-1">
-                            <svg class="w-4 h-4 text-blue-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"></path>
-                            </svg>
-                            <span class="font-semibold text-gray-700">{{ $course->videos_count }}</span>
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-play text-white text-xs"></i>
+                            </div>
+                            <span class="font-bold text-blue-700 text-lg">{{ $course->videos_count }}</span>
                         </div>
-                        <span class="text-gray-500 text-xs">Videos</span>
+                        <span class="text-blue-600 text-xs font-medium">Video</span>
                     </div>
-                    <div class="text-sm">
+                    <div class="bg-yellow-50 rounded-lg p-3 group-hover:bg-yellow-100 transition-colors">
                         <div class="flex items-center justify-center mb-1">
-                            <svg class="w-4 h-4 text-yellow-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                            </svg>
-                            <span class="font-semibold text-gray-700">{{ $course->total_durasi_menit ?? 0 }}</span>
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-clock text-white text-xs"></i>
+                            </div>
+                            <span class="font-bold text-yellow-700 text-lg">{{ $course->total_durasi_menit ?? 0 }}</span>
                         </div>
-                        <span class="text-gray-500 text-xs">Menit</span>
+                        <span class="text-yellow-600 text-xs font-medium">Menit</span>
                     </div>
-                    <div class="text-sm">
+                    <div class="bg-green-50 rounded-lg p-3 group-hover:bg-green-100 transition-colors">
                         <div class="flex items-center justify-center mb-1">
-                            <svg class="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
-                            </svg>
-                            <span class="font-semibold text-gray-700">{{ $course->user_progress_count }}</span>
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-2">
+                                <i class="fas fa-users text-white text-xs"></i>
+                            </div>
+                            <span class="font-bold text-green-700 text-lg">{{ $course->user_progress_count }}</span>
                         </div>
-                        <span class="text-gray-500 text-xs">Students</span>
+                        <span class="text-green-600 text-xs font-medium">Student</span>
                     </div>
                 </div>
 
@@ -189,13 +239,18 @@
                             $userProgress = $course->userProgress->first();
                         @endphp
                         <div class="mb-4">
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full transition-all duration-300" 
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">Progress Belajar</span>
+                                <span class="text-sm font-bold text-green-600">{{ $userProgress->progress_percentage }}%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                <div class="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-500 shadow-sm"
                                      style="width: {{ $userProgress->progress_percentage }}%">
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mt-2">
-                                Progress: {{ $userProgress->progress_percentage }}% selesai
+                            <p class="text-xs text-gray-500 mt-1 flex items-center">
+                                <i class="fas fa-trophy text-yellow-500 mr-1"></i>
+                                {{ $userProgress->progress_percentage }}% telah diselesaikan
                             </p>
                         </div>
                     @endif
@@ -209,39 +264,50 @@
                                 $userProgress = $course->userProgress->first();
                             @endphp
                             @if($userProgress->status !== 'not_started')
-                                <a href="{{ route('courses.show', $course->course_id) }}" 
-                                   class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    Lanjut Belajar
+                                <a href="{{ route('courses.show', $course->course_id) }}"
+                                   class="group/btn w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-green-500/25 hover:scale-105 transform">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3 group-hover/btn:bg-opacity-30 transition-all">
+                                            <i class="fas fa-play text-sm"></i>
+                                        </div>
+                                        <span class="text-sm">Lanjut Belajar</span>
+                                        <i class="fas fa-arrow-right ml-2 text-sm transform group-hover/btn:translate-x-1 transition-transform"></i>
+                                    </div>
                                 </a>
                             @else
-                                <a href="{{ route('courses.show', $course->course_id) }}" 
-                                   class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    Mulai Pembelajaran
+                                <a href="{{ route('courses.show', $course->course_id) }}"
+                                   class="group/btn w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-blue-500/25 hover:scale-105 transform">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3 group-hover/btn:bg-opacity-30 transition-all">
+                                            <i class="fas fa-rocket text-sm"></i>
+                                        </div>
+                                        <span class="text-sm">Mulai Pembelajaran</span>
+                                        <i class="fas fa-arrow-right ml-2 text-sm transform group-hover/btn:translate-x-1 transition-transform"></i>
+                                    </div>
                                 </a>
                             @endif
                         @else
-                            <a href="{{ route('courses.show', $course->course_id) }}" 
-                               class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Mulai Pembelajaran
+                            <a href="{{ route('courses.show', $course->course_id) }}"
+                               class="group/btn w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-blue-500/25 hover:scale-105 transform">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3 group-hover/btn:bg-opacity-30 transition-all">
+                                        <i class="fas fa-rocket text-sm"></i>
+                                    </div>
+                                    <span class="text-sm">Mulai Pembelajaran</span>
+                                    <i class="fas fa-arrow-right ml-2 text-sm transform group-hover/btn:translate-x-1 transition-transform"></i>
+                                </div>
                             </a>
                         @endif
                     @else
-                        <a href="{{ route('courses.show', $course->course_id) }}" 
-                           class="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition-colors duration-200 flex items-center justify-center">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path>
-                                <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            Lihat Detail
+                        <a href="{{ route('courses.show', $course->course_id) }}"
+                           class="group/btn w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-gray-500/25 hover:scale-105 transform">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3 group-hover/btn:bg-opacity-30 transition-all">
+                                    <i class="fas fa-eye text-sm"></i>
+                                </div>
+                                <span class="text-sm">Lihat Detail</span>
+                                <i class="fas fa-arrow-right ml-2 text-sm transform group-hover/btn:translate-x-1 transition-transform"></i>
+                            </div>
                         </a>
                     @endauth
                 </div>
@@ -270,6 +336,23 @@
     @endif
 </div>
 
+<!-- Hidden elements for Tailwind JIT compilation -->
+<div class="hidden">
+    <!-- Force compilation of all color combinations separately -->
+    <div class="bg-green-500"></div><div class="bg-green-600"></div><div class="bg-green-700"></div><div class="bg-green-50"></div><div class="bg-green-100"></div>
+    <div class="text-green-600"></div><div class="text-green-700"></div>
+    <div class="bg-blue-500"></div><div class="bg-blue-600"></div><div class="bg-blue-700"></div><div class="bg-blue-50"></div><div class="bg-blue-100"></div>
+    <div class="text-blue-600"></div><div class="text-blue-700"></div>
+    <div class="bg-yellow-500"></div><div class="bg-yellow-600"></div><div class="bg-yellow-700"></div><div class="bg-yellow-50"></div><div class="bg-yellow-100"></div>
+    <div class="text-yellow-600"></div><div class="text-yellow-700"></div>
+    <div class="bg-red-500"></div><div class="bg-red-600"></div><div class="bg-red-700"></div>
+    <div class="bg-gray-500"></div><div class="bg-gray-600"></div><div class="bg-gray-700"></div>
+    <div class="shadow-green-500/25"></div><div class="shadow-blue-500/25"></div><div class="shadow-gray-500/25"></div>
+    <div class="from-green-500 to-green-600"></div><div class="from-green-600 to-green-700"></div>
+    <div class="from-blue-500 to-blue-600"></div><div class="from-blue-600 to-blue-700"></div>
+    <div class="from-gray-500 to-gray-600"></div><div class="from-gray-600 to-gray-700"></div>
+</div>
+
 <style>
 .line-clamp-2 {
     display: -webkit-box;
@@ -283,6 +366,58 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Enhanced animations */
+@keyframes ripple {
+    0% {
+        transform: scale(0.8);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-ripple {
+    animation: ripple 1.5s infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Custom hover effects */
+.group:hover .animate-float {
+    animation-play-state: paused;
+}
+
+/* Smooth gradient transitions */
+.bg-gradient-to-r {
+    transition: background-image 0.3s ease;
+}
+
+/* Enhanced shadow effects */
+.shadow-glow {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-glow-green {
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+.shadow-glow-gray {
+    box-shadow: 0 0 20px rgba(107, 114, 128, 0.3);
 }
 </style>
 @endsection

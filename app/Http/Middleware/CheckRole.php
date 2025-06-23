@@ -40,26 +40,17 @@ class CheckRole
 
         $user = auth()->user();
 
-        // Check if user has one of the required roles
-        if (!in_array($user->role, $roles)) {
-            Log::warning('CheckRole middleware: Access denied', [
-                'user_id' => $user->users_id ?? $user->id,
-                'user_role' => $user->role,
-                'required_roles' => $roles,
-                'path' => $request->path()
-            ]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Access denied. Insufficient permissions.',
-                'debug' => [
-                    'user_role' => $user->role,
-                    'required_roles' => $roles
-                ]
-            ], 403);
+        // If no specific roles required, allow any authenticated user
+        if (empty($roles)) {
+            return $next($request);
         }
 
-        // Check if user has one of the required roles
+        // If user is admin, allow access to everything
+        if ($user->role === 'AD') {
+            return $next($request);
+        }
+
+        // For non-admin users, check if they have one of the required roles
         if (!in_array($user->role, $roles)) {
             Log::warning('CheckRole middleware: Access denied', [
                 'user_id' => $user->users_id ?? $user->id,
