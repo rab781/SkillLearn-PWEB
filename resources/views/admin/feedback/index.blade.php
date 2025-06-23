@@ -9,12 +9,12 @@
         <h1 class="text-3xl font-bold text-gray-900">Kelola Feedback</h1>
         <p class="text-gray-600 mt-1">Pantau dan balas feedback dari siswa</p>
     </div>
-    <div class="flex space-x-3">
-        <a href="{{ route('courses.index') }}?admin_mode=1" 
+    {{-- <div class="flex space-x-3">
+        <a href="{{ route('courses.index') }}?admin_mode=1"
            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors duration-200">
             <i class="fas fa-eye mr-2"></i> Monitor Pembelajaran
         </a>
-    </div>
+    </div> --}}
 </div>
 
 <!-- Filter Section -->
@@ -22,12 +22,12 @@
     <form method="GET" action="{{ route('admin.feedback.index') }}" class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
             <label for="course_id" class="block text-sm font-medium text-gray-700 mb-2">Filter Course</label>
-            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                    id="course_id" 
+            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    id="course_id"
                     name="course_id">
                 <option value="">Semua Course</option>
                 @foreach($courses as $course)
-                    <option value="{{ $course->course_id }}" 
+                    <option value="{{ $course->course_id }}"
                             {{ request('course_id') == $course->course_id ? 'selected' : '' }}>
                         {{ $course->nama_course }}
                     </option>
@@ -36,8 +36,8 @@
         </div>
         <div>
             <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                    id="status" 
+            <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    id="status"
                     name="status">
                 <option value="">Semua Status</option>
                 <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
@@ -45,7 +45,7 @@
             </select>
         </div>
         <div class="flex items-end">
-            <button type="submit" 
+            <button type="submit"
                     class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center">
                 <i class="fas fa-filter mr-2"></i> Filter
             </button>
@@ -58,7 +58,7 @@
     <div class="px-6 py-4 border-b border-gray-200">
         <h3 class="text-lg font-semibold text-gray-900">Daftar Feedback ({{ $feedbacks->total() }})</h3>
     </div>
-    
+
     @forelse($feedbacks as $feedback)
     <div class="border-b border-gray-200 p-6 hover:bg-gray-50 transition-colors">
         <div class="flex items-start justify-between">
@@ -80,7 +80,7 @@
                         @endif
                     </div>
                 </div>
-                
+
                 <div class="bg-gray-50 rounded-lg p-4 mb-3">
                     <div class="flex items-center space-x-2 mb-2">
                         <i class="fas fa-graduation-cap text-blue-600"></i>
@@ -110,24 +110,24 @@
                 @else
                     <!-- Reply Form -->
                     <div class="reply-section-{{ $feedback->feedback_id }}" style="display: none;">
-                        <form class="reply-form bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4" 
+                        <form class="reply-form bg-yellow-50 border-l-4 border-yellow-500 rounded-lg p-4"
                               data-feedback-id="{{ $feedback->feedback_id }}">
                             @csrf
                             <div class="flex items-center space-x-2 mb-3">
                                 <i class="fas fa-edit text-yellow-600"></i>
                                 <span class="font-medium text-yellow-800">Tulis Balasan</span>
                             </div>
-                            <textarea name="balasan" 
-                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                                      rows="3" 
+                            <textarea name="balasan"
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      rows="3"
                                       placeholder="Tulis balasan untuk siswa..."
                                       required></textarea>
                             <div class="flex space-x-3 mt-3">
-                                <button type="submit" 
+                                <button type="submit"
                                         class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
                                     <i class="fas fa-paper-plane mr-2"></i>Kirim Balasan
                                 </button>
-                                <button type="button" 
+                                <button type="button"
                                         class="cancel-reply px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors">
                                     Batal
                                 </button>
@@ -145,7 +145,7 @@
                         <i class="fas fa-reply mr-1"></i>Balas
                     </button>
                 @endif
-                
+
                 <div class="relative">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
                         {{ $feedback->balasan ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
@@ -183,17 +183,17 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const feedbackId = this.dataset.feedbackId;
             const replySection = document.querySelector(`.reply-section-${feedbackId}`);
-            
+
             // Hide all other reply sections
             document.querySelectorAll('[class*="reply-section-"]').forEach(section => {
                 if (section !== replySection) {
                     section.style.display = 'none';
                 }
             });
-            
+
             // Toggle current reply section
             replySection.style.display = replySection.style.display === 'none' ? 'block' : 'none';
-            
+
             if (replySection.style.display === 'block') {
                 const textarea = replySection.querySelector('textarea');
                 textarea.focus();
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const replySection = this.closest('[class*="reply-section-"]');
             replySection.style.display = 'none';
-            
+
             // Clear textarea
             const textarea = replySection.querySelector('textarea');
             textarea.value = '';
@@ -217,15 +217,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.reply-form').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            
+
             const feedbackId = this.dataset.feedbackId;
             const formData = new FormData(this);
             const submitBtn = this.querySelector('button[type="submit"]');
-            
+
             // Disable submit button
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Mengirim...';
-            
+
             fetch(`/admin/feedback/${feedbackId}/reply`, {
                 method: 'POST',
                 body: formData,
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.success) {
                     // Show success message
                     alert('Balasan berhasil dikirim!');
-                    
+
                     // Reload page to show updated feedback
                     window.location.reload();
                 } else {

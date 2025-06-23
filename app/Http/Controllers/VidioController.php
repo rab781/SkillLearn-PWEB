@@ -56,9 +56,9 @@ class VidioController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:120',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable|string',
             'url' => 'required|url',
-            'gambar' => 'required|url',
+            'gambar' => 'nullable|url',
             'kategori_kategori_id' => 'required|exists:kategori,kategori_id',
             'channel' => 'required|string|max:100',
         ]);
@@ -71,14 +71,30 @@ class VidioController extends Controller
             ], 422);
         }
 
+        // Extract YouTube video ID and get thumbnail if applicable
+        $youtubeId = Vidio::extractYouTubeId($request->url);
+        $thumbnail = $request->gambar;
+
+        // If no thumbnail provided but YouTube URL, use YouTube thumbnail
+        if ((!$thumbnail || $thumbnail == '') && $youtubeId) {
+            $thumbnail = "https://img.youtube.com/vi/{$youtubeId}/maxresdefault.jpg";
+        }
+
+        // If YouTube URL, also try to get duration
+        $durasi = null;
+        if ($youtubeId) {
+            $durasi = Vidio::getYouTubeDuration($request->url);
+        }
+
         $video = Vidio::create([
             'nama' => $request->nama,
             'deskripsi' => $request->deskripsi,
             'url' => $request->url,
-            'gambar' => $request->gambar,
+            'gambar' => $thumbnail,
             'kategori_kategori_id' => $request->kategori_kategori_id,
             'jumlah_tayang' => 0,
-            'channel' => $request->channel
+            'channel' => $request->channel,
+            'durasi_menit' => $durasi
         ]);
 
         return response()->json([
@@ -111,7 +127,7 @@ class VidioController extends Controller
             'nama' => 'sometimes|string|max:120',
             'deskripsi' => 'sometimes|string',
             'url' => 'sometimes|url',
-            'gambar' => 'sometimes|url',
+            'gambar' => 'sometimes|nullable|url',
             'kategori_kategori_id' => 'sometimes|exists:kategori,kategori_id',
             'channel' => 'sometimes|string|max:100',
         ]);
@@ -124,9 +140,36 @@ class VidioController extends Controller
             ], 422);
         }
 
-        $vidio->update($request->only([
-            'nama', 'deskripsi', 'url', 'gambar', 'kategori_kategori_id','channel'
-        ]));
+        // Prepare update data
+        $updateData = $request->only([
+            'nama', 'deskripsi', 'kategori_kategori_id', 'channel'
+        ]);
+
+        // Handle URL change
+        if ($request->has('url')) {
+            $updateData['url'] = $request->url;
+
+            // If URL changed to YouTube URL, update thumbnail and duration if not explicitly set
+            $youtubeId = Vidio::extractYouTubeId($request->url);
+            if ($youtubeId) {
+                // Update thumbnail if not explicitly provided
+                if (!$request->has('gambar') || !$request->gambar) {
+                    $updateData['gambar'] = "https://img.youtube.com/vi/{$youtubeId}/maxresdefault.jpg";
+                }
+
+                // Update duration if not set or if URL changed
+                if (!$vidio->durasi_menit || $vidio->url !== $request->url) {
+                    $updateData['durasi_menit'] = Vidio::getYouTubeDuration($request->url);
+                }
+            }
+        }
+
+        // Only update gambar if explicitly provided
+        if ($request->has('gambar')) {
+            $updateData['gambar'] = $request->gambar;
+        }
+
+        $vidio->update($updateData);
 
         return response()->json([
             'success' => true,

@@ -644,7 +644,7 @@ class QuizController extends Controller
 
         // Get all lessons in order (videos, quick reviews, quizzes)
         $allLessons = collect();
-        
+
         // Add videos with safer URL generation
         if ($course->videos && $course->videos->count() > 0) {
             foreach ($course->videos as $video) {
@@ -776,7 +776,7 @@ class QuizController extends Controller
 
             return view('courses.quiz', compact(
                 'course',
-                'quiz', 
+                'quiz',
                 'userProgress',
                 'previousResults',
                 'bestScore',
@@ -786,6 +786,26 @@ class QuizController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('courses.show', $courseId)
                 ->with('error', 'Quiz tidak ditemukan atau terjadi kesalahan.');
+        }
+    }
+
+    /**
+     * Get quiz data for editing
+     */
+    public function adminGetQuiz($quizId)
+    {
+        try {
+            $quiz = Quiz::findOrFail($quizId);
+
+            return response()->json([
+                'success' => true,
+                'quiz' => $quiz
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Quiz tidak ditemukan'
+            ], 404);
         }
     }
 }

@@ -63,7 +63,7 @@
                 @foreach($courses as $course)
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <img src="{{ $course->gambar_course ? Storage::url($course->gambar_course) : $course->gambar_course }}"
+                        <img src="{{ $course->gambar_course_url }}"
                              alt="{{ $course->nama_course }}"
                              class="w-20 h-15 object-cover rounded-lg shadow-sm">
                     </td>                    <td class="px-6 py-4">
@@ -71,7 +71,7 @@
                         <div class="text-sm text-gray-500 mt-1">{{ Str::limit($course->deskripsi_course, 50) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="text-sm text-gray-900">{{ $course->kategori->nama_kategori ?? 'N/A' }}</span>
+                        <span class="text-sm text-gray-900">{{ $course->kategori->kategori ?? 'N/A' }}</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         @php

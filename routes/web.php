@@ -136,13 +136,13 @@ Route::middleware('auth')->group(function () {
 
         return view('dashboard.customer')->with('dashboardData', $dashboardData);
     })->name('dashboard');
-    
+
     // Additional route for AJAX dashboard data fetching (helps with auth issues)
     Route::get('/dashboard/fetch-data', function () {
         $controller = new \App\Http\Controllers\DashboardController();
         return $controller->customerDashboard();
     })->name('dashboard.fetch-data');
-    
+
     // Direct route for dashboard data (no middleware wrapping)
     Route::get('/dashboard-data-direct', function () {
         $controller = new \App\Http\Controllers\DashboardController();
@@ -258,9 +258,11 @@ Route::middleware('auth')->group(function () {
             // Quiz Questions management
             Route::get('/quiz/{quizId}/questions', [App\Http\Controllers\QuizQuestionController::class, 'index'])->name('quizzes.questions.index');
             Route::post('/quiz/{quizId}/questions', [App\Http\Controllers\QuizQuestionController::class, 'store'])->name('quizzes.questions.store');
-            Route::put('/quiz/questions/{questionId}', [App\Http\Controllers\QuizQuestionController::class, 'update'])->name('quizzes.questions.update');
+            Route::get('/quiz-questions/{questionId}/edit', [App\Http\Controllers\QuizQuestionController::class, 'edit'])->name('quizzes.questions.edit');
+            Route::put('/quiz-questions/{questionId}', [App\Http\Controllers\QuizQuestionController::class, 'update'])->name('quizzes.questions.update');
             Route::delete('/quiz/questions/{questionId}', [App\Http\Controllers\QuizQuestionController::class, 'destroy'])->name('quizzes.questions.destroy');
             Route::post('/quiz/{quizId}/questions/reorder', [App\Http\Controllers\QuizQuestionController::class, 'reorder'])->name('quizzes.questions.reorder');
+            Route::post('/quiz-questions/update-order', [App\Http\Controllers\QuizQuestionController::class, 'updateOrder'])->name('quizzes.questions.update-order');
 
             // Course statistics and management
             Route::get('/{courseId}/history-statistics', [RiwayatTontonController::class, 'getCourseStatistics'])->name('history.statistics');

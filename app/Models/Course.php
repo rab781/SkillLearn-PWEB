@@ -100,12 +100,37 @@ class Course extends Model
         return $this->videos()->count();
     }
 
+    public function getTotalQuizzesAttribute()
+    {
+        return $this->quizzes()->count();
+    }
+
+    public function getGambarCourseUrlAttribute()
+    {
+        if (!$this->gambar_course) {
+            return asset('images/default-course.svg');
+        }
+
+        // Check if it's a URL
+        if (filter_var($this->gambar_course, FILTER_VALIDATE_URL)) {
+            return $this->gambar_course;
+        }
+
+        // Check if it's a storage path
+        if (strpos($this->gambar_course, 'public/') === 0) {
+            return \Storage::url($this->gambar_course);
+        }
+
+        // Default to uploads directory
+        return asset('uploads/' . $this->gambar_course);
+    }
+
     // Helper methods
     public function updateCourseStatistics()
     {
         $totalVideos = $this->videos()->count();
         $totalDuration = $this->videos()->sum('durasi_menit');
-        
+
         $this->update([
             'total_video' => $totalVideos,
             'total_durasi_menit' => $totalDuration,
@@ -121,7 +146,7 @@ class Course extends Model
     {
         $totalEnrolled = $this->userProgress()->count();
         if ($totalEnrolled === 0) return 0;
-        
+
         $completed = $this->userProgress()->where('status', 'completed')->count();
         return round(($completed / $totalEnrolled) * 100, 2);
     }

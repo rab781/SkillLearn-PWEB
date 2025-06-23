@@ -10,32 +10,32 @@
         opacity: 0.4;
         transform: rotate(3deg);
     }
-    
+
     .sortable-chosen {
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         transform: scale(1.02);
         z-index: 1000;
     }
-    
+
     .sortable-drag {
         opacity: 0.8;
         transform: rotate(5deg);
     }
-    
+
     .drag-handle {
         cursor: grab;
         color: #6B7280;
         transition: color 0.2s;
     }
-    
+
     .drag-handle:hover {
         color: #374151;
     }
-    
+
     .drag-handle:active {
         cursor: grabbing;
     }
-    
+
     .drop-zone {
         min-height: 60px;
         border: 2px dashed #d1d5db;
@@ -50,7 +50,7 @@
         transition: all 0.3s ease;
         background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     }
-    
+
     .drop-zone:hover {
         border-color: #3b82f6;
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
@@ -58,7 +58,7 @@
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
     }
-    
+
     .quiz-item {
         background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
         border-radius: 16px;
@@ -73,12 +73,12 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
     }
-    
+
     .quiz-item:hover {
         transform: translateY(-3px);
         box-shadow: 0 12px 35px rgba(139, 92, 246, 0.4);
     }
-    
+
     .add-quiz-btn {
         background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
         color: white;
@@ -94,7 +94,7 @@
         gap: 8px;
         box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
     }
-    
+
     .add-quiz-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
@@ -253,8 +253,8 @@
                 <i class="fas fa-edit"></i> Edit Course
             </a>
             <button onclick="toggleCourseStatus({{ $course->course_id }}, {{ $course->is_active ? 'false' : 'true' }})"
-                    class="action-btn {{ $course->is_active ? 'action-btn-danger' : 'action-btn-success' }}">
-                <i class="fas fa-{{ $course->is_active ? 'pause' : 'play' }}"></i>
+                    class="action-btn text-black {{ $course->is_active ? 'action-btn-danger' : 'action-btn-success' }}">
+                <i class="fas  text-black fa-{{ $course->is_active ? 'pause' : 'play' }}"></i>
                 {{ $course->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
             </button>
         </div>
@@ -276,13 +276,11 @@
     <div class="lg:col-span-1">
         <!-- Course Information Card -->
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-            @if($course->gambar_course)
-                <div class="aspect-video overflow-hidden">
-                    <img src="{{ Storage::url($course->gambar_course) }}"
-                         alt="{{ $course->nama_course }}"
-                         class="w-full h-full object-cover">
-                </div>
-            @endif
+            <div class="aspect-video overflow-hidden">
+                <img src="{{ $course->gambar_course_url }}"
+                     alt="{{ $course->nama_course }}"
+                     class="w-full h-full object-cover">
+            </div>
 
             <div class="p-6">
                 <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
@@ -376,11 +374,11 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}" 
+                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}"
                                    class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})" 
+                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})"
                                         class="bg-red-500 bg-opacity-80 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -388,13 +386,13 @@
                         </div>
                         @endforeach
                     @endif
-                    
+
                     <!-- Add Quiz at Start of Course -->
                     <div class="drop-zone quiz-drop-zone" data-position="start">
                         <i class="fas fa-plus-circle mr-2"></i>
                         <span>Tambah Quiz di Awal Course</span>
                     </div>
-                    
+
                     <div id="sections-container" class="space-y-4">
                         @foreach($course->sections as $section)
                         <div class="section-item border border-gray-200 rounded-xl overflow-hidden" data-section-id="{{ $section->section_id }}">
@@ -449,8 +447,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex space-x-2">
-                                                    <button class="add-quiz-btn" onclick="showAddQuizDialog('after_video', {{ $courseVideo->course_video_id }})">
-                                                        <i class="fas fa-plus"></i>
+                                                    <button class="add-quiz-btn text-black" onclick="showAddQuizDialog('after_video', {{ $courseVideo->course_video_id }})">
+                                                        <i class="fas fa-plus text-black"></i>
                                                         Quiz
                                                     </button>
                                                     <a href="{{ $courseVideo->vidio->url }}" target="_blank"
@@ -477,11 +475,11 @@
                                         </div>
                                     </div>
                                     <div class="flex items-center space-x-2">
-                                        <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}" 
-                                           class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30">
+                                        <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}"
+                                           class="bg-white bg-opacity-20 text-black px-3 py-1 rounded text-sm hover:bg-opacity-30">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
-                                        <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})" 
+                                        <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})"
                                                 class="bg-red-500 bg-opacity-80 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -502,11 +500,11 @@
                                                 class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors flex items-center">
                                             <i class="fas fa-trash mr-2"></i> Hapus Section
                                         </button>
-                                        <button class="add-quiz-btn" onclick="showAddQuizDialog('after_section', {{ $section->section_id }})">
-                                            <i class="fas fa-plus mr-2"></i>
+                                        <button class="add-quiz-btn text-black" onclick="showAddQuizDialog('after_section', {{ $section->section_id }})">
+                                            <i class="fas fa-plus mr-2 text-black"></i>
                                             Quiz Setelah Section
                                         </button>
-                                    </div>                    
+                                    </div>
                     <!-- Display quizzes after this section -->
                     @if($course->courseQuizzes->where('position', 'after_section')->where('reference_id', $section->section_id)->count() > 0)
                         @foreach($course->courseQuizzes->where('position', 'after_section')->where('reference_id', $section->section_id) as $courseQuiz)
@@ -521,11 +519,11 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}" 
-                                   class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30">
+                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}"
+                                   class="bg-white bg-opacity-20 text-black px-3 py-1 rounded text-sm hover:bg-opacity-30">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})" 
+                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})"
                                         class="bg-red-500 bg-opacity-80 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -536,7 +534,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Add Quiz Between Sections -->
                         @if(!$loop->last)
                         <div class="drop-zone quiz-drop-zone" data-position="between_sections" data-after-section="{{ $section->section_id }}">
@@ -544,10 +542,10 @@
                             <span>Tambah Quiz di Sini</span>
                         </div>
                         @endif
-                        
+
                         @endforeach
                     </div>
-                    
+
                     <!-- Display quizzes at end of course -->
                     @if($course->courseQuizzes->where('position', 'end')->count() > 0)
                         @foreach($course->courseQuizzes->where('position', 'end') as $courseQuiz)
@@ -562,11 +560,11 @@
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}" 
-                                   class="bg-white bg-opacity-20 text-white px-3 py-1 rounded text-sm hover:bg-opacity-30">
+                                <a href="{{ route('admin.courses.quizzes.questions.index', $courseQuiz->quiz->quiz_id) }}"
+                                   class="bg-white bg-opacity-80 text-black px-3 py-1 rounded text-sm hover:bg-opacity-30">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
-                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})" 
+                                <button onclick="removeQuizFromCourse({{ $courseQuiz->id }})"
                                         class="bg-red-500 bg-opacity-80 text-white px-3 py-1 rounded text-sm hover:bg-red-600">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -574,7 +572,7 @@
                         </div>
                         @endforeach
                     @endif
-                    
+
                     <!-- Add Quiz at End of Course -->
                     <div class="drop-zone quiz-drop-zone mt-6" data-position="end">
                         <i class="fas fa-plus-circle mr-2"></i>
@@ -686,7 +684,7 @@ function initializeQuizDropZones() {
             const position = this.dataset.position;
             const afterSection = this.dataset.afterSection;
             const afterVideo = this.dataset.afterVideo;
-            
+
             showAddQuizDialog(position, afterSection || afterVideo);
         });
     });
@@ -696,23 +694,23 @@ function initializeQuizDropZones() {
 function updateSectionOrder() {
     const sections = document.querySelectorAll('.section-item');
     const sectionOrder = [];
-    
+
     sections.forEach((section, index) => {
         const sectionId = section.dataset.sectionId;
         const newOrder = index + 1;
-        
+
         // Update visual order number
         const orderSpan = section.querySelector('.section-order');
         if (orderSpan) {
             orderSpan.textContent = newOrder;
         }
-        
+
         sectionOrder.push({
             section_id: sectionId,
             order: newOrder
         });
     });
-    
+
     // Send update to server
     fetch(`/admin/courses/{{ $course->course_id }}/sections/reorder`, {
         method: 'POST',
@@ -742,23 +740,23 @@ function updateSectionOrder() {
 function updateVideoOrder(sectionId) {
     const videos = document.querySelectorAll(`#videos-container-${sectionId} .video-item`);
     const videoOrder = [];
-    
+
     videos.forEach((video, index) => {
         const videoId = video.dataset.videoId;
         const newOrder = index + 1;
-        
+
         // Update visual order number
         const orderSpan = video.querySelector('.video-order');
         if (orderSpan) {
             orderSpan.textContent = newOrder;
         }
-        
+
         videoOrder.push({
             video_id: videoId,
             order: newOrder
         });
     });
-    
+
     // Send update to server
     fetch(`/admin/courses/{{ $course->course_id }}/videos/reorder`, {
         method: 'POST',
@@ -766,9 +764,9 @@ function updateVideoOrder(sectionId) {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ 
-            section_id: sectionId, 
-            videos: videoOrder 
+        body: JSON.stringify({
+            section_id: sectionId,
+            videos: videoOrder
         })
     })
     .then(response => response.json())
@@ -791,7 +789,7 @@ function updateVideoOrder(sectionId) {
 function showAddQuizDialog(position, referenceId = null) {
     let title = 'Tambah Quiz';
     let positionText = '';
-    
+
     switch(position) {
         case 'start':
             positionText = 'di awal course';
@@ -809,7 +807,7 @@ function showAddQuizDialog(position, referenceId = null) {
             positionText = 'di antara section';
             break;
     }
-    
+
     Swal.fire({
         title: `<i class="fas fa-question-circle text-purple-500"></i> ${title}`,
         html: `
@@ -820,7 +818,7 @@ function showAddQuizDialog(position, referenceId = null) {
                         Quiz akan ditempatkan ${positionText}
                     </p>
                 </div>
-                
+
                 <!-- Quiz Selection Tabs -->
                 <div class="mb-4">
                     <div class="flex border-b border-gray-200">
@@ -832,7 +830,7 @@ function showAddQuizDialog(position, referenceId = null) {
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Existing Quiz Tab Content -->
                 <div id="existing-quiz-content" class="quiz-tab-content">
                     <div class="mb-4">
@@ -843,7 +841,7 @@ function showAddQuizDialog(position, referenceId = null) {
                         <small class="text-gray-500 mt-1">Quiz yang sudah digunakan di course ini akan dimark</small>
                     </div>
                 </div>
-                
+
                 <!-- New Quiz Tab Content -->
                 <div id="new-quiz-content" class="quiz-tab-content hidden">
                     <div class="space-y-4">
@@ -853,14 +851,14 @@ function showAddQuizDialog(position, referenceId = null) {
                             </label>
                             <input type="text" id="swal-new_quiz_title" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Masukkan judul quiz...">
                         </div>
-                        
+
                         <div>
                             <label for="swal-new_quiz_description" class="block text-sm font-medium text-gray-700 mb-2">
                                 <i class="fas fa-align-left mr-1"></i>Deskripsi Quiz
                             </label>
                             <textarea id="swal-new_quiz_description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Deskripsi singkat tentang quiz ini..."></textarea>
                         </div>
-                        
+
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="swal-new_quiz_duration" class="block text-sm font-medium text-gray-700 mb-2">
@@ -868,7 +866,7 @@ function showAddQuizDialog(position, referenceId = null) {
                                 </label>
                                 <input type="number" id="swal-new_quiz_duration" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="30" min="1" max="180" value="30">
                             </div>
-                            
+
                             <div>
                                 <label for="swal-new_quiz_type" class="block text-sm font-medium text-gray-700 mb-2">
                                     <i class="fas fa-tag mr-1"></i>Tipe Quiz
@@ -880,7 +878,7 @@ function showAddQuizDialog(position, referenceId = null) {
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="bg-blue-50 p-3 rounded-lg">
                             <p class="text-sm text-blue-700">
                                 <i class="fas fa-lightbulb mr-2"></i>
@@ -903,43 +901,43 @@ function showAddQuizDialog(position, referenceId = null) {
         },
         preConfirm: () => {
             const activeTab = document.querySelector('.quiz-tab-content:not(.hidden)').id;
-            
+
             if (activeTab === 'existing-quiz-content') {
                 const quizId = document.getElementById('swal-quiz_id').value;
                 if (!quizId) {
                     Swal.showValidationMessage('Pilih quiz yang akan ditambahkan!');
                     return false;
                 }
-                return { 
-                    type: 'existing', 
-                    quizId: quizId, 
-                    position: position, 
-                    referenceId: referenceId 
+                return {
+                    type: 'existing',
+                    quizId: quizId,
+                    position: position,
+                    referenceId: referenceId
                 };
             } else {
                 const title = document.getElementById('swal-new_quiz_title').value.trim();
                 const description = document.getElementById('swal-new_quiz_description').value.trim();
                 const duration = document.getElementById('swal-new_quiz_duration').value;
                 const quizType = document.getElementById('swal-new_quiz_type').value;
-                
+
                 if (!title) {
                     Swal.showValidationMessage('Judul quiz harus diisi!');
                     return false;
                 }
-                
+
                 if (!duration || duration < 1) {
                     Swal.showValidationMessage('Durasi quiz harus minimal 1 menit!');
                     return false;
                 }
-                
-                return { 
-                    type: 'new', 
+
+                return {
+                    type: 'new',
                     title: title,
                     description: description,
                     duration: parseInt(duration),
                     quizType: quizType,
-                    position: position, 
-                    referenceId: referenceId 
+                    position: position,
+                    referenceId: referenceId
                 };
             }
         }
@@ -955,11 +953,11 @@ function switchQuizTab(tabName) {
     // Update tab buttons
     document.getElementById('tab-existing').className = 'flex-1 py-2 px-4 text-sm font-medium text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
     document.getElementById('tab-new').className = 'flex-1 py-2 px-4 text-sm font-medium text-center border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300';
-    
+
     // Update content
     document.getElementById('existing-quiz-content').classList.add('hidden');
     document.getElementById('new-quiz-content').classList.add('hidden');
-    
+
     if (tabName === 'existing') {
         document.getElementById('tab-existing').className = 'flex-1 py-2 px-4 text-sm font-medium text-center border-b-2 border-purple-500 text-purple-600 bg-purple-50';
         document.getElementById('existing-quiz-content').classList.remove('hidden');
@@ -976,7 +974,7 @@ function loadQuizOptions() {
         .then(data => {
             const select = document.getElementById('swal-quiz_id');
             select.innerHTML = '<option value="">-- Pilih Quiz --</option>';
-            
+
             data.quizzes.forEach(quiz => {
                 const option = document.createElement('option');
                 option.value = quiz.quiz_id;
@@ -1000,7 +998,7 @@ function addQuizToCourse(data) {
         position: data.position,
         reference_id: data.referenceId
     };
-    
+
     if (data.type === 'existing') {
         payload.quiz_id = data.quizId;
     } else if (data.type === 'new') {
@@ -1009,7 +1007,7 @@ function addQuizToCourse(data) {
         payload.quiz_duration = data.duration;
         payload.quiz_type = data.quizType;
     }
-    
+
     Swal.fire({
         title: 'Memproses Quiz...',
         text: data.type === 'new' ? 'Membuat quiz baru dan menambahkan ke course...' : 'Menambahkan quiz ke course...',
@@ -1018,7 +1016,7 @@ function addQuizToCourse(data) {
             Swal.showLoading();
         }
     });
-    
+
     fetch(`/admin/courses/{{ $course->course_id }}/quizzes/add`, {
         method: 'POST',
         headers: {
@@ -1484,22 +1482,21 @@ async function fetchYouTubeData() {
     statusEl.className = 'text-sm text-blue-500';
 
     try {
-        // Extract video ID from URL
-        const videoId = extractYouTubeVideoId(url);
-        if (!videoId) {
-            throw new Error('URL YouTube tidak valid');
-        }
-
-        // Use oEmbed API to get basic video info (doesn't require API key)
-        const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`;
-
-        const response = await fetch(oembedUrl);
+        // Use our custom API to get comprehensive video data
+        const apiUrl = `/api/youtube/video-data?url=${encodeURIComponent(url)}`;
+        const response = await fetch(apiUrl);
 
         if (!response.ok) {
-            throw new Error('Video tidak ditemukan atau privat');
+            throw new Error('Gagal mengambil data video');
         }
 
-        const data = await response.json();
+        const result = await response.json();
+
+        if (!result.success) {
+            throw new Error(result.message || 'URL YouTube tidak valid');
+        }
+
+        const data = result.data;
 
         // Auto-fill title
         const titleInput = document.getElementById('swal-video_title');
@@ -1507,25 +1504,34 @@ async function fetchYouTubeData() {
             titleInput.value = data.title;
         }
 
-        // Try to estimate duration (this is a fallback, as oEmbed doesn't provide duration)
-        // In production, you would need YouTube Data API v3 for accurate duration
-        statusEl.textContent = 'Data berhasil diambil! Silakan isi durasi video secara manual.';
-        statusEl.className = 'text-sm text-green-500';
+        // Auto-fill description if available
+        const descriptionInput = document.getElementById('swal-video_description');
+        if (data.description && !descriptionInput.value) {
+            descriptionInput.value = data.description;
+        }
 
-        // Focus on duration input
+        // Auto-fill duration
         const durationInput = document.getElementById('swal-durasi_menit');
-        durationInput.focus();
+        if (data.duration && !isNaN(data.duration) && data.duration > 0) {
+            durationInput.value = data.duration;
+            statusEl.textContent = 'Data berhasil diambil! Durasi otomatis terisi.';
+            statusEl.className = 'text-sm text-green-500';
+        } else {
+            durationInput.value = 10;
+            statusEl.textContent = 'Data berhasil diambil! Silakan isi/edit durasi video secara manual (default 10 menit).';
+            statusEl.className = 'text-sm text-orange-500';
+        }
 
-        // Show additional info if available
-        if (data.author_name) {
-            statusEl.textContent += ` Channel: ${data.author_name}`;
+        // Show channel info if available
+        if (data.author) {
+            statusEl.innerHTML += `<br><span class="font-semibold">Channel:</span> ${data.author}`;
         }
 
     } catch (error) {
         // Fallback: just validate URL format
         const videoId = extractYouTubeVideoId(url);
         if (videoId) {
-            statusEl.textContent = 'URL valid! Silakan isi judul dan durasi video secara manual.';
+            statusEl.textContent = 'URL valid, tetapi terjadi kesalahan saat mengambil data. Silakan isi judul dan durasi video secara manual.';
             statusEl.className = 'text-sm text-orange-500';
 
             // Auto-generate placeholder if empty

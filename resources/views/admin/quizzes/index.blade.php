@@ -304,22 +304,20 @@
     .quiz-stats {
         gap: 1rem;
     }
-    
+
     .quiz-stat {
         font-size: 0.8rem;
         padding: 0.3rem 0.6rem;
     }
-    
+
     .quiz-actions {
         flex-direction: column;
     }
-    
+
     .btn-modern {
         justify-content: center;
     }
 }
-</style>
-@endpush
 
 .btn-modern:hover {
     transform: translateY(-1px);
@@ -349,9 +347,9 @@
 @endpush
 
 @section('content')
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 py-3">
     <!-- Page Header -->
-    <div class="page-header fade-in">
+    <div class="page-header fade-in mb-4">
         <div class="d-flex justify-content-between align-items-start">
             <div>
                 <nav aria-label="breadcrumb" class="mb-3">
@@ -382,7 +380,7 @@
                 </div>
             </div>
             <button class="btn-modern btn-primary-modern" onclick="showQuizBuilder()">
-                <i class="fas fa-plus"></i> 
+                <i class="fas fa-plus"></i>
                 <span>Buat Quiz Baru</span>
             </button>
         </div>
@@ -405,7 +403,7 @@
             <form id="quizForm">
                 @csrf
                 <input type="hidden" id="quizId" name="quiz_id">
-                
+
                 <div class="row">
                     <div class="col-md-8">
                         <div class="input-group-modern">
@@ -450,29 +448,12 @@
 
                 <div class="d-flex gap-3 mt-4">
                     <button type="button" class="btn-modern btn-success-modern" onclick="saveQuiz()">
-                        <i class="fas fa-save"></i> 
+                        <i class="fas fa-save"></i>
                         <span>Simpan Quiz</span>
                     </button>
                     <button type="button" class="btn-modern btn-secondary" onclick="cancelQuizBuilder()">
-                        <i class="fas fa-times"></i> 
+                        <i class="fas fa-times"></i>
                         <span>Batal</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-                                <i class="fas fa-toggle-on text-success me-1"></i>Aktifkan quiz
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="d-flex gap-3 mt-4">
-                    <button type="button" class="btn-modern btn-success-modern" onclick="saveQuiz()">
-                        <i class="fas fa-save"></i> Simpan Quiz
-                    </button>
-                    <button type="button" class="btn-modern btn-secondary" onclick="cancelQuizBuilder()">
-                        <i class="fas fa-times"></i> Batal
                     </button>
                 </div>
             </form>
@@ -490,12 +471,12 @@
                             <i class="fas fa-{{ $quiz->is_active ? 'check' : 'pause' }} me-1"></i>
                             {{ $quiz->is_active ? 'Aktif' : 'Nonaktif' }}
                         </span>
-                        
+
                         <h5 class="mb-2 fw-bold">{{ $quiz->judul_quiz }}</h5>
                         <p class="mb-0 opacity-90">
                             {{ $quiz->deskripsi_quiz ? Str::limit($quiz->deskripsi_quiz, 80) : 'Tidak ada deskripsi' }}
                         </p>
-                        
+
                         <div class="quiz-stats">
                             <div class="quiz-stat">
                                 <i class="fas fa-clock"></i>
@@ -537,18 +518,18 @@
                     </div>
 
                     <div class="quiz-actions">
-                        <a href="{{ route('admin.courses.quizzes.questions.index', $quiz->quiz_id) }}" 
+                        <a href="{{ route('admin.courses.quizzes.questions.index', $quiz->quiz_id) }}"
                            class="btn-modern btn-primary-modern flex-fill text-center">
-                            <i class="fas fa-edit"></i> 
+                            <i class="fas fa-edit"></i>
                             <span>Kelola Soal</span>
                         </a>
-                        
-                        <button class="btn-modern btn-warning-modern" onclick="editQuiz({{ $quiz->quiz_id }})" 
+
+                        <button class="btn-modern btn-warning-modern" onclick="editQuiz({{ $quiz->quiz_id }})"
                                 title="Edit Quiz">
                             <i class="fas fa-cog"></i>
                         </button>
-                        
-                        <button class="btn-modern btn-danger-modern" onclick="deleteQuiz({{ $quiz->quiz_id }})" 
+
+                        <button class="btn-modern btn-danger-modern" onclick="deleteQuiz({{ $quiz->quiz_id }})"
                                 title="Hapus Quiz">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -581,7 +562,7 @@ function showQuizBuilder() {
     const builderCard = document.getElementById('quizBuilderCard');
     builderCard.style.display = 'block';
     builderCard.scrollIntoView({ behavior: 'smooth' });
-    
+
     // Reset form
     resetQuizForm();
 }
@@ -605,7 +586,7 @@ function resetQuizForm() {
 // Save quiz
 function saveQuiz() {
     const form = document.getElementById('quizForm');
-    
+
     // Validate form
     if (!validateQuizForm()) {
         return;
@@ -621,8 +602,8 @@ function saveQuiz() {
     };
 
     const quizId = document.getElementById('quizId').value;
-    const url = quizId ? 
-        `/admin/courses/quiz/${quizId}` : 
+    const url = quizId ?
+        `/admin/courses/quiz/${quizId}` :
         `/admin/courses/{{ $course->course_id }}/quizzes`;
     const method = quizId ? 'PUT' : 'POST';
 
@@ -667,7 +648,7 @@ function saveQuiz() {
                         cancelButtonText: 'Nanti Saja'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = `/admin/courses/quiz/${data.quiz_id}/questions`;
+                            window.location.href = `/admin/quiz/${data.quiz_id}/questions`;
                         } else {
                             window.location.reload();
                         }
@@ -741,10 +722,10 @@ function editQuiz(quizId) {
         .then(data => {
             if (data.success) {
                 const quiz = data.quiz;
-                
+
                 // Show quiz builder
                 showQuizBuilder();
-                
+
                 // Fill form with quiz data
                 document.getElementById('quizId').value = quiz.quiz_id;
                 document.getElementById('judulQuiz').value = quiz.judul_quiz;
@@ -752,9 +733,9 @@ function editQuiz(quizId) {
                 document.getElementById('tipeQuiz').value = quiz.tipe_quiz;
                 document.getElementById('durasiQuiz').value = quiz.durasi_menit;
                 document.getElementById('isActive').checked = quiz.is_active;
-                
+
                 currentEditingQuiz = quizId;
-                
+
                 // Trigger label animation
                 triggerLabelAnimation();
             } else {
@@ -848,7 +829,7 @@ function triggerLabelAnimation() {
 // Add event listeners for modern input animations
 document.addEventListener('DOMContentLoaded', function() {
     const inputs = document.querySelectorAll('.input-group-modern input, .input-group-modern textarea, .input-group-modern select');
-    
+
     inputs.forEach(input => {
         input.addEventListener('blur', function() {
             if (this.value) {
@@ -857,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.classList.remove('has-value');
             }
         });
-        
+
         input.addEventListener('focus', function() {
             this.classList.add('has-value');
         });

@@ -102,28 +102,7 @@
         <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden">
             <!-- Course Image -->
             <div class="relative aspect-video overflow-hidden">
-                @php
-                    $thumbnailPath = null;
-                    if ($course->gambar_course) {
-                        // Check if it's a file path or URL
-                        if (strpos($course->gambar_course, 'http') === 0) {
-                            $thumbnailPath = $course->gambar_course;
-                        } else {
-                            // Check if file exists in uploads
-                            $uploadPath = public_path('uploads/' . $course->gambar_course);
-                            if (file_exists($uploadPath)) {
-                                $thumbnailPath = asset('uploads/' . $course->gambar_course);
-                            }
-                        }
-                    }
-
-                    // Fallback to placeholder if no valid thumbnail
-                    if (!$thumbnailPath) {
-                        $thumbnailPath = 'https://via.placeholder.com/400x200/6366f1/ffffff?text=' . urlencode($course->nama_course);
-                    }
-                @endphp
-
-                <img src="{{ $thumbnailPath }}"
+                <img src="{{ $course->gambar_course_url }}"
                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                      alt="{{ $course->nama_course }}"
                      loading="lazy">

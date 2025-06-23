@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\QuizResult;
 
 class UserCourseProgress extends Model
 {
@@ -77,18 +78,50 @@ class UserCourseProgress extends Model
     // Helper methods
     public function updateProgress()
     {
-        $totalVideos = $this->course->videos()->count();
+        $course = $this->course()->with(['videos', 'quizzes'])->first();
+
+        if (!$course) {
+            return;
+        }
+
+        // Video progress calculation
+        $totalVideos = $course->videos()->count();
         $completedVideos = UserVideoProgress::where('user_id', $this->user_id)
             ->where('course_id', $this->course_id)
             ->where('is_completed', true)
             ->count();
 
-        $percentage = $totalVideos > 0 ? round(($completedVideos / $totalVideos) * 100, 2) : 0;
+        $videoProgress = $totalVideos > 0 ? ($completedVideos / $totalVideos) * 100 : 0;
+
+        // Quiz progress calculation
+        $totalQuizzes = $course->quizzes->count();
+        $completedQuizzes = QuizResult::where('users_id', $this->user_id)
+            ->whereIn('quiz_id', $course->quizzes->pluck('quiz_id'))
+            ->distinct('quiz_id')
+            ->count();
+
+        $quizProgress = $totalQuizzes > 0 ? ($completedQuizzes / $totalQuizzes) * 100 : 0;
+
+        // Calculate overall progress as the average of video and quiz progress
+        $overallProgress = 0;
+        $divisor = 0;
+
+        if ($totalVideos > 0) {
+            $overallProgress += $videoProgress;
+            $divisor++;
+        }
+
+        if ($totalQuizzes > 0) {
+            $overallProgress += $quizProgress;
+            $divisor++;
+        }
+
+        $percentage = $divisor > 0 ? round($overallProgress / $divisor, 2) : 0;
 
         $status = 'not_started';
-        if ($completedVideos > 0 && $completedVideos < $totalVideos) {
+        if ($percentage > 0 && $percentage < 100) {
             $status = 'in_progress';
-        } elseif ($completedVideos === $totalVideos && $totalVideos > 0) {
+        } elseif ($percentage >= 100) {
             $status = 'completed';
         }
 

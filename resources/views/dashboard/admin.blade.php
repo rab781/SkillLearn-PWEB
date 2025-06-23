@@ -242,17 +242,13 @@
                 @foreach($popularCourses as $course)
                 <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                     <div class="w-16 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                        @if($course->gambar_course)
-                            <img src="{{ Storage::url($course->gambar_course) }}" alt="{{ $course->nama_course }}" class="w-full h-full object-cover rounded-lg">
-                        @else
-                            <i class="fas fa-graduation-cap text-white text-lg"></i>
-                        @endif
+                        <img src="{{ $course->gambar_course_url }}" alt="{{ $course->nama_course }}" class="w-full h-full object-cover rounded-lg">
                     </div>
                     <div class="flex-1">
                         <h4 class="font-semibold text-gray-900 mb-1">{{ Str::limit($course->nama_course, 40) }}</h4>
                         <div class="flex items-center justify-between">
                             <span class="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                                {{ $course->kategori->nama_kategori ?? 'Uncategorized' }}
+                                {{ $course->kategori->kategori ?? 'Uncategorized' }}
                             </span>
                             <div class="flex items-center text-sm text-gray-500">
                                 <i class="fas fa-users mr-1"></i>

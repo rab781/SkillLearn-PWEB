@@ -46,6 +46,9 @@ Route::get('/courses/{id}', [CourseController::class, 'show']);
 Route::get('/categories', [KategoriController::class, 'index']);
 Route::get('/categories/{kategori}', [KategoriController::class, 'show']);
 
+// YouTube utilities
+Route::get('/youtube/video-data', [\App\Http\Controllers\Api\YouTubeController::class, 'getVideoData']);
+
 // Protected routes (require authentication)
 // Use web session for dashboard access from web interface
 Route::middleware(['web', 'auth'])->group(function () {

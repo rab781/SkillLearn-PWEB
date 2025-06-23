@@ -23,10 +23,10 @@ return new class extends Migration
             // Foreign key constraints
             $table->foreign('course_id')->references('course_id')->on('courses')->onDelete('cascade');
             $table->foreign('quiz_id')->references('quiz_id')->on('quizzes')->onDelete('cascade');
-            
+
             // Unique constraint to prevent duplicate quiz in same course
             $table->unique(['course_id', 'quiz_id']);
-            
+
             // Index for ordering
             $table->index(['course_id', 'order']);
         });

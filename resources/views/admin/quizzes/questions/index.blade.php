@@ -382,11 +382,11 @@
     .question-actions {
         flex-direction: column;
     }
-    
+
     .btn-modern {
         justify-content: center;
     }
-    
+
     .form-section {
         padding: 1.5rem;
     }
@@ -395,6 +395,7 @@
 @endpush
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container-fluid px-4">
     <!-- Page Header -->
     <div class="page-header fade-in">
@@ -434,11 +435,11 @@
             </div>
             <div class="d-flex gap-2 flex-wrap">
                 <button class="btn-modern btn-secondary" onclick="previewQuiz()">
-                    <i class="fas fa-eye"></i> 
+                    <i class="fas fa-eye"></i>
                     <span>Preview Quiz</span>
                 </button>
                 <button class="btn-modern btn-primary-modern" onclick="showQuestionBuilder()">
-                    <i class="fas fa-plus"></i> 
+                    <i class="fas fa-plus"></i>
                     <span>Tambah Soal</span>
                 </button>
             </div>
@@ -498,47 +499,6 @@
             </div>
         </div>
     </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted">Tipe Quiz:</label>
-                        <span class="badge fs-6 ms-2
-                            @switch($quiz->tipe_quiz)
-                                @case('setelah_video') bg-info @break
-                                @case('setelah_section') bg-warning @break
-                                @case('akhir_course') bg-success @break
-                                @default bg-secondary
-                            @endswitch
-                        ">
-                            {{ ucwords(str_replace('_', ' ', $quiz->tipe_quiz)) }}
-                        </span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted">Durasi:</label>
-                        <p class="mb-1">
-                            <i class="fas fa-clock text-warning me-1"></i>
-                            {{ $quiz->durasi_menit }} menit
-                        </p>
-                    </div>
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted">Status:</label>
-                        <span class="badge fs-6 ms-2 {{ $quiz->is_active ? 'bg-success' : 'bg-secondary' }}">
-                            <i class="fas fa-{{ $quiz->is_active ? 'check' : 'times' }} me-1"></i>
-                            {{ $quiz->is_active ? 'Aktif' : 'Nonaktif' }}
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="fw-bold text-muted">Jumlah Pertanyaan:</label>
-                        <p class="mb-1">
-                            <i class="fas fa-list-ol text-primary me-1"></i>
-                            <span class="fs-5 fw-bold">{{ $quiz->questions->count() }}</span> pertanyaan
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Question Builder (Hidden by default) -->
     <div id="questionBuilderCard" class="card form-builder mb-4 fade-in" style="display: none;">
@@ -547,51 +507,52 @@
                 <i class="fas fa-plus-circle text-success"></i>
                 Tambah Pertanyaan Baru
             </h4>
-            <form id="questionForm">
+            <div id="error-messages" class="alert alert-danger" style="display: none;"></div>
+            <form id="questionForm" autocomplete="off">
                 @csrf
-                {{-- Ini akan diisi jika sedang mengedit pertanyaan --}}
                 <input type="hidden" id="questionId" name="question_id">
 
-                <div class="mb-4">
-                    <label for="questionText" class="form-label fw-bold">
-                        <i class="fas fa-question me-2 text-primary"></i>Pertanyaan
-                    </label>
-                    <textarea class="form-control form-control-lg" id="questionText" name="pertanyaan"
-                              rows="3" placeholder="Masukkan pertanyaan quiz di sini..." required></textarea>
+                <div class="input-group-modern">
+                    <textarea id="questionText" name="pertanyaan" rows="3" placeholder=" " required></textarea>
+                    <label for="questionText">Pertanyaan</label>
                 </div>
 
                 <div class="mb-4">
-                    <label class="form-label fw-bold">
+                    <label class="form-label fw-bold mb-3">
                         <i class="fas fa-list me-2 text-primary"></i>Pilihan Jawaban
                     </label>
-                    <div id="answerOptions">
-                        </div>
-                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addAnswerOption()">
-                        <i class="fas fa-plus me-1"></i>Tambah Pilihan
+                    <div id="answerOptions" class="mb-3">
+                        <!-- Answer options will be dynamically added here -->
+                    </div>
+                    <button type="button" class="btn-modern btn-primary-modern btn-sm" onclick="addAnswerOption()">
+                        <i class="fas fa-plus"></i>
+                        <span>Tambah Pilihan</span>
                     </button>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        <label for="questionWeight" class="form-label fw-bold">
-                            <i class="fas fa-weight me-2 text-primary"></i>Bobot Nilai
-                        </label>
-                        <select class="form-select" id="questionWeight" name="bobot_nilai" required>
-                            <option value="">Pilih bobot nilai</option>
-                            <option value="1">1 - Sangat Mudah</option>
-                            <option value="2">2 - Mudah</option>
-                            <option value="3">3 - Sedang</option>
-                            <option value="4">4 - Sulit</option>
-                            <option value="5">5 - Sangat Sulit</option>
-                        </select>
+                        <div class="input-group-modern">
+                            <select id="questionWeight" name="bobot_nilai" required>
+                                <option value="">Pilih bobot nilai</option>
+                                <option value="1">1 - Sangat Mudah</option>
+                                <option value="2">2 - Mudah</option>
+                                <option value="3">3 - Sedang</option>
+                                <option value="4">4 - Sulit</option>
+                                <option value="5">5 - Sangat Sulit</option>
+                            </select>
+                            <label for="questionWeight">Bobot Nilai</label>
+                        </div>
                     </div>
                     <div class="col-md-6 d-flex align-items-end">
-                        <div class="d-flex gap-2 w-100">
-                            <button type="button" class="btn btn-success flex-fill" onclick="saveQuestion()">
-                                <i class="fas fa-save me-2"></i>Simpan Pertanyaan
+                        <div class="d-flex gap-3 w-100">
+                            <button type="button" class="btn-modern btn-success-modern flex-fill" onclick="saveQuestion()">
+                                <i class="fas fa-save"></i>
+                                <span>Simpan Pertanyaan</span>
                             </button>
-                            <button type="button" class="btn btn-secondary" onclick="cancelEditQuestion()">
-                                <i class="fas fa-times me-2"></i>Batal
+                            <button type="button" class="btn-modern btn-secondary" onclick="cancelEditQuestion()">
+                                <i class="fas fa-times"></i>
+                                <span>Batal</span>
                             </button>
                         </div>
                     </div>
@@ -600,57 +561,60 @@
         </div>
     </div>
 
-    <div class="card shadow border-0">
-        <div class="card-header bg-gradient-info text-white d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold">
-                <i class="fas fa-list me-2"></i>Daftar Pertanyaan
-            </h6>
-            @if($quiz->questions->count() > 0)
-                <small class="opacity-75">
-                    <i class="fas fa-hand-rock me-1"></i>Drag untuk mengubah urutan
-                </small>
-            @endif
-        </div>
-        <div class="card-body">
-            @if($quiz->questions->count() > 0)
-                {{-- Wrapper untuk SortableJS --}}
+    <!-- Question List -->
+    <div class="card form-builder fade-in">
+        <div class="form-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>
+                    <i class="fas fa-list text-info"></i>
+                    Daftar Pertanyaan ({{ $questions->count() }})
+                </h4>
+                @if($questions->count() > 0)
+                    <small class="text-muted">
+                        <i class="fas fa-arrows-alt me-1"></i>Drag untuk mengubah urutan
+                    </small>
+                @endif
+            </div>
+
+            @if($questions->count() > 0)
                 <div id="sortable-questions">
-                    @foreach($quiz->questions->sortBy('urutan_pertanyaan') as $question)
-                    <div class="question-card card mb-3 border-left-primary" data-question-id="{{ $question->question_id }}">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fas fa-grip-vertical handle text-muted me-3" title="Drag untuk mengubah urutan"></i>
-                                    {{-- Nomor urut pertanyaan akan di-update oleh JS setelah drag --}}
-                                    <span class="badge bg-primary question-number fs-6">{{ $question->urutan_pertanyaan }}</span>
-                                    <span class="badge bg-secondary ms-2">Bobot: {{ $question->bobot_nilai }}</span>
+                    @foreach($questions->sortBy('urutan_pertanyaan') as $question)
+                    <div class="question-card fade-in" data-question-id="{{ $question->question_id }}">
+                        <div class="question-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-grip-vertical handle me-3" title="Drag untuk mengubah urutan"></i>
+                                    <div>
+                                        <h6 class="mb-1 fw-bold">Pertanyaan {{ $question->urutan_pertanyaan }}</h6>
+                                        <div class="d-flex gap-2">
+                                            <span class="badge bg-light text-dark">
+                                                Bobot: {{ $question->bobot_nilai }}
+                                            </span>
+                                            <span class="badge bg-light text-dark">
+                                                {{ count(json_decode($question->pilihan_jawaban, true) ?? []) }} pilihan
+                                            </span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-cog"></i>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="#" onclick="editQuestion({{ $question->question_id }})">
-                                            <i class="fas fa-edit me-2"></i>Edit</a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item text-danger" href="#" onclick="deleteQuestion({{ $question->question_id }})">
-                                            <i class="fas fa-trash me-2"></i>Hapus</a></li>
-                                    </ul>
-                                </div>
+                                <span class="question-number">{{ $question->urutan_pertanyaan }}</span>
                             </div>
+                        </div>
 
-                            <h6 class="card-title mb-3">{{ $question->pertanyaan }}</h6>
+                        <div class="question-content">
+                            <h6 class="mb-3 text-dark">{{ $question->pertanyaan }}</h6>
 
-                            <div class="row">
+                            <div class="answer-list">
                                 @php
-                                    // Pastikan pilihan_jawaban adalah array, atau decode dari JSON
-                                    $options = is_array($question->pilihan_jawaban) ? $question->pilihan_jawaban : json_decode($question->pilihan_jawaban, true);
-                                    $optionLabels = range('A', chr(65 + count($options) - 1)); // A, B, C, D...
+                                    $options = json_decode($question->pilihan_jawaban, true) ?? [];
+                                    $optionLabels = range('A', chr(65 + count($options) - 1));
                                 @endphp
                                 @foreach($options as $index => $option)
-                                <div class="col-md-6 mb-2">
-                                    <div class="answer-option p-3 border rounded {{ $optionLabels[$index] === $question->jawaban_benar ? 'correct' : '' }}">
-                                        <strong>{{ $optionLabels[$index] }}.</strong> {{ $option }}
+                                <div class="answer-option {{ $optionLabels[$index] === $question->jawaban_benar ? 'correct' : '' }}">
+                                    <div class="answer-indicator {{ $optionLabels[$index] === $question->jawaban_benar ? 'correct' : 'incorrect' }}">
+                                        {{ $optionLabels[$index] }}
+                                    </div>
+                                    <div class="flex-1">
+                                        {{ $option }}
                                         @if($optionLabels[$index] === $question->jawaban_benar)
                                             <i class="fas fa-check-circle text-success float-end"></i>
                                         @endif
@@ -659,16 +623,28 @@
                                 @endforeach
                             </div>
                         </div>
+
+                        <div class="question-actions">
+                            <button class="btn-modern btn-warning-modern btn-sm" onclick="editQuestion({{ $question->question_id }})">
+                                <i class="fas fa-edit"></i>
+                                <span>Edit</span>
+                            </button>
+                            <button class="btn-modern btn-danger-modern btn-sm" onclick="deleteQuestion({{ $question->question_id }})">
+                                <i class="fas fa-trash"></i>
+                                <span>Hapus</span>
+                            </button>
+                        </div>
                     </div>
                     @endforeach
                 </div>
             @else
-                <div class="text-center py-5">
-                    <i class="fas fa-question-circle fa-3x text-muted mb-3"></i>
-                    <h5 class="text-muted">Belum Ada Pertanyaan</h5>
-                    <p class="text-muted mb-4">Mulai tambahkan pertanyaan untuk quiz ini.</p>
-                    <button class="btn btn-primary" onclick="showQuestionBuilder()">
-                        <i class="fas fa-plus me-2"></i>Tambah Pertanyaan Pertama
+                <div class="empty-state">
+                    <i class="fas fa-question-circle"></i>
+                    <h4>Belum Ada Pertanyaan</h4>
+                    <p>Mulai tambahkan pertanyaan untuk quiz ini dan buat pembelajaran lebih interaktif!</p>
+                    <button class="btn-modern btn-primary-modern" onclick="showQuestionBuilder()">
+                        <i class="fas fa-plus"></i>
+                        <span>Tambah Pertanyaan Pertama</span>
                     </button>
                 </div>
             @endif
@@ -678,360 +654,412 @@
 @endsection
 
 @push('scripts')
-{{-- SweetAlert2 dan SortableJS perlu di-load --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 let currentEditingQuestion = null;
-let answerOptionCount = 0; // Untuk melacak berapa banyak pilihan jawaban yang ada
+let answerOptionCount = 0;
+const quiz_id = {{ $quiz->quiz_id }};
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Inisialisasi SortableJS
+    // Setup CSRF token for all AJAX requests
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) {
+        console.log('CSRF token set globally');
+    } else {
+        console.warn('CSRF token not found!');
+    }
+
+    // Initialize SortableJS
     const sortableQuestionsList = document.getElementById('sortable-questions');
     if (sortableQuestionsList) {
         new Sortable(sortableQuestionsList, {
-            handle: '.handle', // Elemen yang bisa di-drag
-            animation: 150,
-            ghostClass: 'sortable-placeholder', // Kelas untuk placeholder saat drag
+            handle: '.handle',
+            animation: 200,
+            ghostClass: 'sortable-placeholder',
             onEnd: function (evt) {
-                // Panggil fungsi untuk mengupdate urutan setelah drag selesai
                 updateQuestionOrder();
             }
         });
     }
 });
 
-// Fungsi bantuan untuk menampilkan pesan SweetAlert
-function showSuccess(message) {
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: message,
-        showConfirmButton: false,
-        timer: 1500
-    });
+function showQuestionBuilder() {
+    document.getElementById('questionBuilderCard').style.display = 'block';
+    document.getElementById('questionBuilderCard').scrollIntoView({ behavior: 'smooth' });
+
+    // Reset form
+    resetQuestionForm();
+
+    // Hide error messages
+    hideErrorMessages();
+
+    // Add initial answer options
+    answerOptionCount = 0;
+    addAnswerOption();
+    addAnswerOption();
+
+    // Focus on the question text field
+    setTimeout(() => {
+        document.getElementById('questionText').focus();
+    }, 300);
 }
 
-function showError(message) {
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: message,
-        confirmButtonColor: '#dc3545'
-    });
+function resetQuestionForm() {
+    document.getElementById('questionForm').reset();
+    document.getElementById('questionId').value = '';
+    document.getElementById('answerOptions').innerHTML = '';
+    currentEditingQuestion = null;
+    answerOptionCount = 0;
 }
 
-function showInfo(message, title = 'Info') {
-    return Swal.fire({
-        icon: 'info',
-        title: title,
-        text: message,
-        confirmButtonColor: '#007bff'
-    });
+function addAnswerOption() {
+    const container = document.getElementById('answerOptions');
+    const optionIndex = answerOptionCount;
+    const optionLabel = String.fromCharCode(65 + optionIndex); // A, B, C, D...
+
+    const optionHtml = `
+        <div class="answer-option-builder mb-3" data-option="${optionLabel}">
+            <div class="input-group-modern">
+                <input type="text" name="pilihan_jawaban[]" placeholder=" " required>
+                <label>Pilihan ${optionLabel}</label>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="radio" name="jawaban_benar" value="${optionLabel}" id="correct_${optionLabel}">
+                <label class="form-check-label" for="correct_${optionLabel}">
+                    Jawaban yang benar
+                </label>
+            </div>
+            ${optionIndex > 1 ? `
+                <button type="button" class="btn-modern btn-danger-modern btn-sm mt-2" onclick="removeAnswerOption('${optionLabel}')">
+                    <i class="fas fa-trash"></i>
+                    <span>Hapus</span>
+                </button>
+            ` : ''}
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', optionHtml);
+    answerOptionCount++;
 }
 
-function showLoading(message) {
+function removeAnswerOption(optionLabel) {
+    const optionElement = document.querySelector(`[data-option="${optionLabel}"]`);
+    if (optionElement) {
+        optionElement.remove();
+    }
+}
+
+function saveQuestion() {
+    // Clear any previous error messages
+    document.getElementById('error-messages').style.display = 'none';
+    document.getElementById('error-messages').innerHTML = '';
+
+    const form = document.getElementById('questionForm');
+    const formData = new FormData(form);
+
+    // Check CSRF token first
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!csrfToken) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'CSRF token not found. Please refresh the page and try again.',
+            confirmButtonColor: '#8B5CF6',
+        });
+        return;
+    }
+
+    // Validate form
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    // Check if at least one correct answer is selected
+    const correctAnswer = formData.get('jawaban_benar');
+    if (!correctAnswer) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Pilih jawaban yang benar!',
+            confirmButtonColor: '#8B5CF6',
+        });
+        return;
+    }
+
+    // Check for empty answer options
+    const answerOptions = formData.getAll('pilihan_jawaban[]');
+    const emptyOptions = answerOptions.filter(option => !option.trim());
+    if (emptyOptions.length > 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Pilihan Jawaban Kosong',
+            text: 'Semua pilihan jawaban harus diisi.',
+            confirmButtonColor: '#8B5CF6',
+        });
+        return;
+    }
+
+    const questionId = document.getElementById('questionId').value;
+    const url = questionId ?
+        `/admin/courses/quiz-questions/${questionId}` :
+        `/admin/courses/quizzes/${quiz_id}/questions`;
+
+    console.log('Saving question to URL:', url);
+    console.log('Quiz ID:', quiz_id);
+    console.log('Question ID:', questionId || 'New Question');
+
+    const method = questionId ? 'PUT' : 'POST';
+
+    // Convert FormData to JSON object properly
+    const data = {
+        pertanyaan: formData.get('pertanyaan'),
+        bobot_nilai: formData.get('bobot_nilai'),
+        jawaban_benar: formData.get('jawaban_benar'),
+        pilihan_jawaban: answerOptions,
+    };
+
+    if (questionId) {
+        data.question_id = questionId;
+    }
+
+    // Show loading
     Swal.fire({
-        title: message,
+        title: 'Menyimpan...',
+        text: 'Mohon tunggu sebentar',
         allowOutsideClick: false,
         didOpen: () => {
             Swal.showLoading();
         }
     });
-}
 
-function showDeleteConfirm(text, title = 'Konfirmasi Hapus') {
-    return Swal.fire({
-        title: title,
-        text: text,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#dc2626',
-        cancelButtonColor: '#6b7280',
-        confirmButtonText: 'Ya, Hapus!',
-        cancelButtonText: 'Batal'
-    });
-}
+    console.log('Sending data:', data);
+    console.log('CSRF token:', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 'Not found');
 
-// Menampilkan form pembuat pertanyaan
-function showQuestionBuilder() {
-    const builderCard = document.getElementById('questionBuilderCard');
-    builderCard.style.display = 'block';
-    builderCard.scrollIntoView({ behavior: 'smooth' }); // Scroll ke form
-
-    // Reset form dan tambahkan 2 pilihan awal
-    resetQuestionForm();
-    addAnswerOption(); // Tambah pilihan A
-    addAnswerOption(); // Tambah pilihan B
-}
-
-// Menyembunyikan form pembuat pertanyaan dan meresetnya
-function cancelEditQuestion() {
-    const builderCard = document.getElementById('questionBuilderCard');
-    builderCard.style.display = 'none';
-    resetQuestionForm();
-    currentEditingQuestion = null; // Reset status edit
-}
-
-// Mereset semua field di form pertanyaan
-function resetQuestionForm() {
-    document.getElementById('questionForm').reset();
-    document.getElementById('questionId').value = ''; // Kosongkan ID pertanyaan
-    document.getElementById('answerOptions').innerHTML = ''; // Hapus semua pilihan jawaban
-    answerOptionCount = 0; // Reset hitungan pilihan
-}
-
-// Menambahkan pilihan jawaban baru ke form
-function addAnswerOption(text = '', isCorrect = false) {
-    answerOptionCount++;
-    // Menggunakan kode ASCII untuk label A, B, C, dst.
-    const optionLabel = String.fromCharCode(64 + answerOptionCount);
-
-    const optionHtml = `
-        <div class="answer-option-item mb-3 p-3 border rounded ${isCorrect ? 'border-success bg-success-subtle' : 'border-secondary-subtle'}" data-option-id="${answerOptionCount}">
-            <div class="d-flex align-items-center">
-                <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="correct_answer"
-                           value="${optionLabel}" id="correct_${answerOptionCount}" ${isCorrect ? 'checked' : ''}>
-                    <label class="form-check-label fw-bold" for="correct_${answerOptionCount}">
-                        ${optionLabel}.
-                    </label>
-                </div>
-                <input type="text" class="form-control me-2" name="option_text[]"
-                       placeholder="Masukkan pilihan ${optionLabel}" value="${text}" required>
-                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeAnswerOption(${answerOptionCount})"
-                        ${answerOptionCount <= 2 ? 'disabled' : ''}>
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('answerOptions').insertAdjacentHTML('beforeend', optionHtml);
-    updateRemoveButtons(); // Perbarui status tombol hapus
-}
-
-// Menghapus pilihan jawaban dari form
-function removeAnswerOption(optionId) {
-    const optionElement = document.querySelector(`[data-option-id="${optionId}"]`);
-    if (optionElement) {
-        optionElement.remove();
-        updateOptionLabels(); // Perbarui label A, B, C dan ID
-        updateRemoveButtons(); // Perbarui status tombol hapus
-    }
-}
-
-// Memperbarui label A, B, C, dst. setelah penambahan/penghapusan pilihan
-function updateOptionLabels() {
-    const options = document.querySelectorAll('.answer-option-item');
-    answerOptionCount = 0; // Reset hitungan
-
-    options.forEach((option, index) => {
-        answerOptionCount++;
-        const optionLabel = String.fromCharCode(65 + index); // A, B, C, D, E
-
-        // Update data-option-id (penting untuk fungsi removeAnswerOption)
-        option.setAttribute('data-option-id', answerOptionCount);
-
-        // Update label radio button dan input placeholder
-        option.querySelector('.form-check-label').textContent = `${optionLabel}.`;
-        option.querySelector('.form-check-input').value = optionLabel;
-        option.querySelector('.form-check-input').id = `correct_${answerOptionCount}`;
-        option.querySelector('.form-check-label').setAttribute('for', `correct_${answerOptionCount}`);
-        option.querySelector('input[name="option_text[]"]').placeholder = `Masukkan pilihan ${optionLabel}`;
-
-        // Update handler tombol hapus
-        const removeBtn = option.querySelector('button[onclick*="removeAnswerOption"]');
-        if (removeBtn) {
-            removeBtn.setAttribute('onclick', `removeAnswerOption(${answerOptionCount})`);
-        }
-    });
-}
-
-// Mengatur status disable tombol hapus (minimal 2 pilihan)
-function updateRemoveButtons() {
-    const options = document.querySelectorAll('.answer-option-item');
-    options.forEach(option => {
-        const removeBtn = option.querySelector('button[onclick*="removeAnswerOption"]');
-        if (removeBtn) {
-            removeBtn.disabled = options.length <= 2;
-        }
-    });
-}
-
-// Menyimpan atau mengupdate pertanyaan
-function saveQuestion() {
-    const form = document.getElementById('questionForm');
-
-    // Validasi form
-    if (!validateQuestionForm()) {
+    // Ensure CSRF token is included
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!csrfToken) {
+        console.error('CSRF token not found!');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'CSRF token not found. Please refresh the page and try again.',
+            confirmButtonColor: '#8B5CF6',
+        });
         return;
     }
-
-    // Mengumpulkan pilihan jawaban
-    const optionTexts = [];
-    document.querySelectorAll('input[name="option_text[]"]').forEach(input => {
-        // Hanya tambahkan jika tidak kosong
-        if (input.value.trim()) {
-            optionTexts.push(input.value.trim());
-        }
-    });
-
-    const correctAnswerRadio = document.querySelector('input[name="correct_answer"]:checked');
-    if (!correctAnswerRadio) {
-        showError('Pilih jawaban yang benar!');
-        return;
-    }
-    const correctAnswerLabel = correctAnswerRadio.value; // Misal: 'A', 'B'
-
-    // Siapkan data untuk dikirim ke backend
-    const questionData = {
-        pertanyaan: document.getElementById('questionText').value,
-        pilihan_jawaban: optionTexts, // Kirim sebagai array
-        jawaban_benar: correctAnswerLabel, // Kirim label (A, B, C)
-        bobot_nilai: parseInt(document.getElementById('questionWeight').value),
-        _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content') // Ambil CSRF token
-    };
-
-    const questionId = document.getElementById('questionId').value;
-    const quizId = "{{ $quiz->quiz_id }}"; // Ambil quiz_id dari Blade
-
-    // Tentukan URL dan metode HTTP (POST untuk baru, PUT untuk edit)
-    const url = questionId ?
-        `/admin/courses/quiz/questions/${questionId}` : // Untuk update
-        `/admin/courses/quiz/${quizId}/questions`;      // Untuk store baru
-    const method = questionId ? 'PUT' : 'POST';
-
-    showLoading(questionId ? 'Mengupdate pertanyaan...' : 'Menyimpan pertanyaan...');
 
     fetch(url, {
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': questionData._token // Penting untuk Laravel
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
         },
-        body: JSON.stringify(questionData) // Kirim data sebagai JSON string
+        body: JSON.stringify(data)
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        console.log('Response headers:', [...response.headers.entries()]);
+
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                console.error('Server error response:', errorData);
+                throw new Error(errorData.message || 'Terjadi kesalahan pada server');
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
-            showSuccess(data.message || 'Pertanyaan berhasil disimpan!');
-            // Reload halaman untuk melihat perubahan
-            setTimeout(() => {
-                window.location.reload();
-            }, 1500);
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: data.message,
+                confirmButtonColor: '#8B5CF6',
+            }).then(() => {
+                location.reload();
+            });
         } else {
-            showError(data.message || 'Gagal menyimpan pertanyaan');
+            throw new Error(data.message || 'Terjadi kesalahan');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving question:', error);
+
+        // Close any loading dialog
+        Swal.close();
+
+        if (error.errors) {
+            // Handle validation errors
+            showErrorMessages(error.errors);
+
+            // Scroll to error messages
+            document.getElementById('error-messages').scrollIntoView({ behavior: 'smooth' });
+        } else {
+            // Get more details about the error
+            let errorMessage = 'Terjadi kesalahan saat menyimpan pertanyaan.';
+
+            if (error.message) {
+                errorMessage += '<br>Detail: ' + error.message;
+            }
+
+            // Show detailed error
+            document.getElementById('error-messages').innerHTML = errorMessage;
+            document.getElementById('error-messages').style.display = 'block';
+            document.getElementById('error-messages').scrollIntoView({ behavior: 'smooth' });
+
+            // Show general error
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menyimpan Pertanyaan',
+                html: errorMessage + '<br><br>Silahkan periksa form anda dan coba lagi.',
+                confirmButtonColor: '#8B5CF6',
+            });
+        }
+    });
+}
+
+function editQuestion(questionId) {
+    // Show loading
+    Swal.fire({
+        title: 'Memuat...',
+        text: 'Mengambil data pertanyaan',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Fetch question data
+    fetch(`/admin/courses/quiz-questions/${questionId}/edit`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => {
+        console.log('Edit response status:', response.status);
+        if (!response.ok) {
+            throw new Error('Tidak dapat mengambil data pertanyaan');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success && data.question) {
+            // Close the loading dialog
+            Swal.close();
+
+            // Set question ID for edit mode
+            document.getElementById('questionId').value = questionId;
+
+            // Set question text
+            document.getElementById('questionText').value = data.question.pertanyaan;
+
+            // Set question weight
+            document.getElementById('questionWeight').value = data.question.bobot_nilai;
+
+            // Clear existing answer options
+            document.getElementById('answerOptions').innerHTML = '';
+
+            // Reset counter
+            answerOptionCount = 0;
+
+            // Add answer options from the question data
+            try {
+                const options = data.question.pilihan_jawaban;
+                const correctAnswer = data.question.jawaban_benar;
+
+                console.log('Options data:', options);
+
+                if (Array.isArray(options) && options.length > 0) {
+                    options.forEach((option, index) => {
+                        const optionLabel = String.fromCharCode(65 + index);
+                        addAnswerOptionWithValue(option, optionLabel === correctAnswer);
+                    });
+                } else if (typeof options === 'object' && options !== null) {
+                    // Handle case where options might be an object with keys A, B, C, etc.
+                    Object.keys(options).forEach((key, index) => {
+                        const optionLabel = String.fromCharCode(65 + index);
+                        addAnswerOptionWithValue(options[key], optionLabel === correctAnswer);
+                    });
+                } else {
+                    throw new Error('Invalid options format');
+                }
+            } catch (e) {
+                console.error('Error processing answer options:', e);
+                // Add default empty options if error
+                addAnswerOption();
+                addAnswerOption();
+            }
+
+            // Show the form
+            document.getElementById('questionBuilderCard').style.display = 'block';
+            document.getElementById('questionBuilderCard').scrollIntoView({ behavior: 'smooth' });
+
+            // Set current editing question
+            currentEditingQuestion = questionId;
+        } else {
+            throw new Error(data.message || 'Tidak dapat memuat data pertanyaan');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showError('Terjadi kesalahan saat menyimpan pertanyaan');
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Terjadi kesalahan saat memuat data pertanyaan',
+            confirmButtonColor: '#8B5CF6',
+        });
     });
 }
 
-// Validasi input form pertanyaan
-function validateQuestionForm() {
-    const questionText = document.getElementById('questionText').value.trim();
-    const weight = document.getElementById('questionWeight').value;
-    const options = document.querySelectorAll('input[name="option_text[]"]');
-    const correctAnswer = document.querySelector('input[name="correct_answer"]:checked');
+function addAnswerOptionWithValue(optionValue, isCorrect) {
+    const container = document.getElementById('answerOptions');
+    const optionIndex = answerOptionCount;
+    const optionLabel = String.fromCharCode(65 + optionIndex); // A, B, C, D...
 
-    if (!questionText) {
-        showError('Pertanyaan harus diisi!');
-        return false;
-    }
+    const optionHtml = `
+        <div class="answer-option-builder mb-3" data-option="${optionLabel}">
+            <div class="input-group-modern">
+                <input type="text" name="pilihan_jawaban[]" placeholder=" " value="${optionValue}" required>
+                <label>Pilihan ${optionLabel}</label>
+            </div>
+            <div class="form-check mt-2">
+                <input class="form-check-input" type="radio" name="jawaban_benar" value="${optionLabel}" id="correct_${optionLabel}" ${isCorrect ? 'checked' : ''}>
+                <label class="form-check-label" for="correct_${optionLabel}">
+                    Jawaban yang benar
+                </label>
+            </div>
+            ${optionIndex > 1 ? `
+                <button type="button" class="btn-modern btn-danger-modern btn-sm mt-2" onclick="removeAnswerOption('${optionLabel}')">
+                    <i class="fas fa-trash"></i>
+                    <span>Hapus</span>
+                </button>
+            ` : ''}
+        </div>
+    `;
 
-    if (!weight) {
-        showError('Bobot nilai harus dipilih!');
-        return false;
-    }
-
-    let validOptions = 0;
-    options.forEach(option => {
-        if (option.value.trim()) validOptions++;
-    });
-
-    if (validOptions < 2) {
-        showError('Minimal harus ada 2 pilihan jawaban!');
-        return false;
-    }
-
-    if (!correctAnswer) {
-        showError('Pilih jawaban yang benar!');
-        return false;
-    }
-
-    return true;
+    container.insertAdjacentHTML('beforeend', optionHtml);
+    answerOptionCount++;
 }
 
-// Mengisi form dengan data pertanyaan yang akan diedit
-function editQuestion(questionId) {
-    // Cari elemen kartu pertanyaan di DOM berdasarkan ID
-    const questionCard = document.querySelector(`[data-question-id="${questionId}"]`);
-    if (!questionCard) {
-        showError('Pertanyaan tidak ditemukan untuk diedit.');
-        return;
-    }
-
-    // Ambil data dari kartu pertanyaan
-    const questionText = questionCard.querySelector('.card-title').textContent.trim();
-    const weightBadge = questionCard.querySelector('.badge.bg-secondary');
-    // Ekstrak bobot nilai (contoh: "Bobot: 3" menjadi "3")
-    const weight = weightBadge ? weightBadge.textContent.replace('Bobot: ', '').trim() : '';
-
-    const optionsElements = questionCard.querySelectorAll('.answer-option');
-    const optionsData = [];
-    let correctOptionLabel = '';
-
-    optionsElements.forEach(optionEl => {
-        // Ambil label (A, B, C) dan teks pilihan
-        const label = optionEl.querySelector('strong').textContent.replace('.', '').trim();
-        // Ambil text content tanpa icon dan strong element
-        const fullText = optionEl.textContent.trim();
-        const text = fullText.replace(label + '.', '').trim();
-        
-        optionsData.push({ label: label, text: text });
-        if (optionEl.classList.contains('correct')) {
-            correctOptionLabel = label;
-        }
-    });
-
-    // Atur ID pertanyaan yang sedang diedit
-    currentEditingQuestion = questionId;
-
-    // Tampilkan form builder
-    showQuestionBuilder();
-
-    // Isi form dengan data yang diambil
-    document.getElementById('questionId').value = questionId;
-    document.getElementById('questionText').value = questionText;
-    document.getElementById('questionWeight').value = weight;
-
-    // Hapus pilihan yang ada dan tambahkan yang baru dari data pertanyaan
-    document.getElementById('answerOptions').innerHTML = '';
-    answerOptionCount = 0; // Reset hitungan
-
-    optionsData.forEach(option => {
-        addAnswerOption(option.text, option.label === correctOptionLabel);
-    });
-
-    // Pastikan tombol hapus diperbarui
-    updateRemoveButtons();
-
-    // Scroll ke form builder
-    document.getElementById('questionBuilderCard').scrollIntoView({ behavior: 'smooth' });
-}
-
-
-// Menghapus pertanyaan
 function deleteQuestion(questionId) {
-    showDeleteConfirm('Pertanyaan akan dihapus secara permanen. Tindakan ini tidak dapat dibatalkan.', 'Hapus Pertanyaan?')
-    .then((result) => {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Pertanyaan ini akan dihapus permanen!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
         if (result.isConfirmed) {
-            showLoading('Menghapus pertanyaan...');
-
             fetch(`/admin/courses/quiz/questions/${questionId}`, {
                 method: 'DELETE',
                 headers: {
@@ -1041,81 +1069,227 @@ function deleteQuestion(questionId) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showSuccess('Pertanyaan berhasil dihapus!');
-                    setTimeout(() => {
-                        window.location.reload(); // Reload halaman setelah berhasil
-                    }, 1500);
+                    Swal.fire('Terhapus!', data.message, 'success')
+                        .then(() => location.reload());
                 } else {
-                    showError(data.message || 'Gagal menghapus pertanyaan');
+                    throw new Error(data.message);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                showError('Terjadi kesalahan saat menghapus pertanyaan');
+                Swal.fire('Error!', error.message, 'error');
             });
         }
     });
 }
 
-// Memperbarui urutan pertanyaan setelah drag-and-drop
-function updateQuestionOrder() {
-    const questionCards = document.querySelectorAll('#sortable-questions .question-card');
-    const questionOrder = [];
+function cancelEditQuestion() {
+    document.getElementById('questionBuilderCard').style.display = 'none';
+    resetQuestionForm();
+}
 
-    questionCards.forEach((card, index) => {
-        const questionId = card.getAttribute('data-question-id');
-        questionOrder.push({
+function updateQuestionOrder() {
+    const questions = document.querySelectorAll('#sortable-questions .question-card');
+    const orderData = [];
+
+    questions.forEach((question, index) => {
+        const questionId = question.getAttribute('data-question-id');
+        orderData.push({
             question_id: questionId,
-            urutan_pertanyaan: index + 1 // Urutan dimulai dari 1
+            urutan_pertanyaan: index + 1
         });
 
-        // Update nomor urut yang ditampilkan di kartu
-        card.querySelector('.question-number').textContent = index + 1;
+        // Update visual order number
+        const numberElement = question.querySelector('.question-number');
+        if (numberElement) {
+            numberElement.textContent = index + 1;
+        }
     });
 
-    // Kirim permintaan AJAX untuk memperbarui urutan di server
-    fetch(`/admin/courses/quiz/{{ $quiz->quiz_id }}/questions/reorder`, {
+    // Send order update to server
+    fetch(`/admin/courses/quiz-questions/update-order`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ questions: questionOrder })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Tampilkan notifikasi kecil di pojok kanan atas
-            const toast = document.createElement('div');
-            toast.className = 'toast-notification';
-            toast.innerHTML = '<i class="fas fa-check me-2"></i>Urutan pertanyaan diperbarui';
-            document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
-        } else {
-            showError(data.message || 'Gagal mengupdate urutan pertanyaan');
-        }
+        body: JSON.stringify({ questions: orderData })
     })
     .catch(error => {
         console.error('Error updating order:', error);
-        showError('Terjadi kesalahan saat mengupdate urutan pertanyaan');
     });
 }
 
-// Fungsi untuk melihat pratinjau kuis (opsional, sesuaikan rute Anda)
 function previewQuiz() {
-    // Ini hanyalah contoh, sesuaikan dengan rute pratinjau kuis Anda di frontend
-    showInfo('Preview quiz akan menampilkan quiz seperti yang dilihat siswa (membutuhkan implementasi di sisi siswa).', 'Preview Quiz').then(() => {
-        // Contoh: window.open(`/quiz/${quizId}/preview`, '_blank');
-        // window.open(`/courses/{{ $quiz->course->course_id }}/quiz/{{ $quiz->quiz_id }}`, '_blank');
-        Swal.fire({
-            icon: 'info',
-            title: 'Fitur Belum Tersedia',
-            text: 'Fungsionalitas pratinjau kuis di sisi siswa perlu diimplementasikan terlebih dahulu di frontend Anda.'
+    // Get all questions for preview
+    const questions = [];
+    document.querySelectorAll('.question-card').forEach((card, index) => {
+        // Get question text
+        const questionText = card.querySelector('h6.mb-3').textContent;
+        const questionNumber = index + 1;
+
+        // Get options
+        const options = [];
+        card.querySelectorAll('.answer-option').forEach((option) => {
+            const optionText = option.querySelector('.flex-1').textContent.trim();
+            const isCorrect = option.classList.contains('correct');
+            options.push({ text: optionText, isCorrect });
+        });
+
+        questions.push({
+            number: questionNumber,
+            text: questionText,
+            options
         });
     });
+
+    // If no questions, show error
+    if (questions.length === 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Tidak ada pertanyaan',
+            text: 'Tambahkan pertanyaan terlebih dahulu untuk melihat preview quiz.',
+            confirmButtonColor: '#8B5CF6',
+        });
+        return;
+    }
+
+    // Build preview HTML
+    let previewHtml = `
+        <div class="quiz-preview-container">
+            <h5 class="mb-4">{{ $quiz->judul_quiz }}</h5>
+    `;
+
+    questions.forEach(q => {
+        previewHtml += `
+            <div class="question-preview mb-4">
+                <h6 class="mb-3">${q.number}. ${q.text}</h6>
+                <div class="options-list">
+        `;
+
+        q.options.forEach((opt, idx) => {
+            const optionLabel = String.fromCharCode(65 + idx);
+            previewHtml += `
+                <div class="option-preview ${opt.isCorrect ? 'option-correct' : ''}">
+                    <span class="option-label">${optionLabel}</span>
+                    <span class="option-text">${opt.text}</span>
+                    ${opt.isCorrect ? '<i class="fas fa-check-circle text-success float-end"></i>' : ''}
+                </div>
+            `;
+        });
+
+        previewHtml += `
+                </div>
+            </div>
+        `;
+    });
+
+    previewHtml += `</div>`;
+
+    // Show preview in modal
+    Swal.fire({
+        title: 'Preview Quiz',
+        html: previewHtml,
+        width: '800px',
+        customClass: {
+            container: 'quiz-preview-modal',
+            popup: 'quiz-preview-popup',
+        },
+        showCloseButton: true,
+        confirmButtonColor: '#8B5CF6',
+        confirmButtonText: 'Tutup Preview'
+    });
+
+    // Add styles for preview
+    const style = document.createElement('style');
+    style.textContent = `
+        .quiz-preview-popup {
+            max-width: 800px;
+            width: 100%;
+        }
+        .quiz-preview-container {
+            text-align: left;
+            padding: 20px 0;
+        }
+        .question-preview {
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 20px;
+        }
+        .question-preview:last-child {
+            border-bottom: none;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .option-preview {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+        }
+        .option-correct {
+            background: #d1e7dd;
+            border: 1px solid #198754;
+        }
+        .option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: #e9ecef;
+            border-radius: 50%;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        .option-correct .option-label {
+            background: #198754;
+            color: white;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function showErrorMessages(errors) {
+    const errorContainer = document.getElementById('error-messages');
+    errorContainer.innerHTML = '';
+    errorContainer.style.display = 'block';
+
+    // Add error header
+    const errorHeader = document.createElement('div');
+    errorHeader.innerHTML = '<strong><i class="fas fa-exclamation-triangle me-2"></i>Ada kesalahan dalam form:</strong>';
+    errorContainer.appendChild(errorHeader);
+
+    if (typeof errors === 'string') {
+        errorContainer.innerHTML += `<p class="mt-2"><i class="fas fa-exclamation-circle me-2"></i>${errors}</p>`;
+        return;
+    }
+
+    const errorList = document.createElement('ul');
+    errorList.classList.add('mb-0', 'mt-2');
+    errorList.style.paddingLeft = '20px';
+
+    if (typeof errors === 'object') {
+        // If errors is an object with error arrays
+        Object.keys(errors).forEach(field => {
+            errors[field].forEach(message => {
+                const item = document.createElement('li');
+                item.textContent = message;
+                errorList.appendChild(item);
+            });
+        });
+    }
+
+    errorContainer.appendChild(errorList);
+}
+
+function hideErrorMessages() {
+    const errorContainer = document.getElementById('error-messages');
+    errorContainer.innerHTML = '';
+    errorContainer.style.display = 'none';
 }
 </script>
 @endpush

@@ -8,6 +8,7 @@ use App\Models\CourseVideo;
 use App\Models\QuickReview;
 use App\Models\UserCourseProgress;
 use App\Models\UserVideoProgress;
+use App\Models\QuizResult;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -117,7 +118,7 @@ class CourseController extends Controller
             if ($course->quizzes) {
                 $quizIds = $course->quizzes->pluck('quiz_id');
             }
-            
+
             $quizResults = \App\Models\QuizResult::with(['quiz', 'answerDetails'])
                 ->whereIn('quiz_id', $quizIds)
                 ->where('users_id', Auth::id())
@@ -167,7 +168,7 @@ class CourseController extends Controller
         $firstSection = $course->sections()
             ->orderBy('urutan_section')
             ->first();
-        
+
         $firstVideo = null;
         if ($firstSection) {
             $firstVideo = $firstSection->videos()
@@ -196,7 +197,7 @@ class CourseController extends Controller
             'sections.quizzes.questions', // Load quizzes for each section
             'quizzes.questions' // Load quizzes with questions
         ])->active()->findOrFail($courseId);
-        
+
         $courseVideo = CourseVideo::with(['vidio', 'section'])
             ->where('course_id', $courseId)
             ->where('course_video_id', $videoId)
@@ -274,7 +275,7 @@ class CourseController extends Controller
 
         // Get completion status from request
         $isCompleted = $request->input('is_completed', true);
-        
+
         if ($isCompleted) {
             $videoProgress->markAsCompleted();
         } else {
@@ -384,27 +385,57 @@ class CourseController extends Controller
     }
 
     /**
-     * Update course progress based on video completions
+     * Update course progress based on video completions and quiz completions
      */
     private function updateCourseProgress($userId, $courseId)
     {
-        $course = Course::findOrFail($courseId);
-        
+        $course = Course::with(['sections.videos', 'quizzes'])->findOrFail($courseId);
+
         // Check if course has sections before accessing videos
         if (!$course->sections || $course->sections->isEmpty()) {
             return;
         }
-        
+
         $totalVideos = $course->sections->flatMap->videos->count();
 
-        if ($totalVideos == 0) return;
+        // Video progress calculation
+        $videoProgress = 0;
+        if ($totalVideos > 0) {
+            $completedVideos = UserVideoProgress::where('user_id', $userId)
+                ->where('course_id', $courseId)
+                ->where('is_completed', true)
+                ->count();
 
-        $completedVideos = UserVideoProgress::where('user_id', $userId)
-            ->where('course_id', $courseId)
-            ->where('is_completed', true)
-            ->count();
+            $videoProgress = ($completedVideos / $totalVideos) * 100;
+        }
 
-        $completionPercentage = ($completedVideos / $totalVideos) * 100;
+        // Quiz progress calculation
+        $quizProgress = 0;
+        $totalQuizzes = $course->quizzes->count();
+        if ($totalQuizzes > 0) {
+            $completedQuizzes = QuizResult::where('users_id', $userId)
+                ->whereIn('quiz_id', $course->quizzes->pluck('quiz_id'))
+                ->distinct('quiz_id')
+                ->count();
+
+            $quizProgress = ($completedQuizzes / $totalQuizzes) * 100;
+        }
+
+        // Calculate overall progress as the average of video and quiz progress
+        $overallProgress = 0;
+        $divisor = 0;
+
+        if ($totalVideos > 0) {
+            $overallProgress += $videoProgress;
+            $divisor++;
+        }
+
+        if ($totalQuizzes > 0) {
+            $overallProgress += $quizProgress;
+            $divisor++;
+        }
+
+        $completionPercentage = $divisor > 0 ? $overallProgress / $divisor : 0;
 
         $userProgress = UserCourseProgress::firstOrCreate(
             ['user_id' => $userId, 'course_id' => $courseId],

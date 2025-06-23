@@ -42,7 +42,7 @@
         <div class="absolute inset-0 bg-black opacity-20"></div>
         <div class="absolute inset-0">
             <div class="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-600/90"></div>
-            <img src="{{ $course->gambar_course ?: 'https://via.placeholder.com/1200x600/4f46e5/ffffff?text=' . urlencode($course->nama_course) }}"
+            <img src="{{ $course->gambar_course_url }}"
                  class="w-full h-full object-cover opacity-30"
                  alt="{{ $course->nama_course }}">
         </div>
@@ -97,13 +97,20 @@
                     <p class="text-xl text-blue-100 mb-8 leading-relaxed">{{ $course->deskripsi_course }}</p>
 
                     <!-- Course Stats -->
-                    <div class="grid grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-4 gap-6 mb-8">
                         <div class="text-center">
                             <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3">
                                 <i class="fas fa-play-circle text-2xl text-white"></i>
                             </div>
                             <div class="text-2xl font-bold text-white">{{ $course->total_video }}</div>
                             <div class="text-blue-200 text-sm">Videos</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3">
+                                <i class="fas fa-question-circle text-2xl text-white"></i>
+                            </div>
+                            <div class="text-2xl font-bold text-white">{{ $course->total_quizzes }}</div>
+                            <div class="text-blue-200 text-sm">Quizzes</div>
                         </div>
                         <div class="text-center">
                             <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-3">
@@ -130,7 +137,11 @@
                                 <i class="fas fa-graduation-cap text-3xl text-white"></i>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Mulai Pembelajaran</h3>
-                            <p class="text-gray-600 text-sm">Course lengkap dengan {{ $course->total_video }} video pembelajaran</p>
+                            <p class="text-gray-600 text-sm">Course lengkap dengan {{ $course->total_video }} video pembelajaran
+                                @if($course->total_quizzes > 0)
+                                dan {{ $course->total_quizzes }} quiz
+                                @endif
+                            </p>
                         </div>
 
                         @auth
@@ -141,10 +152,52 @@
                                         <span class="text-sm font-medium text-gray-700">Progress</span>
                                         <span class="text-sm font-bold text-blue-600">{{ $userProgress->progress_percentage }}%</span>
                                     </div>
-                                    <div class="w-full bg-gray-200 rounded-full h-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-3 mb-3">
                                         <div class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-300"
                                              style="width: {{ $userProgress->progress_percentage }}%"></div>
                                     </div>
+
+                                    @if($course->total_video > 0 || $course->total_quizzes > 0)
+                                        <div class="space-y-2">
+                                            @if($course->total_video > 0)
+                                                @php
+                                                    $completedVideos = \App\Models\UserVideoProgress::where('user_id', Auth::id())
+                                                        ->where('course_id', $course->course_id)
+                                                        ->where('is_completed', true)
+                                                        ->count();
+                                                    $videoProgress = ($completedVideos / $course->total_video) * 100;
+                                                @endphp
+                                                <div class="flex items-center justify-between text-xs">
+                                                    <span class="text-gray-600">📹 Video Progress</span>
+                                                    <div class="flex items-center">
+                                                        <span class="mr-2">{{ $completedVideos }}/{{ $course->total_video }}</span>
+                                                        <div class="w-20 h-1.5 bg-gray-200 rounded-full">
+                                                            <div class="bg-green-500 h-1.5 rounded-full" style="width: {{ $videoProgress }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+
+                                            @if($course->total_quizzes > 0)
+                                                @php
+                                                    $completedQuizzes = \App\Models\QuizResult::where('users_id', Auth::id())
+                                                        ->whereIn('quiz_id', $course->quizzes->pluck('quiz_id'))
+                                                        ->distinct('quiz_id')
+                                                        ->count();
+                                                    $quizProgress = ($completedQuizzes / $course->total_quizzes) * 100;
+                                                @endphp
+                                                <div class="flex items-center justify-between text-xs">
+                                                    <span class="text-gray-600">🎯 Quiz Progress</span>
+                                                    <div class="flex items-center">
+                                                        <span class="mr-2">{{ $completedQuizzes }}/{{ $course->total_quizzes }}</span>
+                                                        <div class="w-20 h-1.5 bg-gray-200 rounded-full">
+                                                            <div class="bg-blue-500 h-1.5 rounded-full" style="width: {{ $quizProgress }}%"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <!-- Continue Learning Button -->
@@ -262,7 +315,7 @@
                                         @php
                                             // Combine videos and quizzes, then sort by order
                                             $sectionItems = collect();
-                                            
+
                                             // Add videos
                                             foreach($sectionVideos as $video) {
                                                 $sectionItems->push([
@@ -271,7 +324,7 @@
                                                     'data' => $video
                                                 ]);
                                             }
-                                            
+
                                             // Add quizzes
                                             foreach($sectionQuizzes as $quiz) {
                                                 $sectionItems->push([
@@ -280,7 +333,7 @@
                                                     'data' => $quiz
                                                 ]);
                                             }
-                                            
+
                                             // Sort by order
                                             $sectionItems = $sectionItems->sortBy('order');
                                         @endphp
@@ -320,8 +373,8 @@
                                                     @endauth
                                                 </div>
                                             @elseif($item['type'] === 'quiz')
-                                                @php 
-                                                    $quiz = $item['data']; 
+                                                @php
+                                                    $quiz = $item['data'];
                                                     $userQuizResult = null;
                                                     if(Auth::check()) {
                                                         $userQuizResult = $quiz->results()->where('users_id', Auth::id())->latest()->first();
@@ -441,7 +494,7 @@
                             <div class="text-2xl font-bold text-blue-600">{{ $courseQuizzes->count() }}</div>
                             <div class="text-sm text-blue-700">Total Quiz</div>
                         </div>
-                        
+
                         <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 text-center">
                             <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
                                 <i class="fas fa-users text-white"></i>
@@ -449,7 +502,7 @@
                             <div class="text-2xl font-bold text-green-600">{{ $allQuizResults->count() }}</div>
                             <div class="text-sm text-green-700">Total Attempts</div>
                         </div>
-                        
+
                         <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 text-center">
                             <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
                                 <i class="fas fa-trophy text-white"></i>
@@ -457,7 +510,7 @@
                             <div class="text-2xl font-bold text-purple-600">{{ round($allQuizResults->avg('nilai_total'), 1) }}%</div>
                             <div class="text-sm text-purple-700">Rata-rata Nilai</div>
                         </div>
-                        
+
                         <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 text-center">
                             <div class="w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
                                 <i class="fas fa-check-circle text-white"></i>
@@ -489,7 +542,7 @@
                                         <div class="text-sm text-gray-500">Rata-rata</div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="bg-white rounded-lg p-4">
                                         <div class="flex items-center justify-between">
@@ -503,7 +556,7 @@
                                                  style="width: {{ $quizPassRate }}%"></div>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="bg-white rounded-lg p-4">
                                         <div class="flex items-center justify-between">
                                             <span class="text-sm text-gray-600">Highest Score</span>
@@ -595,8 +648,8 @@
                                     <i class="fas fa-paper-plane mr-2"></i>
                                     <span id="submit-text">Kirim Feedback</span>
                                 </button>
-                                
-                                <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" 
+
+                                <button type="button" id="cancel-edit-btn" onclick="cancelEdit()"
                                         class="hidden px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-colors">
                                     <i class="fas fa-times mr-2"></i>
                                     Batal
@@ -637,7 +690,7 @@
                         @endphp
                         @forelse($relatedCourses as $relatedCourse)
                         <div class="flex space-x-4 p-4 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors">
-                            <img src="{{ $relatedCourse->gambar_course ?: 'https://via.placeholder.com/80x60/4f46e5/ffffff?text=Course' }}"
+                            <img src="{{ $relatedCourse->gambar_course_url }}"
                                  class="w-16 h-12 object-cover rounded-lg"
                                  alt="{{ $relatedCourse->nama_course }}">
                             <div class="flex-1">
@@ -653,7 +706,7 @@
                     </div>
                 </div>
 
-                <!-- Course Stats -->
+                {{-- <!-- Course Stats -->
                 <div class="bg-white rounded-2xl shadow-xl p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">Statistik Course</h3>
                     <div class="space-y-4">
@@ -674,9 +727,9 @@
                         @php
                             $courseQuizzes = $course->quizzes()->with(['results.user'])->get();
                             $totalQuizAttempts = $courseQuizzes->sum(function($quiz) { return $quiz->results->count(); });
-                            $avgScore = $courseQuizzes->isNotEmpty() ? 
-                                round($courseQuizzes->sum(function($quiz) { 
-                                    return $quiz->results->avg('nilai_total') ?? 0; 
+                            $avgScore = $courseQuizzes->isNotEmpty() ?
+                                round($courseQuizzes->sum(function($quiz) {
+                                    return $quiz->results->avg('nilai_total') ?? 0;
                                 }) / $courseQuizzes->count(), 1) : 0;
                         @endphp
                         @if($courseQuizzes->isNotEmpty())
@@ -724,7 +777,7 @@
                             <h3 class="text-lg font-bold text-gray-900">Hasil Quiz Anda</h3>
                             <span class="text-sm text-gray-500">{{ $userQuizResults->count() }} dari {{ $courseQuizzes->count() }} quiz</span>
                         </div>
-                        
+
                         <!-- Quiz Results Summary -->
                         <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
                             <div class="grid grid-cols-2 gap-4 text-center">
@@ -777,7 +830,7 @@
                     </div>
                     @endif
                 @endif
-                @endauth
+                @endauth --}}
             </div>
         </div>
     </div>
@@ -871,7 +924,7 @@ function toggleBookmark(courseId) {
         });
     @else
         showInfo('Silakan login terlebih dahulu untuk bookmark course', 'Login Required').then(() => {
-            window.location.href = '{{ route("login") }}';
+            window.location.href = '{{ route('login') }}';
         });
     @endauth
 }
@@ -1038,14 +1091,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayExistingFeedback(feedback) {
         $('#existing-feedback').show();
         $('#feedback-form-container').hide();
-        
+
         // Display rating stars
         displayRatingStars('#existing-rating-stars', feedback.rating);
         $('#existing-rating-text').text(`(${feedback.rating}/5)`);
-        
+
         // Display feedback text
         $('#existing-feedback-text').text(feedback.pesan);
-        
+
         // Display date
         const feedbackDate = new Date(feedback.created_at).toLocaleDateString('id-ID', {
             year: 'numeric',
@@ -1059,7 +1112,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayRatingStars(container, rating) {
         const starsContainer = $(container);
         starsContainer.empty();
-        
+
         for (let i = 1; i <= 5; i++) {
             const star = $('<i class="fas fa-star text-lg"></i>');
             if (i <= rating) {
@@ -1087,21 +1140,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Edit feedback function
     window.editFeedback = function() {
         if (!currentFeedback) return;
-        
+
         isEditMode = true;
-        
+
         // Show form
         $('#existing-feedback').hide();
         $('#feedback-form-container').show();
-        
+
         // Fill form with existing data
         $('#feedback-id').val(currentFeedback.feedback_id);
         $('#pesan').val(currentFeedback.pesan);
         $('#rating-input').val(currentFeedback.rating);
-        
+
         // Update stars
         updateStarDisplay(currentFeedback.rating);
-        
+
         // Update UI
         $('#submit-text').text('Update Feedback');
         $('#cancel-edit-btn').show();
@@ -1111,23 +1164,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Cancel edit function
     window.cancelEdit = function() {
         isEditMode = false;
-        
+
         // Reset form
         $('#feedback-form')[0].reset();
         $('#feedback-id').val('');
         $('#rating-input').val('');
-        
+
         // Reset stars
         stars.forEach(s => {
             s.classList.remove('text-yellow-500');
             s.classList.add('text-gray-300');
         });
-        
+
         // Update UI
         $('#submit-text').text('Kirim Feedback');
         $('#cancel-edit-btn').hide();
         $('#submit-feedback-btn').addClass('flex-1');
-        
+
         // Show existing feedback
         $('#feedback-form-container').hide();
         $('#existing-feedback').show();
@@ -1136,7 +1189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Delete feedback function
     window.deleteFeedback = function() {
         if (!currentFeedback) return;
-        
+
         Swal.fire({
             title: 'Hapus Feedback?',
             text: 'Anda yakin ingin menghapus feedback ini? Tindakan ini tidak dapat dibatalkan.',
@@ -1149,7 +1202,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 showLoading('Menghapus feedback...');
-                
+
                 $.ajax({
                     url: '{{ route("web.feedback.destroy", "") }}/' + currentFeedback.feedback_id,
                     type: 'DELETE',
@@ -1212,8 +1265,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const ajaxOptions = {
                 type: isEditMode ? 'PUT' : 'POST',
-                url: isEditMode ? 
-                    '{{ route("web.feedback.update", "") }}/' + feedbackId : 
+                url: isEditMode ?
+                    '{{ route("web.feedback.update", "") }}/' + feedbackId :
                     '{{ route("web.feedback.store") }}',
                 data: ajaxData,
                 success: function(data) {
@@ -1223,23 +1276,23 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Update current feedback
                             currentFeedback = data.feedback;
                             isEditMode = false;
-                            
+
                             // Reset form
                             feedbackForm.reset();
                             $('#feedback-id').val('');
                             $('#rating-input').val('');
-                            
+
                             // Reset stars
                             stars.forEach(s => {
                                 s.classList.remove('text-yellow-500');
                                 s.classList.add('text-gray-300');
                             });
-                            
+
                             // Update UI
                             $('#submit-text').text('Kirim Feedback');
                             $('#cancel-edit-btn').hide();
                             $('#submit-feedback-btn').addClass('flex-1');
-                            
+
                             // Show existing feedback
                             displayExistingFeedback(currentFeedback);
                         });
@@ -1331,13 +1384,13 @@ function checkBookmarkStatus(courseId) {
 function showQuizReport() {
     @auth
         showLoading('Memuat laporan quiz...');
-        
+
         $.ajax({
             url: '{{ route("courses.quiz-report", $course->course_id) }}',
             type: 'GET',
             success: function(data) {
                 Swal.close();
-                
+
                 if (data.success) {
                     let reportHtml = `
                         <div class="text-left">
@@ -1358,16 +1411,16 @@ function showQuizReport() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-4">
                                 <h4 class="font-semibold mb-3">Detail Hasil Quiz:</h4>
                                 <div class="space-y-3 max-h-64 overflow-y-auto">
                     `;
-                    
+
                     data.quiz_results.forEach(result => {
                         let gradeColor = result.nilai_total >= 80 ? 'green' : (result.nilai_total >= 60 ? 'yellow' : 'red');
                         let gradeIcon = result.nilai_total >= 60 ? 'check-circle' : 'times-circle';
-                        
+
                         reportHtml += `
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                 <div class="flex-1">
@@ -1376,8 +1429,8 @@ function showQuizReport() {
                                         <h5 class="font-medium">${result.quiz_title}</h5>
                                     </div>
                                     <div class="text-sm text-gray-600 mt-1">
-                                        <span>Dikerjakan: ${result.date}</span> • 
-                                        <span>Durasi: ${result.duration} menit</span> • 
+                                        <span>Dikerjakan: ${result.date}</span> •
+                                        <span>Durasi: ${result.duration} menit</span> •
                                         <span>Benar: ${result.jumlah_benar}/${result.total_soal}</span>
                                     </div>
                                 </div>
@@ -1388,13 +1441,13 @@ function showQuizReport() {
                             </div>
                         `;
                     });
-                    
+
                     reportHtml += `
                                 </div>
                             </div>
                         </div>
                     `;
-                    
+
                     Swal.fire({
                         title: '<i class="fas fa-chart-bar text-blue-500"></i> Laporan Quiz Detail',
                         html: reportHtml,

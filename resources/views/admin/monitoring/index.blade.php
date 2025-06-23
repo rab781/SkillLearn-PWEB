@@ -192,15 +192,9 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                         <div class="flex items-center">
                             <div class="flex-shrink-0 h-10 w-10">
-                                @if($course->gambar_course)
-                                    <img class="h-10 w-10 rounded-lg object-cover"
-                                         src="{{ Storage::url($course->gambar_course) }}"
-                                         alt="{{ $course->nama_course }}">
-                                @else
-                                    <div class="h-10 w-10 rounded-lg bg-gray-300 flex items-center justify-center">
-                                        <i class="fas fa-graduation-cap text-gray-600"></i>
-                                    </div>
-                                @endif
+                                <img class="h-10 w-10 rounded-lg object-cover"
+                                     src="{{ $course->gambar_course_url }}"
+                                     alt="{{ $course->nama_course }}">
                             </div>
                             <div class="ml-4">
                                 <div class="text-sm font-medium text-gray-900">

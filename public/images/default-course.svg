@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Default Course Image</title>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#4F46E5" x="0" y="0" width="800" height="600"></rect>
+        <g transform="translate(250.000000, 200.000000)" fill="#FFFFFF">
+            <path d="M150,0 C184.183,0 212,27.8171 212,62 C212,87.6541 196.26,109.74 173.5,119.857 L173.5,170 L138.5,135 L138.5,119.857 C115.74,109.74 100,87.6541 100,62 C100,27.8171 127.817,0 162,0 L150,0 Z" id="Combined-Shape"></path>
+            <path d="M62,30 C96.183,30 124,57.8171 124,92 C124,126.183 96.183,154 62,154 C27.8171,154 0,126.183 0,92 C0,57.8171 27.8171,30 62,30 Z M75,78.5 L50,78.5 L50,106.5 L75,106.5 L75,78.5 Z" id="Combined-Shape"></path>
+            <path d="M238,30 C272.183,30 300,57.8171 300,92 C300,126.183 272.183,154 238,154 C203.817,154 176,126.183 176,92 C176,57.8171 203.817,30 238,30 Z M248,78 L227,92 L248,106 L248,78 Z" id="Combined-Shape"></path>
+        </g>
+        <text font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#FFFFFF" text-anchor="middle" x="400" y="450">COURSE</text>
+    </g>
+</svg>

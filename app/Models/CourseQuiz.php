@@ -9,7 +9,7 @@ class CourseQuiz extends Model
 {
     protected $table = 'course_quizzes';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = [
         'course_id',
         'quiz_id',

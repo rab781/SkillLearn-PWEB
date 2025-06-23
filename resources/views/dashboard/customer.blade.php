@@ -629,7 +629,7 @@ async function loadDashboard() {
 
         // Try multiple fetch approaches
         console.log('Fetching dashboard data from API...');
-        
+
         let dashboardData = null;
         let fetchSuccess = false;
 
@@ -644,7 +644,7 @@ async function loadDashboard() {
                 },
                 credentials: 'same-origin'
             });
-            
+
             if (webResponse.ok) {
                 dashboardData = await webResponse.json();
                 if (dashboardData.success) {
@@ -655,7 +655,7 @@ async function loadDashboard() {
         } catch (webError) {
             console.warn('Web route fetch failed:', webError);
         }
-        
+
         // Try approach 2: API route if web route failed
         if (!fetchSuccess) {
             try {
@@ -669,7 +669,7 @@ async function loadDashboard() {
                     },
                     credentials: 'same-origin'
                 });
-                
+
                 if (apiResponse.ok) {
                     dashboardData = await apiResponse.json();
                     if (dashboardData.success) {
@@ -687,7 +687,7 @@ async function loadDashboard() {
                 console.warn('API fetch error:', apiError);
             }
         }
-        
+
         // Try approach 3: Alternative API endpoint as last resort
         if (!fetchSuccess) {
             try {
@@ -701,7 +701,7 @@ async function loadDashboard() {
                     },
                     credentials: 'same-origin'
                 });
-                
+
                 if (altResponse.ok) {
                     dashboardData = await altResponse.json();
                     if (dashboardData.success) {
@@ -717,7 +717,7 @@ async function loadDashboard() {
                 console.warn('Alternative API fetch error:', altError);
             }
         }
-        
+
         // Try approach 4: Direct fetch as last resort
         if (!fetchSuccess) {
             try {
@@ -730,7 +730,7 @@ async function loadDashboard() {
                     },
                     credentials: 'include' // Use include instead of same-origin
                 });
-                
+
                 if (response.ok) {
                     dashboardData = await response.json();
                     if (dashboardData.success) {
@@ -742,7 +742,7 @@ async function loadDashboard() {
                 console.warn('Direct fetch error:', directError);
             }
         }
-        
+
         // If any API succeeded, render the data
         if (fetchSuccess && dashboardData) {
             loadStats(dashboardData.stats || {});
@@ -752,12 +752,12 @@ async function loadDashboard() {
             loadCategories(dashboardData.categories || []);
             return;
         }
-        
+
         // If all API approaches fail, load fallback data
         console.log('API fetch failed, loading fallback data...');
         loadFallbackData();
         showInfoNotification('Memuat data dashboard dalam mode offline. Beberapa fitur mungkin terbatas.');
-        
+
     } catch (error) {
         console.error('Error loading dashboard:', error);
         loadFallbackData();
@@ -841,7 +841,7 @@ function loadStats(stats) {
                 <div>
                     <p class="text-purple-100">🎓 Course Progress</p>
                     <p class="text-3xl font-bold">${learningProgress.toFixed(1)}%</p>
-                    <p class="text-sm text-purple-200 mt-1">Kemajuan pembelajaran</p>
+                    <p class="text-sm text-purple-200 mt-1">Kemajuan pembelajaran <span class="text-xs">(Video + Quiz)</span></p>
                 </div>
                 <div class="text-4xl opacity-80">�</div>
             </div>
@@ -1331,7 +1331,19 @@ function loadEnrolledCourses(enrolledCourses) {
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-gray-600">🎯 Quiz Progress</span>
-                            <span class="font-medium">${courseData.completed_quizzes}/${courseData.total_quizzes}</span>
+                            <span class="font-medium">${courseData.completed_quizzes || 0}/${courseData.total_quizzes || 0}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <div class="w-full h-1.5 bg-gray-200 rounded-full">
+                                <div class="h-1.5 bg-green-500 rounded-full" style="width: ${videoProgress.toFixed(1)}%"></div>
+                            </div>
+                            <span class="ml-2 text-xs font-medium text-gray-500">${videoProgress.toFixed(0)}%</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div class="w-full h-1.5 bg-gray-200 rounded-full">
+                                <div class="h-1.5 bg-blue-500 rounded-full" style="width: ${quizProgress.toFixed(1)}%"></div>
+                            </div>
+                            <span class="ml-2 text-xs font-medium text-gray-500">${quizProgress.toFixed(0)}%</span>
                         </div>
                     </div>
 
@@ -1713,7 +1725,7 @@ function displayQuizReports(data) {
 async function exportQuizReport() {
     try {
         showInfoNotification('Menggenerate laporan PDF...');
-        
+
         // This would typically call an API to generate PDF
         const response = await fetch('/api/quiz-reports/export', {
             method: 'POST',
@@ -1750,7 +1762,7 @@ function showDetailedAnalysis() {
     const analysisHtml = `
         <div class="text-left p-4">
             <h3 class="font-bold text-lg mb-4 text-center">📈 Analisis Detail Performance</h3>
-            
+
             <div class="space-y-4">
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-blue-800 mb-2">🎯 Kekuatan Anda</h4>
@@ -1760,7 +1772,7 @@ function showDetailedAnalysis() {
                         <li>• Tingkat completion rate yang baik (66.7%)</li>
                     </ul>
                 </div>
-                
+
                 <div class="bg-orange-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-orange-800 mb-2">⚠️ Area Peningkatan</h4>
                     <ul class="text-sm text-orange-700 space-y-1">
@@ -1769,7 +1781,7 @@ function showDetailedAnalysis() {
                         <li>• Tingkatkan fokus pada soal-soal teoretis</li>
                     </ul>
                 </div>
-                
+
                 <div class="bg-green-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-green-800 mb-2">💡 Rekomendasi Belajar</h4>
                     <ul class="text-sm text-green-700 space-y-1">
@@ -1796,7 +1808,7 @@ function showQuizRecommendations() {
     const recommendationsHtml = `
         <div class="text-left p-4">
             <h3 class="font-bold text-lg mb-4 text-center">💡 Rekomendasi Quiz</h3>
-            
+
             <div class="space-y-4">
                 <div class="border rounded-lg p-4 hover:bg-gray-50">
                     <div class="flex items-center justify-between mb-2">
@@ -1811,7 +1823,7 @@ function showQuizRecommendations() {
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="border rounded-lg p-4 hover:bg-gray-50">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-semibold text-gray-800">Advanced JavaScript Concepts</h4>
@@ -1825,7 +1837,7 @@ function showQuizRecommendations() {
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="border rounded-lg p-4 hover:bg-gray-50">
                     <div class="flex items-center justify-between mb-2">
                         <h4 class="font-semibold text-gray-800">UI/UX Design Principles</h4>
@@ -1883,7 +1895,7 @@ function showStudyPlan() {
     const studyPlanHtml = `
         <div class="text-left p-4">
             <h3 class="font-bold text-lg mb-4 text-center">📚 Study Plan Rekomendasi</h3>
-            
+
             <div class="space-y-4">
                 <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
                     <h4 class="font-semibold text-blue-800 mb-2">Week 1-2: Database Fundamentals</h4>
@@ -1896,7 +1908,7 @@ function showStudyPlan() {
                         <span class="bg-blue-200 text-blue-800 text-xs px-2 py-1 rounded">Priority: High</span>
                     </div>
                 </div>
-                
+
                 <div class="bg-green-50 border-l-4 border-green-500 p-4 rounded">
                     <h4 class="font-semibold text-green-800 mb-2">Week 3-4: Advanced Programming</h4>
                     <ul class="text-sm text-green-700 space-y-1 ml-4">
@@ -1908,7 +1920,7 @@ function showStudyPlan() {
                         <span class="bg-green-200 text-green-800 text-xs px-2 py-1 rounded">Priority: Medium</span>
                     </div>
                 </div>
-                
+
                 <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded">
                     <h4 class="font-semibold text-purple-800 mb-2">Week 5-6: UI/UX Skills</h4>
                     <ul class="text-sm text-purple-700 space-y-1 ml-4">
@@ -1921,11 +1933,11 @@ function showStudyPlan() {
                     </div>
                 </div>
             </div>
-            
+
             <div class="mt-6 p-4 bg-gray-50 rounded-lg">
                 <h4 class="font-semibold text-gray-800 mb-2">📊 Progress Tracking</h4>
                 <p class="text-sm text-gray-600">
-                    Ikuti study plan ini untuk meningkatkan skor quiz Anda dari rata-rata 78.5% menjadi 85%+ 
+                    Ikuti study plan ini untuk meningkatkan skor quiz Anda dari rata-rata 78.5% menjadi 85%+
                     dalam 6 minggu ke depan.
                 </p>
                 <div class="mt-3 flex gap-2">
@@ -1953,7 +1965,7 @@ function showProgressTrend() {
     const trendHtml = `
         <div class="text-left p-4">
             <h3 class="font-bold text-lg mb-4 text-center">📈 Progress Trend Analysis</h3>
-            
+
             <!-- Mock Progress Chart -->
             <div class="bg-gray-50 p-4 rounded-lg mb-4">
                 <h4 class="font-semibold text-gray-800 mb-3">Skor Quiz Bulanan</h4>
@@ -1987,7 +1999,7 @@ function showProgressTrend() {
                     </div>
                 </div>
             </div>
-            
+
             <!-- Insights -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="bg-green-50 p-4 rounded-lg">
@@ -1998,7 +2010,7 @@ function showProgressTrend() {
                         <li>• Tingkat retry menurun</li>
                     </ul>
                 </div>
-                
+
                 <div class="bg-blue-50 p-4 rounded-lg">
                     <h4 class="font-semibold text-blue-800 mb-2">📊 Key Metrics</h4>
                     <ul class="text-sm text-blue-700 space-y-1">
@@ -2008,13 +2020,13 @@ function showProgressTrend() {
                     </ul>
                 </div>
             </div>
-            
+
             <!-- Prediction -->
             <div class="mt-4 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border">
                 <h4 class="font-semibold text-purple-800 mb-2">🔮 Prediksi Performance</h4>
                 <p class="text-sm text-purple-700">
-                    Berdasarkan trend saat ini, Anda diprediksi akan mencapai skor rata-rata 
-                    <strong>85%</strong> dalam 4-6 minggu ke depan jika konsisten mengikuti 
+                    Berdasarkan trend saat ini, Anda diprediksi akan mencapai skor rata-rata
+                    <strong>85%</strong> dalam 4-6 minggu ke depan jika konsisten mengikuti
                     study plan yang disarankan.
                 </p>
             </div>

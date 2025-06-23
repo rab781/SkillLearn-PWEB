@@ -346,12 +346,12 @@ class AdminCourseController extends Controller
             });
 
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Urutan section berhasil diperbarui!'
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Gagal memperbarui urutan section: ' . $e->getMessage()
             ], 500);
         }
@@ -384,12 +384,12 @@ class AdminCourseController extends Controller
             $course->updateCourseStatistics();
 
             return response()->json([
-                'success' => true, 
+                'success' => true,
                 'message' => 'Urutan video berhasil diperbarui!'
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Gagal memperbarui urutan video: ' . $e->getMessage()
             ], 500);
         }
@@ -492,7 +492,7 @@ class AdminCourseController extends Controller
             });
 
             $message = $isNewQuiz ? 'Quiz baru berhasil dibuat dan ditambahkan ke course!' : 'Quiz berhasil ditambahkan ke course!';
-            
+
             return response()->json([
                 'success' => true,
                 'message' => $message,
@@ -547,7 +547,7 @@ class AdminCourseController extends Controller
             case 'after_video':
             case 'between_sections':
                 // For simplicity, add at the end for now
-                // In a more sophisticated implementation, you might want to 
+                // In a more sophisticated implementation, you might want to
                 // insert at specific positions and reorder existing quizzes
                 return $maxOrder + 1;
             default:
