@@ -35,7 +35,7 @@ class AdminMonitoringController extends Controller
             // Get video information
             $video = Vidio::find($activity->vidio_vidio_id);
             $activity->video = $video;
-            
+
             // Get course information through video
             if ($video) {
                 $course = DB::table('course_video')
@@ -45,7 +45,7 @@ class AdminMonitoringController extends Controller
                            ->first();
                 $activity->course = $course;
             }
-            
+
             return $activity;
         });
 
@@ -94,12 +94,12 @@ class AdminMonitoringController extends Controller
                                            ->get()
                                            ->map(function ($progress) use ($course) {
                                                $totalVideos = $course->videos->count();
-                                               
+
                                                // Get video progress for this user
                                                $videoProgress = UserVideoProgress::where('user_id', $progress->user_id)
                                                                                 ->whereIn('video_id', $course->videos->pluck('vidio_id'))
                                                                                 ->get();
-                                               
+
                                                $completedVideos = $videoProgress->where('is_completed', true)->count();
                                                $watchedMinutes = $videoProgress->sum('watched_duration');
 
@@ -121,7 +121,7 @@ class AdminMonitoringController extends Controller
             $videoStats = $course->videos->map(function ($courseVideo) {
                 $video = Vidio::find($courseVideo->vidio_id);
                 if (!$video) return null;
-                
+
                 $watchCount = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->count();
                 $totalWatchTime = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->sum('durasi_tonton') ?? 0;
                 $uniqueViewers = RiwayatTonton::where('vidio_vidio_id', $video->vidio_id)->distinct('users_id')->count();
@@ -148,7 +148,7 @@ class AdminMonitoringController extends Controller
                     // Handle if results relationship doesn't exist
                     $results = collect();
                 }
-                
+
                 $totalAttempts = $results->count();
                 $passedAttempts = $results->where('nilai_total', '>=', 60)->count();
                 $averageScore = $results->avg('nilai_total');
@@ -181,7 +181,7 @@ class AdminMonitoringController extends Controller
         $courseStats = $user->courseProgress->map(function ($progress) {
             $course = $progress->course;
             $totalVideos = $course->videos ? $course->videos->count() : 0;
-            
+
             // Get video progress for this user
             $videoProgress = collect();
             if ($totalVideos > 0) {
@@ -189,7 +189,7 @@ class AdminMonitoringController extends Controller
                                                  ->whereIn('video_id', $course->videos->pluck('vidio_id'))
                                                  ->get();
             }
-            
+
             $completedVideos = $videoProgress->where('is_completed', true)->count();
             $watchedMinutes = $videoProgress->sum('watched_duration');
 
@@ -213,7 +213,7 @@ class AdminMonitoringController extends Controller
                                             // Get video information
                                             $video = Vidio::find($activity->vidio_vidio_id);
                                             $activity->video = $video;
-                                            
+
                                             // Get course information through video
                                             if ($video) {
                                                 $course = DB::table('course_video')
@@ -223,7 +223,7 @@ class AdminMonitoringController extends Controller
                                                            ->first();
                                                 $activity->course = $course;
                                             }
-                                            
+
                                             return $activity;
                                         });
 
