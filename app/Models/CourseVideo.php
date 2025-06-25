@@ -40,11 +40,15 @@ class CourseVideo extends Model
     public function vidio()
     {
         return $this->belongsTo(Vidio::class, 'vidio_vidio_id');
-    }
-
-    public function userProgress()
+    }    public function userProgress()
     {
         return $this->hasMany(UserVideoProgress::class, 'vidio_vidio_id', 'vidio_vidio_id');
+    }
+    
+    public function video_progress()
+    {
+        return $this->hasOne(UserVideoProgress::class, 'vidio_vidio_id', 'vidio_vidio_id')
+                ->where('user_id', auth()->id());
     }
 
     // Helper methods

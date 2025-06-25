@@ -60,7 +60,9 @@ class Course extends Model
 
     public function quizzes()
     {
-        return $this->hasMany(Quiz::class, 'course_id');
+        return $this->hasMany(Quiz::class, 'course_id')
+                    ->where('is_active', true)
+                    ->orderBy('urutan');
     }
 
     public function courseQuizzes()

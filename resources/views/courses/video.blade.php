@@ -539,9 +539,29 @@
                                     @endforeach
 
                                     @php
-                                        // Show section quizzes at the end of section videos
-                                        $sectionQuizzes = $course->quizzes->where('section_id', $section->section_id)
-                                            ->where('tipe_quiz', 'setelah_section');
+                                        // Initialize empty collection
+                                        $sectionQuizzes = collect();
+                                        
+                                        // First try section->quizzes relationship
+                                        if ($section->relationLoaded('quizzes') && $section->quizzes->count() > 0) {
+                                            $sectionQuizzes = $section->quizzes;
+                                        }
+                                        // Also check course->quizzes if section quizzes is empty or if we need more
+                                        if (isset($course->quizzes) && $course->quizzes->count() > 0) {
+                                            // Filter quizzes by section_id and merge with existing
+                                            $courseQuizzes = $course->quizzes->where('section_id', $section->section_id);
+                                            if ($courseQuizzes->count() > 0) {
+                                                // Merge with existing quizzes if any
+                                                if ($sectionQuizzes->isEmpty()) {
+                                                    $sectionQuizzes = $courseQuizzes;
+                                                } else {
+                                                    // Make sure we don't have duplicates
+                                                    $existingIds = $sectionQuizzes->pluck('quiz_id')->toArray();
+                                                    $newQuizzes = $courseQuizzes->whereNotIn('quiz_id', $existingIds);
+                                                    $sectionQuizzes = $sectionQuizzes->concat($newQuizzes);
+                                                }
+                                            }
+                                        }
                                     @endphp
                                     @if($sectionQuizzes->count() > 0)
                                         @foreach($sectionQuizzes as $quiz)

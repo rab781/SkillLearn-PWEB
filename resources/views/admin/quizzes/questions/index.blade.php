@@ -1050,7 +1050,7 @@ button[onclick="showQuestionBuilder()"] {
                                                         <i class="fas fa-weight-hanging me-1"></i>{{ $question->bobot_nilai }} poin
                                                     </span>
                                                     <span class="question-badge">
-                                                        <i class="fas fa-list me-1"></i>{{ count(json_decode($question->pilihan_jawaban, true) ?? []) }} pilihan
+                                                        <i class="fas fa-list me-1"></i>{{ count(is_array($question->pilihan_jawaban) ? $question->pilihan_jawaban : (json_decode($question->pilihan_jawaban, true) ?? [])) }} pilihan
                                                     </span>
                                                 </div>
                                             </div>

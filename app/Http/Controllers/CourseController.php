@@ -85,9 +85,28 @@ class CourseController extends Controller
         $course = Course::with([
             'kategori',
             'sections.videos.vidio',
-            'sections.quizzes.questions', // Load quizzes for each section
-            'quizzes', // Load all course quizzes
-            'quizzes.questions' // Load quiz questions
+            'sections.videos.video_progress' => function($query) {
+                if (Auth::check()) {
+                    $query->where('user_id', Auth::id());
+                }
+            },
+            'sections.quizzes', // Load all quizzes for each section
+            'sections.quizzes.questions', // Load quiz questions
+            'sections.quizzes.results' => function($query) {
+                if (Auth::check()) {
+                    $query->where('users_id', Auth::id());
+                }
+            },
+            'quizzes' => function($query) { // Ensure all course quizzes are loaded with proper constraints
+                $query->where('is_active', true)->orderBy('urutan');
+            },
+            'quizzes.questions', // Load quiz questions with answers
+            'quizzes.results' => function($query) {
+                if (Auth::check()) {
+                    $query->where('users_id', Auth::id());
+                }
+            },
+            'courseQuizzes.quiz.questions' // Also load course quizzes through pivot table
         ])->active()->findOrFail($id);
 
         $userProgress = null;
@@ -98,20 +117,8 @@ class CourseController extends Controller
                 ->where('course_id', $id)
                 ->first();
 
-            // Load video progress for each course video if user has progress
-            if ($userProgress && $course->sections) {
-                foreach ($course->sections as $section) {
-                    if ($section->videos) {
-                        foreach ($section->videos as $courseVideo) {
-                            $videoProgress = UserVideoProgress::where('user_id', Auth::id())
-                                ->where('vidio_vidio_id', $courseVideo->vidio_vidio_id)
-                                ->where('course_id', $id)
-                                ->first();
-                            $courseVideo->video_progress = $videoProgress;
-                        }
-                    }
-                }
-            }
+            // No need to manually set video_progress, eager loading will handle it
+            // if user is not authenticated, the relationship will return null
 
             // Load quiz results for the course
             $quizIds = collect();
@@ -194,8 +201,13 @@ class CourseController extends Controller
     {
         $course = Course::with([
             'sections.videos.vidio',
-            'sections.quizzes.questions', // Load quizzes for each section
-            'quizzes.questions' // Load quizzes with questions
+            'sections.quizzes', // Load all quizzes for each section
+            'sections.quizzes.questions', // Load quiz questions
+            'quizzes' => function($query) { // Properly constrain quizzes
+                $query->where('is_active', true)->orderBy('urutan');
+            }, 
+            'quizzes.questions', // Load quizzes with questions
+            'courseQuizzes.quiz.questions' // Also load course quizzes through pivot table
         ])->active()->findOrFail($courseId);
 
         $courseVideo = CourseVideo::with(['vidio', 'section'])

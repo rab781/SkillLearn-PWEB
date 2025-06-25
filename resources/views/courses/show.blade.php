@@ -285,8 +285,33 @@
                     <div class="space-y-4">
                         @forelse($course->sections as $section)
                         @php
-                            $sectionQuizzes = $section->quizzes ?? collect();
                             $sectionVideos = $section->videos ?? collect();
+                            
+                            // Initialize empty collection
+                            $sectionQuizzes = collect();
+                            
+                            // Debug the section and its quizzes
+                            // First try section->quizzes relationship
+                            if ($section->relationLoaded('quizzes') && $section->quizzes->count() > 0) {
+                                $sectionQuizzes = $section->quizzes;
+                            }
+                            // Also check course->quizzes if section quizzes is empty or if we need more
+                            if (isset($course->quizzes) && $course->quizzes->count() > 0) {
+                                // Filter quizzes by section_id and merge with existing
+                                $courseQuizzes = $course->quizzes->where('section_id', $section->section_id);
+                                if ($courseQuizzes->count() > 0) {
+                                    // Merge with existing quizzes if any
+                                    if ($sectionQuizzes->isEmpty()) {
+                                        $sectionQuizzes = $courseQuizzes;
+                                    } else {
+                                        // Make sure we don't have duplicates
+                                        $existingIds = $sectionQuizzes->pluck('quiz_id')->toArray();
+                                        $newQuizzes = $courseQuizzes->whereNotIn('quiz_id', $existingIds);
+                                        $sectionQuizzes = $sectionQuizzes->concat($newQuizzes);
+                                    }
+                                }
+                            }
+                            
                             $totalItems = $sectionVideos->count() + $sectionQuizzes->count();
                         @endphp
                         <div class="border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
@@ -327,6 +352,16 @@
 
                                             // Add quizzes
                                             foreach($sectionQuizzes as $quiz) {
+                                                // Make sure quiz model has been properly loaded with relationships
+                                                if (method_exists($quiz, 'load')) {
+                                                    // Always load questions and results for better reliability
+                                                    $quiz->load(['questions', 'results' => function($query) {
+                                                        if (Auth::check()) {
+                                                            $query->where('users_id', Auth::id());
+                                                        }
+                                                    }]);
+                                                }
+                                                
                                                 $sectionItems->push([
                                                     'type' => 'quiz',
                                                     'order' => $quiz->urutan ?? 999,
@@ -355,7 +390,10 @@
                                                                 Video
                                                             </span>
                                                             @auth
-                                                                @if($userProgress && isset($video->video_progress) && $video->video_progress && $video->video_progress->is_completed)
+                                                                @php 
+                                                                    $videoProgress = $video->video_progress;
+                                                                @endphp
+                                                                @if($userProgress && $videoProgress && $videoProgress->is_completed)
                                                                     <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                                                                         <i class="fas fa-check mr-1"></i>Selesai
                                                                     </span>
@@ -391,7 +429,20 @@
                                                                 <i class="fas fa-clock mr-1"></i>{{ $quiz->durasi_menit ?? 0 }} menit
                                                             </span>
                                                             <span class="text-sm text-gray-500">
-                                                                <i class="fas fa-list mr-1"></i>{{ $quiz->questions->count() }} soal
+                                                                @php
+                                                                    // Better handling of questions count
+                                                                    $questionsCount = 0;
+                                                                    if(is_object($quiz->questions)) {
+                                                                        $questionsCount = $quiz->questions->count();
+                                                                    } elseif(is_array($quiz->questions)) {
+                                                                        $questionsCount = count($quiz->questions);
+                                                                    } elseif($quiz->relationLoaded('questions')) {
+                                                                        $questionsCount = $quiz->questions->count();
+                                                                    } elseif(method_exists($quiz, 'questions')) {
+                                                                        $questionsCount = $quiz->questions()->count();
+                                                                    }
+                                                                @endphp
+                                                                <i class="fas fa-list mr-1"></i>{{ $questionsCount }} soal
                                                             </span>
                                                             <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                                                 Quiz

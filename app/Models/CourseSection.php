@@ -31,11 +31,11 @@ class CourseSection extends Model
     }    public function quickReviews()
     {
         return $this->hasMany(QuickReview::class, 'section_id')->orderBy('urutan_review');
-    }
-
-    public function quizzes()
+    }    public function quizzes()
     {
-        return $this->hasMany(Quiz::class, 'section_id')->orderBy('urutan');
+        return $this->hasMany(Quiz::class, 'section_id')
+                    ->where('is_active', true)
+                    ->orderBy('urutan');
     }
 
     // Helper methods
