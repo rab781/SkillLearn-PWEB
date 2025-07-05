@@ -1,0 +1,67 @@
+---
+name: ✨ Feature Request
+about: Suggest a new feature for SkillLearn
+title: '[FEATURE] '
+labels: ['enhancement']
+assignees: ''
+
+---
+
+## 🚀 Feature Description
+A clear and concise description of the feature you'd like to see implemented.
+
+## 🎯 Problem Statement
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+## 💡 Proposed Solution
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+## 🔄 Alternative Solutions
+**Describe alternatives you've considered**
+A clear and concise description of any alternative solutions or features you've considered.
+
+## 📋 Use Cases
+**How would this feature be used?**
+Provide specific examples of how this feature would be used:
+1. As a student, I want to...
+2. As an admin, I need to...
+3. As an instructor, I would like to...
+
+## 🎨 Mockups/Design Ideas
+If applicable, add mockups, sketches, or design ideas to help visualize the feature.
+
+## 📊 Expected Impact
+**How would this feature benefit users?**
+- [ ] Improved user experience
+- [ ] Better performance
+- [ ] Enhanced accessibility
+- [ ] New functionality
+- [ ] Better admin tools
+- [ ] Other: ___________
+
+## 🛠️ Technical Considerations
+**Are there any technical requirements or constraints?**
+- Database changes needed: Yes/No
+- API changes needed: Yes/No
+- UI/UX changes needed: Yes/No
+- Third-party integrations: Yes/No
+
+## 📈 Priority Level
+**How important is this feature to you?**
+- [ ] Critical - Essential for basic functionality
+- [ ] High - Would significantly improve the experience
+- [ ] Medium - Nice to have improvement
+- [ ] Low - Minor enhancement
+
+## 📋 Additional Context
+Add any other context, screenshots, or examples about the feature request here.
+
+---
+
+### Checklist
+- [ ] I have checked existing feature requests
+- [ ] I have provided a clear use case
+- [ ] I have considered the impact on existing features
+- [ ] I have thought about potential technical challenges
